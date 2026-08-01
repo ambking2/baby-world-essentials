@@ -1,24 +1,79 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
+import { Header } from "@/components/site/Header";
+import { Footer } from "@/components/site/Footer";
+import { Hero } from "@/components/site/Hero";
+import { Categories } from "@/components/site/Categories";
+import { FeaturedProducts } from "@/components/site/FeaturedProducts";
+import { Installment } from "@/components/site/Installment";
+import { Workshop } from "@/components/site/Workshop";
+import { StoreVisit } from "@/components/site/StoreVisit";
+import { Faq, faqs } from "@/components/site/Faq";
+
+const title = "سیسمونی جهان کودک ابهر | خرید سیسمونی نوزاد و سرویس خواب چوبی";
+const description =
+  "فروش سیسمونی کامل نوزاد در ابهر: سرویس خواب چوبی ساخت کارگاه خودمان، کالسکه، لباس، اسباب‌بازی و لوازم تغذیه. خرید نقدی یا اقساط ۶ ماهه.";
+
 export const Route = createFileRoute("/")({
-  component: Index,
+  head: () => ({
+    meta: [
+      { title },
+      { name: "description", content: description },
+      { property: "og:title", content: title },
+      { property: "og:description", content: description },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "Store",
+              name: "سیسمونی جهان کودک",
+              image: "https://jahankoodak.ir/og.jpg",
+              telephone: "+982435223344",
+              address: {
+                "@type": "PostalAddress",
+                streetAddress: "خیابان طالقانی، روبه‌روی بانک ملت، پلاک ۱۴۲",
+                addressLocality: "ابهر",
+                addressRegion: "زنجان",
+                addressCountry: "IR",
+              },
+              openingHours: "Sa-Th 09:00-21:00",
+            },
+            {
+              "@type": "FAQPage",
+              mainEntity: faqs.map((f) => ({
+                "@type": "Question",
+                name: f.q,
+                acceptedAnswer: { "@type": "Answer", text: f.a },
+              })),
+            },
+          ],
+        }),
+      },
+    ],
+  }),
+  component: Home,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
+function Home() {
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
+    <div className="min-h-screen bg-background">
+      <Header />
+      <main>
+        <Hero />
+        <Categories />
+        <FeaturedProducts />
+        <Installment />
+        <Workshop />
+        <StoreVisit />
+        <Faq />
+      </main>
+      <Footer />
     </div>
   );
 }
