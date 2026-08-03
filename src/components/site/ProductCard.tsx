@@ -13,7 +13,11 @@ export function ProductCard({ product }: { product: Product }) {
 
   return (
     <article className="group relative flex h-full flex-col border border-border bg-card p-3 transition-colors hover:border-primary/40">
-      <Link to="/" className="relative block bg-sand">
+      <Link
+        to="/product/$slug"
+        params={{ slug: product.slug }}
+        className="relative block bg-sand"
+      >
         <img
           src={product.image}
           alt={product.title}
@@ -37,7 +41,7 @@ export function ProductCard({ product }: { product: Product }) {
       <div className="mt-3 flex flex-1 flex-col gap-1.5">
         <p className="text-[11px] text-muted-foreground">{product.brand}</p>
         <h3 className="line-clamp-2 min-h-10 text-[13px] leading-5 text-foreground">
-          <Link to="/" className="hover:text-primary">
+          <Link to="/product/$slug" params={{ slug: product.slug }} className="hover:text-primary">
             {product.title}
           </Link>
         </h3>
