@@ -4,8 +4,8 @@ import type { ReactNode } from "react";
 type Crumb = { label: string; to?: "/shop" | "/categories" | "/blog" | "/brands" | "/offers" };
 
 const tones = {
-  purple: "bg-[linear-gradient(180deg,oklch(0.55_0.22_292),oklch(0.7_0.15_300))]",
-  coral: "bg-[linear-gradient(180deg,oklch(0.62_0.19_20),oklch(0.78_0.13_25))]",
+  purple: "bg-[linear-gradient(180deg,oklch(0.6_0.19_30),oklch(0.75_0.14_35))]",
+  coral: "bg-[linear-gradient(180deg,oklch(0.6_0.19_25),oklch(0.78_0.13_28))]",
   sky: "bg-[linear-gradient(180deg,oklch(0.6_0.13_235),oklch(0.78_0.09_230))]",
 } as const;
 
@@ -13,7 +13,7 @@ export function PageHeader({
   title,
   description,
   crumbs = [],
-  tone = "purple",
+  tone = "coral",
   children,
 }: {
   title: string;
@@ -70,6 +70,7 @@ export function PageHeader({
         {children}
       </div>
       <div className="cloud-bottom" aria-hidden="true" />
+      <div className="zigzag-bottom" aria-hidden="true" />
     </section>
   );
 }

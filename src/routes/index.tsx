@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { Hero } from "@/components/site/Hero";
+import { FeatureTiles } from "@/components/site/FeatureTiles";
 import { AgeStrip } from "@/components/site/AgeStrip";
 import { CategoryGrid } from "@/components/site/CategoryGrid";
 import { ProductSection } from "@/components/site/ProductSection";
@@ -67,6 +68,7 @@ function Home() {
   return (
     <SiteLayout>
       <Hero />
+      <FeatureTiles />
       <AgeStrip />
       <ProductSection
         id="offers"
