@@ -17,7 +17,16 @@ export const Route = createFileRoute("/product/$slug")({
     const product = await context.queryClient.ensureQueryData(productQuery(params.slug));
     if (!product) throw notFound();
     void context.queryClient.ensureQueryData(relatedProductsQuery(params.slug, 5));
-    return { title: product.title, brand: product.brand, image: product.image };
+    return {
+      title: product.title,
+      brand: product.brand,
+      image: product.image,
+      sku: product.detail.sku,
+      price: product.price,
+      inStock: product.stock > 0,
+      rating: product.rating,
+      reviewCount: product.reviewCount,
+    };
   },
   head: ({ loaderData }) => {
     if (!loaderData) {
