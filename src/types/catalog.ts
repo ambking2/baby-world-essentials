@@ -28,3 +28,29 @@ export function discountPercent(product: Product): number {
   if (!product.oldPrice || product.oldPrice <= product.price) return 0;
   return Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100);
 }
+
+export type ProductSpec = { label: string; value: string };
+
+export type ProductReview = {
+  id: string;
+  author: string;
+  city: string;
+  rating: number;
+  date: string;
+  body: string;
+  verified: boolean;
+};
+
+export type ProductFaq = { q: string; a: string };
+
+export type ProductDetail = {
+  sku: string;
+  gallery: string[];
+  description: string[];
+  specs: ProductSpec[];
+  highlights: string[];
+  faqs: ProductFaq[];
+  reviews: ProductReview[];
+};
+
+export type ProductWithDetail = Product & { detail: ProductDetail };

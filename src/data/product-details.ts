@@ -228,9 +228,9 @@ export const productDetails: Record<string, ProductDetail> = Object.fromEntries(
       {
         sku: skuFor(p.id, p.categorySlug),
         gallery: galleryByCategory[p.categorySlug] ?? [p.image],
-        description: seed.description,
-        specs: seed.specs,
-        highlights: seed.highlights,
+        description: seed["description"],
+        specs: seed["specs"],
+        highlights: seed["highlights"],
         faqs,
         reviews: reviewsByCategory[p.categorySlug] ?? reviewsByCategory["default"]!,
       } satisfies ProductDetail,
