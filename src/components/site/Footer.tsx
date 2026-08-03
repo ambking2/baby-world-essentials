@@ -1,80 +1,98 @@
-import { Clock, MapPin, Phone } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { Instagram, Mail, MapPin, Phone, Send } from "lucide-react";
 
-import { categories } from "@/data/catalog";
 import { toFaDigits } from "@/lib/format";
 
 const help = [
-  "روش‌های پرداخت و اقساط",
-  "شرایط ارسال و هزینه‌ها",
-  "مرجوعی و تعویض کالا",
-  "راهنمای انتخاب سرویس خواب",
-  "سفارش ساخت با ابعاد دلخواه",
-];
+  { to: "/contact", label: "تماس با فروشگاه" },
+  { to: "/contact", label: "رویه ارسال" },
+  { to: "/contact", label: "شرایط مرجوعی" },
+  { to: "/about", label: "پرداخت قسطی" },
+] as const;
+
+const shop = [
+  { to: "/shop", label: "همه کالاها" },
+  { to: "/offers", label: "تخفیف‌های این هفته" },
+  { to: "/categories", label: "دسته‌بندی‌ها" },
+  { to: "/brands", label: "برندها" },
+] as const;
 
 export function Footer() {
   return (
-    <footer id="footer" className="mt-8 border-t border-border bg-secondary">
-      <div className="container-page grid gap-8 py-10 md:grid-cols-4">
+    <footer className="mt-16 bg-[oklch(0.28_0.08_290)] text-[oklch(0.93_0.02_290)]">
+      <div className="container-page grid gap-10 py-12 md:grid-cols-2 lg:grid-cols-4">
         <div>
-          <p className="text-sm font-bold text-foreground">جهان کودک</p>
-          <p className="mt-3 text-xs leading-6 text-muted-foreground">
-            فروشگاه سیسمونی و اتاق کودک در ابهر، با کارگاه تولید چوب. از سال ۱۳۸۹ فروش حضوری و از
-            سال ۱۴۰۱ ارسال به سراسر کشور. مدیریت: آقای عسگری.
+          <p className="text-lg font-black text-background">جهان کودک</p>
+          <p className="mt-3 text-sm leading-7 text-[oklch(0.83_0.03_290)]">
+            فروشگاه سیسمونی جهان کودک از سال ۱۳۹۲ در ابهر فعال است. سرویس خواب چوبی را در کارگاه
+            خودمان می‌سازیم و بقیه کالاها را مستقیم از واردکننده تهیه می‌کنیم.
           </p>
+          <div className="mt-4 flex gap-2">
+            <a
+              href="https://instagram.com"
+              aria-label="اینستاگرام جهان کودک"
+              className="grid size-9 place-items-center rounded-full bg-white/10 hover:bg-white/20"
+            >
+              <Instagram className="size-4" aria-hidden="true" />
+            </a>
+            <a
+              href="https://t.me"
+              aria-label="تلگرام جهان کودک"
+              className="grid size-9 place-items-center rounded-full bg-white/10 hover:bg-white/20"
+            >
+              <Send className="size-4" aria-hidden="true" />
+            </a>
+          </div>
         </div>
 
         <div>
-          <p className="text-[13px] font-bold text-foreground">دسته‌بندی‌ها</p>
-          <ul className="mt-3 flex flex-col gap-2 text-xs text-muted-foreground">
-            {categories.map((c) => (
-              <li key={c.slug}>
-                <a href="#categories" className="hover:text-primary">
-                  {c.title}
-                </a>
+          <p className="text-sm font-bold text-background">فروشگاه</p>
+          <ul className="mt-4 flex flex-col gap-2.5 text-sm">
+            {shop.map((l) => (
+              <li key={l.label}>
+                <Link to={l.to} className="text-[oklch(0.85_0.03_290)] hover:text-background">
+                  {l.label}
+                </Link>
               </li>
             ))}
           </ul>
         </div>
 
         <div>
-          <p className="text-[13px] font-bold text-foreground">راهنمای خرید</p>
-          <ul className="mt-3 flex flex-col gap-2 text-xs text-muted-foreground">
-            {help.map((h) => (
-              <li key={h}>
-                <a href="#trust" className="hover:text-primary">
-                  {h}
-                </a>
+          <p className="text-sm font-bold text-background">راهنمای خرید</p>
+          <ul className="mt-4 flex flex-col gap-2.5 text-sm">
+            {help.map((l) => (
+              <li key={l.label}>
+                <Link to={l.to} className="text-[oklch(0.85_0.03_290)] hover:text-background">
+                  {l.label}
+                </Link>
               </li>
             ))}
           </ul>
         </div>
 
         <div>
-          <p className="text-[13px] font-bold text-foreground">تماس و آدرس</p>
-          <ul className="mt-3 flex flex-col gap-3 text-xs text-muted-foreground">
+          <p className="text-sm font-bold text-background">فروشگاه ابهر</p>
+          <ul className="mt-4 flex flex-col gap-3 text-sm text-[oklch(0.85_0.03_290)]">
             <li className="flex gap-2">
               <MapPin className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
-              ابهر، خیابان طالقانی، روبه‌روی بانک ملت، پلاک ۱۴۲
+              زنجان، ابهر، خیابان طالقانی، روبه‌روی بانک ملت، پلاک {toFaDigits(142)}
             </li>
             <li className="flex gap-2">
               <Phone className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
-              <a href="tel:+982435223344" className="hover:text-primary">
-                {toFaDigits("024-3522-3344")}
-              </a>
+              <a href="tel:+982435223344">{toFaDigits("024-35223344")}</a>
             </li>
             <li className="flex gap-2">
-              <Clock className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
-              شنبه تا پنجشنبه، ۹ صبح تا ۹ شب
+              <Mail className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
+              info@jahankoodak.ir
             </li>
+            <li>شنبه تا پنجشنبه، {toFaDigits("۹")} تا {toFaDigits("۲۱")}</li>
           </ul>
         </div>
       </div>
 
-      <div className="border-t border-border">
-        <div className="container-page flex flex-col gap-2 py-4 text-[11px] text-muted-foreground md:flex-row md:items-center md:justify-between">
-          <p>© {toFaDigits(1405)} فروشگاه جهان کودک ابهر. تمام حقوق محفوظ است.</p>
-          <p>پرداخت امن از طریق درگاه بانکی و پرداخت در محل برای ابهر و خرمدره.</p>
-        </div>
+      <div className="border-t border-white/10 py-5 text-center text-xs text-[oklch(0.8_0.03_290)]">
+        © {toFaDigits(1404)} فروشگاه جهان کودک — مدیریت: آقای عسگری
       </div>
     </footer>
   );
