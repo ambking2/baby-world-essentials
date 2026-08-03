@@ -64,21 +64,19 @@ function Home() {
       <Header />
       <main>
         <PromoBanner />
-        <CategoryStrip />
+        <TrustBar />
         <ProductSection
           id="offers"
           title="پیشنهاد ویژه این هفته"
           subtitle="تا پایان موجودی انبار"
           query={{ tag: "offer", limit: 5 }}
         />
-        <div id="trust" className="scroll-mt-24">
-          <TrustBar />
-        </div>
+        <CategoryStrip />
         <ProductSection
-          id="new"
-          title="جدیدترین کالاها"
-          subtitle="تازه‌ رسیده‌های این ماه"
-          query={{ tag: "new", limit: 5 }}
+          id="featured"
+          title="محصولات منتخب فروشگاه"
+          subtitle="انتخاب کارشناس فروش برای اتاق نوزاد"
+          query={{ tag: "featured", limit: 5 }}
         />
         <ProductSection
           id="best"
@@ -86,7 +84,15 @@ function Home() {
           subtitle="بیشترین خرید مشتریان فروشگاه"
           query={{ tag: "best", limit: 5 }}
         />
+        <ProductSection
+          id="new"
+          title="جدیدترین کالاها"
+          subtitle="تازه‌ رسیده‌های این ماه"
+          query={{ tag: "new", limit: 5 }}
+        />
+        <CustomerTrust />
       </main>
+
       <Footer />
     </div>
   );
