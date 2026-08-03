@@ -2,19 +2,35 @@ import { Link } from "@tanstack/react-router";
 import { Heart, ShoppingCart, Star } from "lucide-react";
 import { toast } from "sonner";
 
-import { Button } from "@/components/ui/button";
 import { formatToman, toFaDigits } from "@/lib/format";
 import { discountPercent, type Product } from "@/types/catalog";
 import { cn } from "@/lib/utils";
 
+function Stars({ rating }: { rating: number }) {
+  return (
+    <div className="flex items-center justify-center gap-0.5" aria-label={`امتیاز ${rating} از ۵`}>
+      {[1, 2, 3, 4, 5].map((i) => (
+        <Star
+          key={i}
+          aria-hidden="true"
+          className={cn(
+            "size-3.5",
+            i <= Math.round(rating) ? "fill-sun text-sun" : "fill-border text-border",
+          )}
+        />
+      ))}
+    </div>
+  );
+}
+
 export function ProductCard({ product }: { product: Product }) {
   const off = discountPercent(product);
   const outOfStock = product.stock <= 0;
-  const lowStock = !outOfStock && product.stock <= 4;
+  const isNew = product.tags.includes("new");
 
   return (
-    <article className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card transition-shadow hover:shadow-lift">
-      <div className="relative bg-secondary/50 p-2 md:p-3">
+    <article className="group flex h-full flex-col text-center">
+      <div className="relative overflow-hidden rounded-2xl bg-secondary/60">
         <Link to="/product/$slug" params={{ slug: product.slug }} className="block">
           <img
             src={product.image}
@@ -23,85 +39,75 @@ export function ProductCard({ product }: { product: Product }) {
             height={600}
             loading="lazy"
             className={cn(
-              "aspect-square w-full rounded-xl object-cover",
+              "aspect-square w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]",
               outOfStock && "opacity-60 grayscale",
             )}
           />
         </Link>
 
-        {off > 0 && !outOfStock ? (
-          <span className="absolute top-4 start-4 rounded-full bg-sale px-2 py-0.5 text-[11px] font-bold text-sale-foreground">
-            ٪{toFaDigits(off)} تخفیف
-          </span>
-        ) : null}
+        {/* badges */}
+        <div className="pointer-events-none absolute top-2 start-2 flex flex-col gap-1">
+          {off > 0 && !outOfStock ? (
+            <span className="grid size-11 place-items-center rounded-full bg-sale text-[11px] font-black leading-none text-sale-foreground shadow-soft">
+              ٪{toFaDigits(off)}
+            </span>
+          ) : null}
+          {isNew ? (
+            <span className="grid size-11 place-items-center rounded-full bg-sky text-[11px] font-black leading-none text-foreground shadow-soft">
+              جدید
+            </span>
+          ) : null}
+          {outOfStock ? (
+            <span className="grid size-11 place-items-center rounded-full bg-muted-foreground/90 text-[10px] font-bold leading-none text-background">
+              ناموجود
+            </span>
+          ) : null}
+        </div>
 
-        <button
-          type="button"
-          aria-label="افزودن به علاقه‌مندی‌ها"
-          onClick={() => toast.success("به علاقه‌مندی‌ها اضافه شد")}
-          className="absolute top-4 end-4 grid size-8 place-items-center rounded-full bg-background/90 text-muted-foreground shadow-soft transition-colors hover:text-accent"
-        >
-          <Heart className="size-4" aria-hidden="true" />
-        </button>
-
-        {outOfStock ? (
-          <span className="absolute inset-x-3 bottom-3 rounded-lg bg-foreground/80 py-1 text-center text-xs font-medium text-background">
-            ناموجود
-          </span>
+        {/* hover action overlay (KidsPlay style) */}
+        {!outOfStock ? (
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center gap-3 bg-primary/90 opacity-0 transition-opacity duration-200 group-hover:pointer-events-auto group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:opacity-100">
+            <button
+              type="button"
+              aria-label={`افزودن ${product.title} به سبد خرید`}
+              onClick={() => toast.success("کالا به سبد خرید اضافه شد")}
+              className="grid size-12 place-items-center rounded-full border-2 border-primary-foreground/80 text-primary-foreground transition-colors hover:bg-primary-foreground hover:text-primary"
+            >
+              <ShoppingCart className="size-5" aria-hidden="true" />
+            </button>
+            <button
+              type="button"
+              aria-label={`افزودن ${product.title} به علاقه‌مندی‌ها`}
+              onClick={() => toast.success("به علاقه‌مندی‌ها اضافه شد")}
+              className="grid size-12 place-items-center rounded-full border-2 border-primary-foreground/80 text-primary-foreground transition-colors hover:bg-primary-foreground hover:text-primary"
+            >
+              <Heart className="size-5" aria-hidden="true" />
+            </button>
+          </div>
         ) : null}
       </div>
 
-      <div className="flex flex-1 flex-col gap-1 p-2.5 pt-2 md:gap-1.5 md:p-3">
-        <p className="text-[11px] text-primary">{product.brand}</p>
-        <h3 className="line-clamp-2 min-h-10 text-[13px] font-medium leading-5 text-foreground">
+      <div className="flex flex-1 flex-col items-center gap-1.5 px-1 pt-3">
+        <p className="text-[11px] text-muted-foreground">{product.brand}</p>
+        <h3 className="line-clamp-2 min-h-10 text-[13px] font-bold leading-5 text-foreground">
           <Link to="/product/$slug" params={{ slug: product.slug }} className="hover:text-primary">
             {product.title}
           </Link>
         </h3>
 
-        <div className="flex items-center gap-1 text-[11px] text-muted-foreground">
-          <Star className="size-3.5 fill-sun text-sun" aria-hidden="true" />
-          {toFaDigits(product.rating.toFixed(1))}
-          <span>({toFaDigits(product.reviewCount)} نظر)</span>
-        </div>
-
-        <div className="mt-auto pt-2">
-          <div className="flex items-baseline gap-2">
-            <span className="text-[15px] font-black text-foreground md:text-base">
-              {formatToman(product.price)}
+        <div className="mt-auto flex flex-wrap items-baseline justify-center gap-2 pt-1">
+          {product.oldPrice ? (
+            <span className="text-xs text-muted-foreground line-through">
+              {formatToman(product.oldPrice)}
             </span>
-            <span className="text-[11px] text-muted-foreground">تومان</span>
-            {product.oldPrice ? (
-              <span className="text-xs text-muted-foreground line-through">
-                {formatToman(product.oldPrice)}
-              </span>
-            ) : null}
-          </div>
-
-          <p
-            className={cn(
-              "mt-1 text-[11px] font-medium",
-              lowStock ? "text-sale" : outOfStock ? "text-muted-foreground" : "text-primary",
-            )}
-          >
-            {outOfStock
-              ? "موجود نیست"
-              : lowStock
-                ? `تنها ${toFaDigits(product.stock)} عدد در انبار`
-                : "موجود در انبار"}
-          </p>
-
-          <Button
-            size="sm"
-            className="mt-2 h-9 w-full rounded-full text-xs md:mt-2.5 md:text-sm"
-            variant={outOfStock ? "outline" : "default"}
-            disabled={outOfStock}
-            onClick={() => toast.success("کالا به سبد خرید اضافه شد")}
-          >
-            <ShoppingCart data-icon="inline-start" aria-hidden="true" />
-            {outOfStock ? "ناموجود" : "افزودن به سبد"}
-          </Button>
+          ) : null}
+          <span className="text-[15px] font-black text-primary md:text-base">
+            {formatToman(product.price)}
+          </span>
+          <span className="text-[11px] text-muted-foreground">تومان</span>
         </div>
+
+        <Stars rating={product.rating} />
       </div>
     </article>
   );
