@@ -6,6 +6,7 @@ import { PromoBanner } from "@/components/site/PromoBanner";
 import { CategoryStrip } from "@/components/site/CategoryStrip";
 import { ProductSection } from "@/components/site/ProductSection";
 import { TrustBar } from "@/components/site/TrustBar";
+import { CustomerTrust } from "@/components/site/CustomerTrust";
 import { categoriesQuery, productsQuery } from "@/lib/api/catalog";
 
 const title = "جهان کودک | فروشگاه اینترنتی سیسمونی و اتاق کودک";
@@ -16,6 +17,7 @@ export const Route = createFileRoute("/")({
   loader: ({ context }) => {
     void context.queryClient.ensureQueryData(categoriesQuery());
     void context.queryClient.ensureQueryData(productsQuery({ tag: "offer", limit: 5 }));
+    void context.queryClient.ensureQueryData(productsQuery({ tag: "featured", limit: 5 }));
     void context.queryClient.ensureQueryData(productsQuery({ tag: "new", limit: 5 }));
     void context.queryClient.ensureQueryData(productsQuery({ tag: "best", limit: 5 }));
   },
@@ -62,21 +64,19 @@ function Home() {
       <Header />
       <main>
         <PromoBanner />
-        <CategoryStrip />
+        <TrustBar />
         <ProductSection
           id="offers"
           title="پیشنهاد ویژه این هفته"
           subtitle="تا پایان موجودی انبار"
           query={{ tag: "offer", limit: 5 }}
         />
-        <div id="trust" className="scroll-mt-24">
-          <TrustBar />
-        </div>
+        <CategoryStrip />
         <ProductSection
-          id="new"
-          title="جدیدترین کالاها"
-          subtitle="تازه‌ رسیده‌های این ماه"
-          query={{ tag: "new", limit: 5 }}
+          id="featured"
+          title="محصولات منتخب فروشگاه"
+          subtitle="انتخاب کارشناس فروش برای اتاق نوزاد"
+          query={{ tag: "featured", limit: 5 }}
         />
         <ProductSection
           id="best"
@@ -84,7 +84,15 @@ function Home() {
           subtitle="بیشترین خرید مشتریان فروشگاه"
           query={{ tag: "best", limit: 5 }}
         />
+        <ProductSection
+          id="new"
+          title="جدیدترین کالاها"
+          subtitle="تازه‌ رسیده‌های این ماه"
+          query={{ tag: "new", limit: 5 }}
+        />
+        <CustomerTrust />
       </main>
+
       <Footer />
     </div>
   );

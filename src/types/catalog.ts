@@ -5,7 +5,7 @@ export type Category = {
   image: string;
 };
 
-export type ProductTag = "offer" | "new" | "best";
+export type ProductTag = "offer" | "new" | "best" | "featured";
 
 export type Product = {
   id: string;

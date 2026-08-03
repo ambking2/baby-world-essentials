@@ -35,7 +35,7 @@ export const products: Product[] = [
     rating: 4.8,
     reviewCount: 37,
     stock: 4,
-    tags: ["offer", "best"],
+    tags: ["offer", "best", "featured"],
     madeInWorkshop: true,
   },
   {
@@ -81,7 +81,7 @@ export const products: Product[] = [
     rating: 4.7,
     reviewCount: 96,
     stock: 40,
-    tags: ["best", "new"],
+    tags: ["best", "new", "featured"],
   },
   {
     id: "1005",
@@ -125,7 +125,7 @@ export const products: Product[] = [
     rating: 4.9,
     reviewCount: 15,
     stock: 3,
-    tags: ["new", "offer"],
+    tags: ["new", "offer", "featured"],
     madeInWorkshop: true,
   },
   {
@@ -140,7 +140,7 @@ export const products: Product[] = [
     rating: 4.2,
     reviewCount: 27,
     stock: 9,
-    tags: ["best"],
+    tags: ["best", "featured"],
   },
   {
     id: "1009",
@@ -185,7 +185,7 @@ export const products: Product[] = [
     rating: 4.5,
     reviewCount: 48,
     stock: 30,
-    tags: ["offer", "best"],
+    tags: ["offer", "best", "featured"],
   },
   {
     id: "1012",
