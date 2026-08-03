@@ -10,23 +10,18 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as BlogRouteImport } from './routes/blog'
 import { Route as BrandsRouteImport } from './routes/brands'
 import { Route as CategoriesRouteImport } from './routes/categories'
 import { Route as OffersRouteImport } from './routes/offers'
 import { Route as ShopRouteImport } from './routes/shop'
 import { Route as AgeSlugRouteImport } from './routes/age.$slug'
+import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as CategorySlugRouteImport } from './routes/category.$slug'
 import { Route as ProductSlugRouteImport } from './routes/product.$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BlogRoute = BlogRouteImport.update({
-  id: '/blog',
-  path: '/blog',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BrandsRoute = BrandsRouteImport.update({
@@ -54,6 +49,11 @@ const AgeSlugRoute = AgeSlugRouteImport.update({
   path: '/age/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CategorySlugRoute = CategorySlugRouteImport.update({
   id: '/category/$slug',
   path: '/category/$slug',
@@ -67,7 +67,6 @@ const ProductSlugRoute = ProductSlugRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/blog': typeof BlogRoute
   '/brands': typeof BrandsRoute
   '/categories': typeof CategoriesRoute
   '/offers': typeof OffersRoute
@@ -75,10 +74,10 @@ export interface FileRoutesByFullPath {
   '/age/$slug': typeof AgeSlugRoute
   '/category/$slug': typeof CategorySlugRoute
   '/product/$slug': typeof ProductSlugRoute
+  '/blog/': typeof BlogIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/blog': typeof BlogRoute
   '/brands': typeof BrandsRoute
   '/categories': typeof CategoriesRoute
   '/offers': typeof OffersRoute
@@ -86,11 +85,11 @@ export interface FileRoutesByTo {
   '/age/$slug': typeof AgeSlugRoute
   '/category/$slug': typeof CategorySlugRoute
   '/product/$slug': typeof ProductSlugRoute
+  '/blog': typeof BlogIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/blog': typeof BlogRoute
   '/brands': typeof BrandsRoute
   '/categories': typeof CategoriesRoute
   '/offers': typeof OffersRoute
@@ -98,12 +97,12 @@ export interface FileRoutesById {
   '/age/$slug': typeof AgeSlugRoute
   '/category/$slug': typeof CategorySlugRoute
   '/product/$slug': typeof ProductSlugRoute
+  '/blog/': typeof BlogIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/blog'
     | '/brands'
     | '/categories'
     | '/offers'
@@ -111,10 +110,10 @@ export interface FileRouteTypes {
     | '/age/$slug'
     | '/category/$slug'
     | '/product/$slug'
+    | '/blog/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/blog'
     | '/brands'
     | '/categories'
     | '/offers'
@@ -122,10 +121,10 @@ export interface FileRouteTypes {
     | '/age/$slug'
     | '/category/$slug'
     | '/product/$slug'
+    | '/blog'
   id:
     | '__root__'
     | '/'
-    | '/blog'
     | '/brands'
     | '/categories'
     | '/offers'
@@ -133,11 +132,11 @@ export interface FileRouteTypes {
     | '/age/$slug'
     | '/category/$slug'
     | '/product/$slug'
+    | '/blog/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  BlogRoute: typeof BlogRoute
   BrandsRoute: typeof BrandsRoute
   CategoriesRoute: typeof CategoriesRoute
   OffersRoute: typeof OffersRoute
@@ -145,6 +144,7 @@ export interface RootRouteChildren {
   AgeSlugRoute: typeof AgeSlugRoute
   CategorySlugRoute: typeof CategorySlugRoute
   ProductSlugRoute: typeof ProductSlugRoute
+  BlogIndexRoute: typeof BlogIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -154,13 +154,6 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/blog': {
-      id: '/blog'
-      path: '/blog'
-      fullPath: '/blog'
-      preLoaderRoute: typeof BlogRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/brands': {
@@ -198,6 +191,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AgeSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog/': {
+      id: '/blog/'
+      path: '/blog'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/category/$slug': {
       id: '/category/$slug'
       path: '/category/$slug'
@@ -217,7 +217,6 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  BlogRoute: BlogRoute,
   BrandsRoute: BrandsRoute,
   CategoriesRoute: CategoriesRoute,
   OffersRoute: OffersRoute,
@@ -225,6 +224,7 @@ const rootRouteChildren: RootRouteChildren = {
   AgeSlugRoute: AgeSlugRoute,
   CategorySlugRoute: CategorySlugRoute,
   ProductSlugRoute: ProductSlugRoute,
+  BlogIndexRoute: BlogIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
