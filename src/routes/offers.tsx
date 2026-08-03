@@ -8,7 +8,7 @@ import { productsQuery } from "@/lib/api/catalog";
 
 const title = "تخفیف‌های این هفته | جهان کودک";
 const description =
-  "کالاهای تخفیف‌دار فروشگاه جهان کودک ابهر؛ قیمت ویژه تا پایان موجودی انبار با امکان پرداخت ۶ قسط.";
+  "کالاهای تخفیف‌دار فروشگاه جهان کودک ابهر؛ قیمت ویژه تا پایان موجودی انبار.";
 
 export const Route = createFileRoute("/offers")({
   loader: ({ context }) => context.queryClient.ensureQueryData(productsQuery({ tag: "offer" })),
@@ -39,7 +39,7 @@ function OffersPage() {
     <SiteLayout>
       <PageHeader
         title="تخفیف‌های این هفته"
-        description="قیمت‌ها تا پایان موجودی انبار معتبر است. تخفیف با پرداخت قسطی هم قابل استفاده است."
+        description="قیمت‌ها تا پایان موجودی انبار معتبر است."
         crumbs={[{ label: "تخفیف‌ها" }]}
       />
       <div className="container-page py-8">

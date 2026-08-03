@@ -3,7 +3,7 @@ import { Heart, ShoppingCart, Star } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
-import { formatToman, monthlyInstallment, toFaDigits } from "@/lib/format";
+import { formatToman, toFaDigits } from "@/lib/format";
 import { discountPercent, type Product } from "@/types/catalog";
 import { cn } from "@/lib/utils";
 
@@ -77,10 +77,6 @@ export function ProductCard({ product }: { product: Product }) {
               </span>
             ) : null}
           </div>
-
-          <p className="mt-1 text-[11px] text-installment-foreground">
-            ۶ قسط ماهیانه {formatToman(monthlyInstallment(product.price))} تومان
-          </p>
 
           <p
             className={cn(
