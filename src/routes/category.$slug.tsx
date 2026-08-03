@@ -4,6 +4,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { PageHeader } from "@/components/site/PageHeader";
 import { ProductGrid } from "@/components/site/ProductGrid";
+import { ShopSidebar } from "@/components/site/ShopSidebar";
 import { categoriesQuery, productsQuery } from "@/lib/api/catalog";
 import { toFaDigits } from "@/lib/format";
 
@@ -53,17 +54,26 @@ function CategoryPage() {
   const { slug } = Route.useParams();
   const { title, note } = Route.useLoaderData();
   const { data: products } = useSuspenseQuery(productsQuery({ categorySlug: slug }));
+  const { data: categories } = useSuspenseQuery(categoriesQuery());
+  const { data: allProducts } = useSuspenseQuery(productsQuery());
+  const topRated = [...allProducts].sort((a, b) => b.rating - a.rating).slice(0, 3);
 
   return (
     <SiteLayout>
       <PageHeader
+        tone="coral"
         title={title}
         description={note}
         crumbs={[{ label: "دسته‌بندی‌ها", to: "/categories" }, { label: title }]}
       />
-      <div className="container-page py-8">
-        <p className="mb-5 text-xs text-muted-foreground">{toFaDigits(products.length)} کالا</p>
-        <ProductGrid products={products} />
+      <div className="container-page grid gap-8 py-10 lg:grid-cols-[280px_1fr]">
+        <ShopSidebar categories={categories} topRated={topRated} activeCategory={slug} />
+        <div>
+          <p className="mb-6 border-b border-border pb-3 text-sm font-black text-foreground">
+            {toFaDigits(products.length)} کالا یافت شد
+          </p>
+          <ProductGrid products={products} />
+        </div>
       </div>
     </SiteLayout>
   );
