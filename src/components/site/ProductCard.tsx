@@ -14,7 +14,7 @@ export function ProductCard({ product }: { product: Product }) {
 
   return (
     <article className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card transition-shadow hover:shadow-lift">
-      <div className="relative bg-secondary/50 p-3">
+      <div className="relative bg-secondary/50 p-2 md:p-3">
         <Link to="/product/$slug" params={{ slug: product.slug }} className="block">
           <img
             src={product.image}
@@ -51,7 +51,7 @@ export function ProductCard({ product }: { product: Product }) {
         ) : null}
       </div>
 
-      <div className="flex flex-1 flex-col gap-1.5 p-3 pt-2">
+      <div className="flex flex-1 flex-col gap-1 p-2.5 pt-2 md:gap-1.5 md:p-3">
         <p className="text-[11px] text-primary">{product.brand}</p>
         <h3 className="line-clamp-2 min-h-10 text-[13px] font-medium leading-5 text-foreground">
           <Link to="/product/$slug" params={{ slug: product.slug }} className="hover:text-primary">
@@ -67,7 +67,7 @@ export function ProductCard({ product }: { product: Product }) {
 
         <div className="mt-auto pt-2">
           <div className="flex items-baseline gap-2">
-            <span className="text-base font-black text-foreground">
+            <span className="text-[15px] font-black text-foreground md:text-base">
               {formatToman(product.price)}
             </span>
             <span className="text-[11px] text-muted-foreground">تومان</span>
@@ -93,7 +93,7 @@ export function ProductCard({ product }: { product: Product }) {
 
           <Button
             size="sm"
-            className="mt-2.5 w-full rounded-full"
+            className="mt-2 h-9 w-full rounded-full text-xs md:mt-2.5 md:text-sm"
             variant={outOfStock ? "outline" : "default"}
             disabled={outOfStock}
             onClick={() => toast.success("کالا به سبد خرید اضافه شد")}
