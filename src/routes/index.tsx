@@ -20,9 +20,9 @@ export const Route = createFileRoute("/")({
   loader: ({ context }) => {
     void context.queryClient.ensureQueryData(categoriesQuery());
     void context.queryClient.ensureQueryData(ageGroupsQuery());
-    void context.queryClient.ensureQueryData(productsQuery({ tag: "new", limit: 4 }));
+    void context.queryClient.ensureQueryData(productsQuery({ tag: "new", limit: 8 }));
     void context.queryClient.ensureQueryData(productsQuery({ tag: "offer", limit: 8 }));
-    void context.queryClient.ensureQueryData(productsQuery({ tag: "best", limit: 4 }));
+    void context.queryClient.ensureQueryData(productsQuery({ tag: "best", limit: 8 }));
   },
   head: () => ({
     meta: [
