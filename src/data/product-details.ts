@@ -10,7 +10,7 @@ import workshop from "@/assets/workshop.jpg";
 import type { ProductDetail } from "@/types/catalog";
 import { products } from "@/data/catalog";
 
-type DetailSeed = Omit<ProductDetail, "sku" | "gallery"> & { gallery?: string[] };
+type DetailSeed = Pick<ProductDetail, "description" | "specs" | "highlights">;
 
 const galleryByCategory: Record<string, string[]> = {
   "servis-khab": [furniture, hero, workshop, dresser],
