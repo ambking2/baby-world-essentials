@@ -4,28 +4,14 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/*
- * Design system definition.
- *
- * The @theme inline block maps CSS custom properties to Tailwind utility
- * classes (e.g. --color-primary -> bg-primary, text-primary).
- *
- * The :root and .dark blocks define the actual color values using oklch.
- * All colors MUST use oklch format.
- *
- * To add a new semantic color:
- * 1. Add the variable to :root (light value) and .dark (dark value)
- * 2. Register it in @theme inline as --color-<name>: var(--<name>)
- */
-
 @theme inline {
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 8px);
+  --radius-md: calc(var(--radius) - 4px);
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
-  --radius-3xl: calc(var(--radius) + 12px);
-  --radius-4xl: calc(var(--radius) + 16px);
+  --radius-xl: calc(var(--radius) + 6px);
+  --radius-2xl: calc(var(--radius) + 12px);
+  --radius-3xl: calc(var(--radius) + 20px);
+  --radius-4xl: calc(var(--radius) + 28px);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -61,59 +47,65 @@
   --color-sidebar-ring: var(--sidebar-ring);
   --color-brand: var(--brand);
   --color-brand-soft: var(--brand-soft);
-  --color-clay: var(--clay);
-  --color-sand: var(--sand);
+  --color-bubble: var(--bubble);
   --color-sale: var(--sale);
   --color-sale-foreground: var(--sale-foreground);
+  --color-mint: var(--mint);
+  --color-cream: var(--cream);
+  --color-sky: var(--sky);
+  --color-sun: var(--sun);
   --color-installment: var(--installment);
   --color-installment-foreground: var(--installment-foreground);
   --font-sans: "Vazirmatn", ui-sans-serif, system-ui, sans-serif;
-  --shadow-soft: 0 1px 2px oklch(0.35 0.03 70 / 0.05);
-  --shadow-lift: 0 2px 8px oklch(0.35 0.03 70 / 0.1);
+  --shadow-soft: 0 2px 10px oklch(0.4 0.1 292 / 0.07);
+  --shadow-lift: 0 10px 30px oklch(0.4 0.12 292 / 0.12);
 }
 
 :root {
-  --radius: 0.375rem;
+  --radius: 1rem;
   --background: oklch(1 0 0);
-  --foreground: oklch(0.26 0.017 60);
+  --foreground: oklch(0.26 0.04 285);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.26 0.017 60);
+  --card-foreground: oklch(0.26 0.04 285);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.26 0.017 60);
-  --primary: oklch(0.46 0.055 158);
-  --primary-foreground: oklch(0.985 0.008 90);
-  --secondary: oklch(0.955 0.014 85);
-  --secondary-foreground: oklch(0.32 0.02 60);
-  --muted: oklch(0.958 0.01 85);
-  --muted-foreground: oklch(0.52 0.018 65);
-  --accent: oklch(0.93 0.025 90);
-  --accent-foreground: oklch(0.3 0.02 60);
-  --destructive: oklch(0.55 0.19 27);
-  --destructive-foreground: oklch(0.985 0.008 90);
-  --border: oklch(0.9 0.012 85);
-  --input: oklch(0.9 0.012 85);
-  --ring: oklch(0.46 0.055 158);
-  --brand: oklch(0.46 0.055 158);
-  --brand-soft: oklch(0.94 0.025 158);
-  --clay: oklch(0.62 0.1 46);
-  --sand: oklch(0.965 0.012 80);
-  --sale: oklch(0.55 0.19 27);
-  --sale-foreground: oklch(0.99 0.005 90);
-  --installment: oklch(0.96 0.03 158);
-  --installment-foreground: oklch(0.42 0.06 158);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0.008 90);
-  --sidebar-foreground: oklch(0.26 0.017 60);
-  --sidebar-primary: oklch(0.46 0.055 158);
-  --sidebar-primary-foreground: oklch(0.985 0.008 90);
-  --sidebar-accent: oklch(0.94 0.025 158);
-  --sidebar-accent-foreground: oklch(0.3 0.02 60);
-  --sidebar-border: oklch(0.9 0.012 85);
-  --sidebar-ring: oklch(0.46 0.055 158);
+  --popover-foreground: oklch(0.26 0.04 285);
+  --primary: oklch(0.52 0.24 292);
+  --primary-foreground: oklch(0.99 0.005 285);
+  --secondary: oklch(0.96 0.02 292);
+  --secondary-foreground: oklch(0.35 0.12 292);
+  --muted: oklch(0.97 0.012 292);
+  --muted-foreground: oklch(0.53 0.03 285);
+  --accent: oklch(0.7 0.19 2);
+  --accent-foreground: oklch(0.99 0.005 285);
+  --destructive: oklch(0.58 0.2 25);
+  --destructive-foreground: oklch(0.99 0.005 285);
+  --border: oklch(0.92 0.015 292);
+  --input: oklch(0.92 0.015 292);
+  --ring: oklch(0.52 0.24 292);
+  --brand: oklch(0.52 0.24 292);
+  --brand-soft: oklch(0.955 0.03 292);
+  --bubble: oklch(0.97 0.02 292);
+  --sale: oklch(0.65 0.21 15);
+  --sale-foreground: oklch(0.99 0.005 285);
+  --mint: oklch(0.93 0.06 165);
+  --cream: oklch(0.96 0.045 80);
+  --sky: oklch(0.92 0.06 220);
+  --sun: oklch(0.83 0.15 80);
+  --installment: oklch(0.96 0.03 165);
+  --installment-foreground: oklch(0.45 0.1 165);
+  --chart-1: oklch(0.52 0.24 292);
+  --chart-2: oklch(0.7 0.19 2);
+  --chart-3: oklch(0.68 0.15 165);
+  --chart-4: oklch(0.83 0.15 80);
+  --chart-5: oklch(0.65 0.16 220);
+  --sidebar: oklch(0.985 0.008 292);
+  --sidebar-foreground: oklch(0.26 0.04 285);
+  --sidebar-primary: oklch(0.52 0.24 292);
+  --sidebar-primary-foreground: oklch(0.99 0.005 285);
+  --sidebar-accent: oklch(0.955 0.03 292);
+  --sidebar-accent-foreground: oklch(0.35 0.12 292);
+  --sidebar-border: oklch(0.92 0.015 292);
+  --sidebar-ring: oklch(0.52 0.24 292);
 }
 
 @layer base {
@@ -146,6 +138,27 @@
   }
 }
 
+/* Cloud divider used at the bottom of colored sections. */
+@utility cloud-bottom {
+  position: absolute;
+  inset-inline: 0;
+  bottom: -1px;
+  height: 42px;
+  background-color: var(--color-background);
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 60' preserveAspectRatio='none'%3E%3Cpath d='M0,60 L1200,60 L1200,30 C1160,30 1150,8 1110,8 C1075,8 1065,26 1035,26 C1005,26 995,4 955,4 C915,4 905,28 870,28 C835,28 825,10 790,10 C750,10 740,30 705,30 C670,30 660,6 620,6 C580,6 570,28 535,28 C500,28 490,8 450,8 C412,8 402,30 365,30 C330,30 320,6 282,6 C243,6 233,28 196,28 C160,28 150,10 112,10 C74,10 60,30 0,30 Z' fill='%23fff'/%3E%3C/svg%3E");
+  mask-size: 100% 100%;
+  mask-repeat: no-repeat;
+  pointer-events: none;
+}
 
-
-
+@utility cloud-top {
+  position: absolute;
+  inset-inline: 0;
+  top: -1px;
+  height: 42px;
+  background-color: var(--color-background);
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 60' preserveAspectRatio='none'%3E%3Cpath d='M0,0 L1200,0 L1200,30 C1160,30 1150,52 1110,52 C1075,52 1065,34 1035,34 C1005,34 995,56 955,56 C915,56 905,32 870,32 C835,32 825,50 790,50 C750,50 740,30 705,30 C670,30 660,54 620,54 C580,54 570,32 535,32 C500,32 490,52 450,52 C412,52 402,30 365,30 C330,30 320,54 282,54 C243,54 233,32 196,32 C160,32 150,50 112,50 C74,50 60,30 0,30 Z' fill='%23fff'/%3E%3C/svg%3E");
+  mask-size: 100% 100%;
+  mask-repeat: no-repeat;
+  pointer-events: none;
+}

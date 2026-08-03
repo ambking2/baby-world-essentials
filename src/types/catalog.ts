@@ -54,3 +54,23 @@ export type ProductDetail = {
 };
 
 export type ProductWithDetail = Product & { detail: ProductDetail };
+
+export type AgeGroup = {
+  slug: string;
+  label: string;
+  note: string;
+  /** Tailwind background class used for the age bubble. */
+  color: string;
+};
+
+export type Brand = { slug: string; title: string; note: string };
+
+export type BlogPost = {
+  slug: string;
+  title: string;
+  excerpt: string;
+  date: string;
+  author: string;
+  readMinutes: number;
+  body: string[];
+};

@@ -1,13 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { Header } from "@/components/site/Header";
-import { Footer } from "@/components/site/Footer";
-import { PromoBanner } from "@/components/site/PromoBanner";
-import { CategoryStrip } from "@/components/site/CategoryStrip";
+import { SiteLayout } from "@/components/site/SiteLayout";
+import { Hero } from "@/components/site/Hero";
+import { AgeStrip } from "@/components/site/AgeStrip";
+import { CategoryGrid } from "@/components/site/CategoryGrid";
 import { ProductSection } from "@/components/site/ProductSection";
-import { TrustBar } from "@/components/site/TrustBar";
-import { CustomerTrust } from "@/components/site/CustomerTrust";
-import { categoriesQuery, productsQuery } from "@/lib/api/catalog";
+import { PromoTiles } from "@/components/site/PromoTiles";
+import { TrustSection } from "@/components/site/TrustSection";
+import { CustomerReviews } from "@/components/site/CustomerReviews";
+import { InstagramStrip } from "@/components/site/InstagramStrip";
+import { Newsletter } from "@/components/site/Newsletter";
+import { ageGroupsQuery, categoriesQuery, productsQuery } from "@/lib/api/catalog";
 
 const title = "جهان کودک | فروشگاه اینترنتی سیسمونی و اتاق کودک";
 const description =
@@ -16,10 +19,10 @@ const description =
 export const Route = createFileRoute("/")({
   loader: ({ context }) => {
     void context.queryClient.ensureQueryData(categoriesQuery());
-    void context.queryClient.ensureQueryData(productsQuery({ tag: "offer", limit: 5 }));
-    void context.queryClient.ensureQueryData(productsQuery({ tag: "featured", limit: 5 }));
-    void context.queryClient.ensureQueryData(productsQuery({ tag: "new", limit: 5 }));
-    void context.queryClient.ensureQueryData(productsQuery({ tag: "best", limit: 5 }));
+    void context.queryClient.ensureQueryData(ageGroupsQuery());
+    void context.queryClient.ensureQueryData(productsQuery({ tag: "new", limit: 4 }));
+    void context.queryClient.ensureQueryData(productsQuery({ tag: "offer", limit: 8 }));
+    void context.queryClient.ensureQueryData(productsQuery({ tag: "best", limit: 4 }));
   },
   head: () => ({
     meta: [
@@ -28,8 +31,10 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: title },
       { property: "og:description", content: description },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://baby-world-essentials.lovable.app/" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
+    links: [{ rel: "canonical", href: "https://baby-world-essentials.lovable.app/" }],
     scripts: [
       {
         type: "application/ld+json",
@@ -60,40 +65,40 @@ export const Route = createFileRoute("/")({
 
 function Home() {
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      <main>
-        <PromoBanner />
-        <TrustBar />
-        <ProductSection
-          id="offers"
-          title="پیشنهاد ویژه این هفته"
-          subtitle="تا پایان موجودی انبار"
-          query={{ tag: "offer", limit: 5 }}
-        />
-        <CategoryStrip />
-        <ProductSection
-          id="featured"
-          title="محصولات منتخب فروشگاه"
-          subtitle="انتخاب کارشناس فروش برای اتاق نوزاد"
-          query={{ tag: "featured", limit: 5 }}
-        />
-        <ProductSection
-          id="best"
-          title="پرفروش‌ترین‌ها"
-          subtitle="بیشترین خرید مشتریان فروشگاه"
-          query={{ tag: "best", limit: 5 }}
-        />
-        <ProductSection
-          id="new"
-          title="جدیدترین کالاها"
-          subtitle="تازه‌ رسیده‌های این ماه"
-          query={{ tag: "new", limit: 5 }}
-        />
-        <CustomerTrust />
-      </main>
-
-      <Footer />
-    </div>
+    <SiteLayout>
+      <Hero />
+      <AgeStrip />
+      <ProductSection
+        id="new"
+        title="تازه‌رسیده‌ها"
+        subtitle="کالاهای اضافه‌شده در دو هفته گذشته"
+        query={{ tag: "new", limit: 4 }}
+      />
+      <PromoTiles />
+      <section className="container-page py-8">
+        <div className="mb-5">
+          <h2 className="text-lg font-black text-foreground md:text-xl">دسته‌بندی کالاها</h2>
+          <p className="mt-1 text-xs text-muted-foreground">همه چیز برای اتاق و روزمرگی نوزاد</p>
+        </div>
+        <CategoryGrid />
+      </section>
+      <ProductSection
+        id="offers"
+        title="پیشنهاد ویژه این هفته"
+        subtitle="تا پایان موجودی انبار"
+        query={{ tag: "offer", limit: 8 }}
+        moreTo="/offers"
+      />
+      <TrustSection />
+      <ProductSection
+        id="best"
+        title="پرفروش‌ترین‌ها"
+        subtitle="بیشترین خرید مشتریان فروشگاه"
+        query={{ tag: "best", limit: 4 }}
+      />
+      <CustomerReviews />
+      <InstagramStrip />
+      <Newsletter />
+    </SiteLayout>
   );
 }
