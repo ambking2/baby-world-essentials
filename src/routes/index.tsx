@@ -6,6 +6,7 @@ import { PromoBanner } from "@/components/site/PromoBanner";
 import { CategoryStrip } from "@/components/site/CategoryStrip";
 import { ProductSection } from "@/components/site/ProductSection";
 import { TrustBar } from "@/components/site/TrustBar";
+import { CustomerTrust } from "@/components/site/CustomerTrust";
 import { categoriesQuery, productsQuery } from "@/lib/api/catalog";
 
 const title = "جهان کودک | فروشگاه اینترنتی سیسمونی و اتاق کودک";
@@ -16,6 +17,7 @@ export const Route = createFileRoute("/")({
   loader: ({ context }) => {
     void context.queryClient.ensureQueryData(categoriesQuery());
     void context.queryClient.ensureQueryData(productsQuery({ tag: "offer", limit: 5 }));
+    void context.queryClient.ensureQueryData(productsQuery({ tag: "featured", limit: 5 }));
     void context.queryClient.ensureQueryData(productsQuery({ tag: "new", limit: 5 }));
     void context.queryClient.ensureQueryData(productsQuery({ tag: "best", limit: 5 }));
   },
