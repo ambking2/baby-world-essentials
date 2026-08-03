@@ -90,6 +90,8 @@ function Home() {
         subtitle="بیشترین خرید مشتریان فروشگاه"
         query={{ tag: "best", limit: 8 }}
       />
+      <AboutCompany />
+      <SpecialPowers />
       <PromoTiles />
       <ProductSection
         id="new"
@@ -107,8 +109,10 @@ function Home() {
         </div>
         <CategoryGrid />
       </section>
+      <CtaBanner />
       <TrustSection />
       <CustomerReviews />
+      <BlogPreview />
       <InstagramStrip />
       <Newsletter />
     </SiteLayout>
