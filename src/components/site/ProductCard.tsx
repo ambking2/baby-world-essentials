@@ -30,7 +30,7 @@ export function ProductCard({ product }: { product: Product }) {
 
   return (
     <article className="group flex h-full flex-col text-center">
-      <div className="relative overflow-hidden rounded-2xl bg-secondary/60">
+      <div className="relative overflow-hidden rounded-2xl bg-secondary">
         <Link to="/product/$slug" params={{ slug: product.slug }} className="block">
           <img
             src={product.image}
@@ -48,7 +48,7 @@ export function ProductCard({ product }: { product: Product }) {
         {/* badges */}
         <div className="pointer-events-none absolute top-2 start-2 flex flex-col gap-1">
           {off > 0 && !outOfStock ? (
-            <span className="grid size-11 place-items-center rounded-full bg-sale text-[11px] font-black leading-none text-sale-foreground shadow-soft">
+            <span className="grid size-11 place-items-center rounded-full bg-fresh text-[11px] font-black leading-none text-primary-foreground shadow-soft">
               ٪{toFaDigits(off)}
             </span>
           ) : null}
@@ -63,6 +63,7 @@ export function ProductCard({ product }: { product: Product }) {
             </span>
           ) : null}
         </div>
+
 
         {/* hover action overlay (KidsPlay style) */}
         {!outOfStock ? (
