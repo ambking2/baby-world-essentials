@@ -19,8 +19,9 @@ const shop = [
 
 export function Footer() {
   return (
-    <footer className="mt-16 bg-[oklch(0.28_0.08_290)] text-[oklch(0.93_0.02_290)]">
-      <div className="container-page grid gap-10 py-12 md:grid-cols-2 lg:grid-cols-4">
+    <footer className="relative mt-16 bg-[oklch(0.28_0.08_290)] text-[oklch(0.93_0.02_290)]">
+      <div className="cloud-top" aria-hidden="true" />
+      <div className="container-page grid gap-10 pt-20 pb-12 md:grid-cols-2 lg:grid-cols-4">
         <div>
           <p className="text-lg font-black text-background">جهان کودک</p>
           <p className="mt-3 text-sm leading-7 text-[oklch(0.83_0.03_290)]">
