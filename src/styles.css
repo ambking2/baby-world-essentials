@@ -96,9 +96,11 @@
   --brand: oklch(0.46 0.055 158);
   --brand-soft: oklch(0.94 0.025 158);
   --clay: oklch(0.62 0.1 46);
-  --sand: oklch(0.955 0.018 80);
-  --installment: oklch(0.96 0.045 85);
-  --installment-foreground: oklch(0.42 0.09 60);
+  --sand: oklch(0.965 0.012 80);
+  --sale: oklch(0.55 0.19 27);
+  --sale-foreground: oklch(0.99 0.005 90);
+  --installment: oklch(0.96 0.03 158);
+  --installment-foreground: oklch(0.42 0.06 158);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
@@ -144,9 +146,6 @@
   }
 }
 
-@utility glass-panel {
-  background-color: oklch(1 0 0 / 0.72);
-  backdrop-filter: blur(16px);
-  border: 1px solid oklch(1 0 0 / 0.6);
-}
+
+
 
