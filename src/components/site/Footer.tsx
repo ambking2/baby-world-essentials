@@ -1,28 +1,31 @@
-import { MapPin, Phone, Clock, Instagram } from "lucide-react";
+import { Clock, MapPin, Phone } from "lucide-react";
 
 import { categories } from "@/data/catalog";
 import { toFaDigits } from "@/lib/format";
 
+const help = [
+  "روش‌های پرداخت و اقساط",
+  "شرایط ارسال و هزینه‌ها",
+  "مرجوعی و تعویض کالا",
+  "راهنمای انتخاب سرویس خواب",
+  "سفارش ساخت با ابعاد دلخواه",
+];
+
 export function Footer() {
   return (
-    <footer className="mt-20 border-t border-border bg-sand">
-      <div className="container-page grid gap-10 py-14 md:grid-cols-4">
-        <div className="md:col-span-1">
-          <div className="flex items-center gap-2">
-            <span className="flex size-10 items-center justify-center rounded-xl bg-primary text-base font-bold text-primary-foreground">
-              ج ک
-            </span>
-            <span className="text-base font-bold">سیسمونی جهان کودک</span>
-          </div>
-          <p className="mt-4 text-sm leading-7 text-muted-foreground">
-            فروش سیسمونی و تولید سرویس خواب چوبی نوزاد در ابهر. سفارش‌ها را می‌توانید حضوری در
-            فروشگاه یا تلفنی ثبت کنید؛ ارسال به شهرهای استان زنجان با باربری انجام می‌شود.
+    <footer id="footer" className="mt-8 border-t border-border bg-secondary">
+      <div className="container-page grid gap-8 py-10 md:grid-cols-4">
+        <div>
+          <p className="text-sm font-bold text-foreground">جهان کودک</p>
+          <p className="mt-3 text-xs leading-6 text-muted-foreground">
+            فروشگاه سیسمونی و اتاق کودک در ابهر، با کارگاه تولید چوب. از سال ۱۳۸۹ فروش حضوری و از
+            سال ۱۴۰۱ ارسال به سراسر کشور. مدیریت: آقای عسگری.
           </p>
         </div>
 
-        <nav aria-label="دسته‌بندی محصولات">
-          <h2 className="text-sm font-semibold">دسته‌بندی محصولات</h2>
-          <ul className="mt-4 flex flex-col gap-2.5 text-sm text-muted-foreground">
+        <div>
+          <p className="text-[13px] font-bold text-foreground">دسته‌بندی‌ها</p>
+          <ul className="mt-3 flex flex-col gap-2 text-xs text-muted-foreground">
             {categories.map((c) => (
               <li key={c.slug}>
                 <a href="#categories" className="hover:text-primary">
@@ -31,37 +34,24 @@ export function Footer() {
               </li>
             ))}
           </ul>
-        </nav>
+        </div>
 
-        <nav aria-label="راهنمای خرید">
-          <h2 className="text-sm font-semibold">راهنمای خرید</h2>
-          <ul className="mt-4 flex flex-col gap-2.5 text-sm text-muted-foreground">
-            <li>
-              <a href="#installment" className="hover:text-primary">
-                شرایط خرید قسطی ۶ ماهه
-              </a>
-            </li>
-            <li>
-              <a href="#store" className="hover:text-primary">
-                آدرس فروشگاه و ساعت کاری
-              </a>
-            </li>
-            <li>
-              <a href="#workshop" className="hover:text-primary">
-                سفارش ساخت سرویس چوبی
-              </a>
-            </li>
-            <li>
-              <a href="#faq" className="hover:text-primary">
-                ارسال، تعویض و گارانتی
-              </a>
-            </li>
+        <div>
+          <p className="text-[13px] font-bold text-foreground">راهنمای خرید</p>
+          <ul className="mt-3 flex flex-col gap-2 text-xs text-muted-foreground">
+            {help.map((h) => (
+              <li key={h}>
+                <a href="#trust" className="hover:text-primary">
+                  {h}
+                </a>
+              </li>
+            ))}
           </ul>
-        </nav>
+        </div>
 
-        <address className="not-italic">
-          <h2 className="text-sm font-semibold">تماس با ما</h2>
-          <ul className="mt-4 flex flex-col gap-3 text-sm text-muted-foreground">
+        <div>
+          <p className="text-[13px] font-bold text-foreground">تماس و آدرس</p>
+          <ul className="mt-3 flex flex-col gap-3 text-xs text-muted-foreground">
             <li className="flex gap-2">
               <MapPin className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
               ابهر، خیابان طالقانی، روبه‌روی بانک ملت، پلاک ۱۴۲
@@ -74,22 +64,16 @@ export function Footer() {
             </li>
             <li className="flex gap-2">
               <Clock className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
-              همه روزه ۹ تا ۲۱ • جمعه‌ها ۱۰ تا ۱۴
-            </li>
-            <li className="flex gap-2">
-              <Instagram className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
-              <a href="https://instagram.com" className="hover:text-primary">
-                jahankoodak.abhar@
-              </a>
+              شنبه تا پنجشنبه، ۹ صبح تا ۹ شب
             </li>
           </ul>
-        </address>
+        </div>
       </div>
 
-      <div className="border-t border-border/70">
-        <div className="container-page flex flex-col gap-2 py-5 text-xs text-muted-foreground md:flex-row md:items-center md:justify-between">
-          <p>© {toFaDigits(1404)} سیسمونی جهان کودک — مدیریت: آقای عسگری</p>
-          <p>تمام قیمت‌ها به تومان و شامل مالیات بر ارزش افزوده است.</p>
+      <div className="border-t border-border">
+        <div className="container-page flex flex-col gap-2 py-4 text-[11px] text-muted-foreground md:flex-row md:items-center md:justify-between">
+          <p>© {toFaDigits(1405)} فروشگاه جهان کودک ابهر. تمام حقوق محفوظ است.</p>
+          <p>پرداخت امن از طریق درگاه بانکی و پرداخت در محل برای ابهر و خرمدره.</p>
         </div>
       </div>
     </footer>

@@ -1,60 +1,84 @@
-import { Hammer, ShoppingBag } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { ShoppingCart, Star } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { formatToman, monthlyInstallment, toFaDigits } from "@/lib/format";
-import type { Product } from "@/data/catalog";
+import { discountPercent, type Product } from "@/types/catalog";
+import { cn } from "@/lib/utils";
 
 export function ProductCard({ product }: { product: Product }) {
+  const off = discountPercent(product);
+  const outOfStock = product.stock <= 0;
+  const lowStock = !outOfStock && product.stock <= 4;
+
   return (
-    <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-[var(--shadow-soft)] transition-shadow duration-300 hover:shadow-[var(--shadow-lift)]">
-      <div className="relative overflow-hidden bg-sand">
+    <article className="group relative flex h-full flex-col border border-border bg-card p-3 transition-colors hover:border-primary/40">
+      <Link to="/" className="relative block bg-sand">
         <img
           src={product.image}
           alt={product.title}
-          width={900}
-          height={900}
+          width={600}
+          height={600}
           loading="lazy"
-          className="aspect-square w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+          className={cn("aspect-square w-full object-cover", outOfStock && "opacity-60 grayscale")}
         />
-        {product.badge ? (
-          <span className="absolute top-3 start-3 inline-flex items-center gap-1 rounded-full bg-brand-soft px-3 py-1 text-xs font-medium text-primary">
-            <Hammer className="size-3.5" aria-hidden="true" />
-            {product.badge}
+        {off > 0 && !outOfStock ? (
+          <span className="absolute top-2 start-2 bg-sale px-1.5 py-0.5 text-xs font-bold text-sale-foreground">
+            ٪{toFaDigits(off)}
           </span>
         ) : null}
-        {!product.inStock ? (
-          <span className="absolute top-3 end-3 rounded-full bg-foreground/80 px-3 py-1 text-xs font-medium text-background">
+        {outOfStock ? (
+          <span className="absolute inset-x-0 bottom-0 bg-foreground/75 py-1 text-center text-xs font-medium text-background">
             ناموجود
           </span>
         ) : null}
-      </div>
+      </Link>
 
-      <div className="flex flex-1 flex-col gap-3 p-4">
-        <p className="text-xs text-muted-foreground">{product.category}</p>
-        <h3 className="text-sm leading-6 font-medium text-foreground">{product.title}</h3>
+      <div className="mt-3 flex flex-1 flex-col gap-1.5">
+        <p className="text-[11px] text-muted-foreground">{product.brand}</p>
+        <h3 className="line-clamp-2 min-h-10 text-[13px] leading-5 text-foreground">
+          <Link to="/" className="hover:text-primary">
+            {product.title}
+          </Link>
+        </h3>
 
-        <div className="mt-auto flex flex-col gap-2">
-          <div className="flex items-baseline gap-2">
-            <span className="text-lg font-bold text-foreground">{formatToman(product.price)}</span>
-            <span className="text-xs text-muted-foreground">تومان</span>
-            {product.oldPrice ? (
-              <span className="text-xs text-muted-foreground line-through">
-                {formatToman(product.oldPrice)}
-              </span>
-            ) : null}
+        <div className="flex items-center gap-1 text-[11px] text-muted-foreground">
+          <Star className="size-3.5 fill-clay text-clay" aria-hidden="true" />
+          {toFaDigits(product.rating.toFixed(1))}
+          <span>({toFaDigits(product.reviewCount)} نظر)</span>
+        </div>
+
+        <div className="mt-auto pt-2">
+          {product.oldPrice ? (
+            <span className="block text-xs text-muted-foreground line-through">
+              {formatToman(product.oldPrice)}
+            </span>
+          ) : (
+            <span className="block text-xs text-transparent select-none">‌</span>
+          )}
+          <div className="flex items-baseline gap-1">
+            <span className="text-base font-bold text-foreground">{formatToman(product.price)}</span>
+            <span className="text-[11px] text-muted-foreground">تومان</span>
           </div>
-
-          <p className="rounded-lg bg-installment px-3 py-2 text-xs text-installment-foreground">
-            قسط ۶ ماهه از ماهی {formatToman(monthlyInstallment(product.price))} تومان
+          <p className="mt-1 text-[11px] text-installment-foreground">
+            ۶ قسط ماهیانه {formatToman(monthlyInstallment(product.price))} تومان
           </p>
 
-          <Button className="w-full" disabled={!product.inStock}>
-            <ShoppingBag data-icon="inline-start" aria-hidden="true" />
-            {product.inStock ? "افزودن به سبد" : "اطلاع از موجود شدن"}
+          {lowStock ? (
+            <p className="mt-1 text-[11px] font-medium text-sale">
+              تنها {toFaDigits(product.stock)} عدد در انبار
+            </p>
+          ) : null}
+
+          <Button
+            size="sm"
+            className="mt-2 w-full rounded-md"
+            variant={outOfStock ? "outline" : "default"}
+            disabled={outOfStock}
+          >
+            <ShoppingCart data-icon="inline-start" aria-hidden="true" />
+            {outOfStock ? "ناموجود" : "افزودن به سبد"}
           </Button>
-          <p className="text-center text-xs text-muted-foreground">
-            کد کالا: {toFaDigits(product.id.length * 137)}
-          </p>
         </div>
       </div>
     </article>
