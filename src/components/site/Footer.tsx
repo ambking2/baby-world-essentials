@@ -7,7 +7,7 @@ const help = [
   { to: "/contact", label: "تماس با فروشگاه" },
   { to: "/contact", label: "رویه ارسال" },
   { to: "/contact", label: "شرایط مرجوعی" },
-  { to: "/about", label: "پرداخت قسطی" },
+  { to: "/about", label: "درباره فروشگاه" },
 ] as const;
 
 const shop = [

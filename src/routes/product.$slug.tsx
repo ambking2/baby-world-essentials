@@ -35,7 +35,7 @@ export const Route = createFileRoute("/product/$slug")({
       };
     }
     const title = `${loaderData.title} | جهان کودک`;
-    const description = `خرید ${loaderData.title} از برند ${loaderData.brand} در فروشگاه جهان کودک ابهر؛ پرداخت نقدی یا ۶ قسط ماهیانه، ضمانت اصالت کالا و ارسال به سراسر ایران.`;
+    const description = `خرید ${loaderData.title} از برند ${loaderData.brand} در فروشگاه جهان کودک ابهر؛ ضمانت اصالت کالا و ارسال به سراسر ایران.`;
     return {
       meta: [
         { title },

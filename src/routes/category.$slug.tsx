@@ -22,7 +22,7 @@ export const Route = createFileRoute("/category/$slug")({
       };
     }
     const title = `${loaderData.title} | فروشگاه جهان کودک`;
-    const description = `خرید ${loaderData.title} (${loaderData.note}) از فروشگاه جهان کودک ابهر با امکان پرداخت ۶ قسط و ارسال به سراسر ایران.`;
+    const description = `خرید ${loaderData.title} (${loaderData.note}) از فروشگاه جهان کودک ابهر با ارسال به سراسر ایران.`;
     const url = `https://baby-world-essentials.lovable.app/category/${params.slug}`;
     return {
       meta: [

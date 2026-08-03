@@ -3,7 +3,7 @@ import { Heart, Minus, Plus, ShoppingCart, Truck, RotateCcw, ShieldCheck, Headse
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
-import { formatToman, monthlyInstallment, toFaDigits } from "@/lib/format";
+import { formatToman, toFaDigits } from "@/lib/format";
 import { discountPercent, type ProductWithDetail } from "@/types/catalog";
 
 const benefits = [
@@ -42,10 +42,6 @@ export function ProductPurchase({ product }: { product: ProductWithDetail }) {
           <span className="text-2xl font-bold text-foreground">{formatToman(product.price)}</span>
           <span className="text-xs text-muted-foreground">تومان</span>
         </div>
-        <p className="mt-2 border-t border-border pt-2 text-xs leading-6 text-installment-foreground">
-          پرداخت قسطی: ۶ قسط ماهیانه {formatToman(monthlyInstallment(product.price))} تومان،
-          بدون بهره
-        </p>
 
         <div className="mt-4 flex items-center gap-3">
           <span className="text-[13px] text-muted-foreground">تعداد</span>

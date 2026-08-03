@@ -7,7 +7,3 @@ export function toFaDigits(input: string | number): string {
 export function formatToman(value: number): string {
   return toFaDigits(value.toLocaleString("en-US").replace(/,/g, "٬"));
 }
-
-export function monthlyInstallment(price: number, months = 6): number {
-  return Math.round(price / months / 1000) * 1000;
-}

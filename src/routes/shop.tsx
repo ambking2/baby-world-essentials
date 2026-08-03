@@ -9,7 +9,7 @@ import { toFaDigits } from "@/lib/format";
 
 const title = "فروشگاه | همه کالاهای سیسمونی جهان کودک";
 const description =
-  "فهرست کامل کالاهای فروشگاه جهان کودک ابهر: سرویس خواب، کالسکه، پوشاک نوزاد، اسباب‌بازی چوبی و لوازم تغذیه با امکان پرداخت قسطی.";
+  "فهرست کامل کالاهای فروشگاه جهان کودک ابهر: سرویس خواب، کالسکه، پوشاک نوزاد، اسباب‌بازی چوبی و لوازم تغذیه با ارسال به سراسر ایران.";
 
 export const Route = createFileRoute("/shop")({
   loader: ({ context }) => context.queryClient.ensureQueryData(productsQuery()),
