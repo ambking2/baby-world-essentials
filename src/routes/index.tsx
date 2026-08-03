@@ -69,33 +69,38 @@ function Home() {
       <Hero />
       <AgeStrip />
       <ProductSection
-        id="new"
-        title="تازه‌رسیده‌ها"
-        subtitle="کالاهای اضافه‌شده در دو هفته گذشته"
-        query={{ tag: "new", limit: 4 }}
-      />
-      <PromoTiles />
-      <section className="container-page py-8">
-        <div className="mb-5">
-          <h2 className="text-lg font-black text-foreground md:text-xl">دسته‌بندی کالاها</h2>
-          <p className="mt-1 text-xs text-muted-foreground">همه چیز برای اتاق و روزمرگی نوزاد</p>
-        </div>
-        <CategoryGrid />
-      </section>
-      <ProductSection
         id="offers"
         title="پیشنهاد ویژه این هفته"
         subtitle="تا پایان موجودی انبار"
         query={{ tag: "offer", limit: 8 }}
         moreTo="/offers"
+        rail
+        tone="sale"
       />
-      <TrustSection />
       <ProductSection
         id="best"
         title="پرفروش‌ترین‌ها"
         subtitle="بیشترین خرید مشتریان فروشگاه"
-        query={{ tag: "best", limit: 4 }}
+        query={{ tag: "best", limit: 8 }}
       />
+      <PromoTiles />
+      <ProductSection
+        id="new"
+        title="تازه‌رسیده‌ها"
+        subtitle="کالاهای اضافه‌شده در دو هفته گذشته"
+        query={{ tag: "new", limit: 8 }}
+        rail
+      />
+      <section className="container-page py-6 md:py-8">
+        <div className="mb-4 md:mb-5">
+          <h2 className="text-lg font-black text-foreground md:text-xl">دسته‌بندی کالاها</h2>
+          <p className="mt-0.5 text-[11px] text-muted-foreground md:text-xs">
+            همه چیز برای اتاق و روزمرگی نوزاد
+          </p>
+        </div>
+        <CategoryGrid />
+      </section>
+      <TrustSection />
       <CustomerReviews />
       <InstagramStrip />
       <Newsletter />
