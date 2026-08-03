@@ -11,7 +11,11 @@ import { TrustSection } from "@/components/site/TrustSection";
 import { CustomerReviews } from "@/components/site/CustomerReviews";
 import { InstagramStrip } from "@/components/site/InstagramStrip";
 import { Newsletter } from "@/components/site/Newsletter";
-import { ageGroupsQuery, categoriesQuery, productsQuery } from "@/lib/api/catalog";
+import { AboutCompany } from "@/components/site/AboutCompany";
+import { SpecialPowers } from "@/components/site/SpecialPowers";
+import { CtaBanner } from "@/components/site/CtaBanner";
+import { BlogPreview } from "@/components/site/BlogPreview";
+import { ageGroupsQuery, categoriesQuery, postsQuery, productsQuery } from "@/lib/api/catalog";
 
 const title = "جهان کودک | فروشگاه اینترنتی سیسمونی و اتاق کودک";
 const description =
@@ -24,6 +28,7 @@ export const Route = createFileRoute("/")({
     void context.queryClient.ensureQueryData(productsQuery({ tag: "new", limit: 8 }));
     void context.queryClient.ensureQueryData(productsQuery({ tag: "offer", limit: 8 }));
     void context.queryClient.ensureQueryData(productsQuery({ tag: "best", limit: 8 }));
+    void context.queryClient.ensureQueryData(postsQuery());
   },
   head: () => ({
     meta: [
