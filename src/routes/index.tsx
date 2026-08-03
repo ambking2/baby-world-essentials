@@ -2,19 +2,23 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
-import { Hero } from "@/components/site/Hero";
-import { Categories } from "@/components/site/Categories";
-import { FeaturedProducts } from "@/components/site/FeaturedProducts";
-import { Installment } from "@/components/site/Installment";
-import { Workshop } from "@/components/site/Workshop";
-import { StoreVisit } from "@/components/site/StoreVisit";
-import { Faq, faqs } from "@/components/site/Faq";
+import { PromoBanner } from "@/components/site/PromoBanner";
+import { CategoryStrip } from "@/components/site/CategoryStrip";
+import { ProductSection } from "@/components/site/ProductSection";
+import { TrustBar } from "@/components/site/TrustBar";
+import { categoriesQuery, productsQuery } from "@/lib/api/catalog";
 
-const title = "سیسمونی جهان کودک ابهر | خرید سیسمونی نوزاد و سرویس خواب چوبی";
+const title = "جهان کودک | فروشگاه اینترنتی سیسمونی و اتاق کودک";
 const description =
-  "فروش سیسمونی کامل نوزاد در ابهر: سرویس خواب چوبی ساخت کارگاه خودمان، کالسکه، لباس، اسباب‌بازی و لوازم تغذیه. خرید نقدی یا اقساط ۶ ماهه.";
+  "خرید سیسمونی نوزاد از فروشگاه جهان کودک ابهر: سرویس خواب چوبی، کالسکه، لباس، اسباب‌بازی و لوازم تغذیه. پرداخت قسطی ۶ ماهه و ارسال به سراسر ایران.";
 
 export const Route = createFileRoute("/")({
+  loader: ({ context }) => {
+    void context.queryClient.ensureQueryData(categoriesQuery());
+    void context.queryClient.ensureQueryData(productsQuery({ tag: "offer", limit: 5 }));
+    void context.queryClient.ensureQueryData(productsQuery({ tag: "new", limit: 5 }));
+    void context.queryClient.ensureQueryData(productsQuery({ tag: "best", limit: 5 }));
+  },
   head: () => ({
     meta: [
       { title },
@@ -29,35 +33,27 @@ export const Route = createFileRoute("/")({
         type: "application/ld+json",
         children: JSON.stringify({
           "@context": "https://schema.org",
-          "@graph": [
-            {
-              "@type": "Store",
-              name: "سیسمونی جهان کودک",
-              image: "https://jahankoodak.ir/og.jpg",
-              telephone: "+982435223344",
-              address: {
-                "@type": "PostalAddress",
-                streetAddress: "خیابان طالقانی، روبه‌روی بانک ملت، پلاک ۱۴۲",
-                addressLocality: "ابهر",
-                addressRegion: "زنجان",
-                addressCountry: "IR",
-              },
-              openingHours: "Sa-Th 09:00-21:00",
-            },
-            {
-              "@type": "FAQPage",
-              mainEntity: faqs.map((f) => ({
-                "@type": "Question",
-                name: f.q,
-                acceptedAnswer: { "@type": "Answer", text: f.a },
-              })),
-            },
-          ],
+          "@type": "Store",
+          name: "فروشگاه جهان کودک",
+          telephone: "+982435223344",
+          address: {
+            "@type": "PostalAddress",
+            streetAddress: "خیابان طالقانی، روبه‌روی بانک ملت، پلاک ۱۴۲",
+            addressLocality: "ابهر",
+            addressRegion: "زنجان",
+            addressCountry: "IR",
+          },
+          openingHours: "Sa-Th 09:00-21:00",
         }),
       },
     ],
   }),
   component: Home,
+  errorComponent: ({ error }) => (
+    <div role="alert" className="container-page py-20 text-center text-sm">
+      {error.message}
+    </div>
+  ),
 });
 
 function Home() {
@@ -65,13 +61,29 @@ function Home() {
     <div className="min-h-screen bg-background">
       <Header />
       <main>
-        <Hero />
-        <Categories />
-        <FeaturedProducts />
-        <Installment />
-        <Workshop />
-        <StoreVisit />
-        <Faq />
+        <PromoBanner />
+        <CategoryStrip />
+        <ProductSection
+          id="offers"
+          title="پیشنهاد ویژه این هفته"
+          subtitle="تا پایان موجودی انبار"
+          query={{ tag: "offer", limit: 5 }}
+        />
+        <div id="trust" className="scroll-mt-24">
+          <TrustBar />
+        </div>
+        <ProductSection
+          id="new"
+          title="جدیدترین کالاها"
+          subtitle="تازه‌ رسیده‌های این ماه"
+          query={{ tag: "new", limit: 5 }}
+        />
+        <ProductSection
+          id="best"
+          title="پرفروش‌ترین‌ها"
+          subtitle="بیشترین خرید مشتریان فروشگاه"
+          query={{ tag: "best", limit: 5 }}
+        />
       </main>
       <Footer />
     </div>
