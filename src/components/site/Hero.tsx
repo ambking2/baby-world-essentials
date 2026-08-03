@@ -1,62 +1,77 @@
 import { Link } from "@tanstack/react-router";
+import { ArrowLeft } from "lucide-react";
 
 import heroKid from "@/assets/hero-kid.png";
-import { Button } from "@/components/ui/button";
 import { toFaDigits } from "@/lib/format";
+
+function Squiggle({ className = "" }: { className?: string }) {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 120 12" className={`h-3 w-28 ${className}`}>
+      <path
+        d="M2 8 C10 -2, 18 14, 26 6 S42 -2, 50 8 S66 14, 74 6 S90 -2, 98 8 S114 12, 118 6"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
 
 export function Hero() {
   return (
-    <section className="relative overflow-hidden bg-primary text-primary-foreground">
-      <div className="container-page relative grid items-center gap-4 pb-14 pt-6 md:grid-cols-2 md:gap-6 md:pb-24 md:pt-12">
-        <div>
-          <h1 className="text-xl font-black leading-relaxed md:text-4xl md:leading-[1.4]">
-            سیسمونی نوزاد را یک‌جا از جهان کودک بخرید
+    <section className="relative overflow-hidden bg-[radial-gradient(120%_120%_at_70%_10%,oklch(0.55_0.09_60),oklch(0.35_0.06_55))] text-primary-foreground">
+      <div className="container-page relative grid items-center gap-4 pb-16 pt-8 md:grid-cols-2 md:gap-6 md:pb-28 md:pt-14">
+        <div className="text-center md:text-start">
+          <h1 className="text-2xl font-black leading-[1.5] md:text-[2.75rem] md:leading-[1.35]">
+            سرویس خواب چوبی آرتا
+            <span className="block text-primary">فقط {toFaDigits("۲۸٬۵۰۰٬۰۰۰")} تومان</span>
           </h1>
-          <p className="mt-3 max-w-lg text-[13px] leading-6 md:text-sm md:leading-7 text-white/85 md:text-base">
-            سرویس خواب چوبی ساخت کارگاه خودمان در ابهر، کالسکه، پوشاک نخی، اسباب‌بازی و لوازم تغذیه.
-            ارسال به سراسر ایران و تحویل رایگان در ابهر و زنجان.
+
+          <Squiggle className="mx-auto mt-4 text-white/70 md:mx-0" />
+
+          <p className="mt-4 max-w-lg text-[13px] leading-7 text-white/85 md:text-sm">
+            ساخت کارگاه خودمان در ابهر، چوب راش خشک‌شده با رنگ بی‌خطر کودک. تحویل و نصب رایگان در
+            ابهر و زنجان.
           </p>
-          <div className="mt-5 flex flex-wrap gap-2.5">
-            <Button asChild size="lg" variant="secondary" className="rounded-full px-7">
-              <Link to="/shop">شروع خرید</Link>
-            </Button>
-            <Button
-              asChild
-              size="lg"
-              variant="outline"
-              className="rounded-full border-white/40 bg-transparent px-7 text-primary-foreground hover:bg-white/10 hover:text-primary-foreground"
+
+          <div className="mt-6 flex flex-wrap justify-center gap-3 md:justify-start">
+            <Link
+              to="/product/$slug"
+              params={{ slug: "servis-khab-arta" }}
+              className="inline-flex items-center gap-2 rounded-full bg-foreground py-2.5 ps-6 pe-2.5 text-sm font-bold text-background transition-opacity hover:opacity-90"
             >
-              <Link to="/offers">تخفیف‌های این هفته</Link>
-            </Button>
+              مشاهده محصول
+              <span className="grid size-8 place-items-center rounded-full bg-primary text-primary-foreground">
+                <ArrowLeft className="size-4" aria-hidden="true" />
+              </span>
+            </Link>
+            <Link
+              to="/offers"
+              className="inline-flex items-center gap-2 rounded-full border-2 border-white/50 py-2.5 ps-6 pe-2.5 text-sm font-bold transition-colors hover:bg-white/10"
+            >
+              تخفیف‌های این هفته
+              <span className="grid size-8 place-items-center rounded-full bg-primary text-primary-foreground">
+                <ArrowLeft className="size-4" aria-hidden="true" />
+              </span>
+            </Link>
           </div>
-          <dl className="mt-6 flex gap-6 text-[13px] md:mt-8 md:gap-8 md:text-sm">
-            <div>
-              <dt className="text-white/70">سال فعالیت</dt>
-              <dd className="text-xl font-black">{toFaDigits(13)}</dd>
-            </div>
-            <div>
-              <dt className="text-white/70">سفارش تحویل‌شده</dt>
-              <dd className="text-xl font-black">+{toFaDigits("۹٬۴۰۰")}</dd>
-            </div>
-            <div>
-              <dt className="text-white/70">ضمانت کالا</dt>
-              <dd className="text-xl font-black">{toFaDigits(18)} ماه</dd>
-            </div>
-          </dl>
         </div>
 
         <div className="relative flex justify-center">
           <div className="absolute inset-0 m-auto size-44 rounded-full bg-white/10 md:size-80" aria-hidden="true" />
           <img
             src={heroKid}
-            alt="نوزاد در حال بازی با حلقه‌های رنگی"
+            alt="نوزاد در حال بازی با حلقه‌های چوبی رنگی"
             width={1024}
             height={1024}
             className="relative w-44 max-w-full md:w-[26rem]"
           />
         </div>
       </div>
+
       <div className="cloud-bottom" aria-hidden="true" />
+      <div className="zigzag-bottom" aria-hidden="true" />
     </section>
   );
 }
