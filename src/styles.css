@@ -54,58 +54,62 @@
   --color-cream: var(--cream);
   --color-sky: var(--sky);
   --color-sun: var(--sun);
+  --color-charcoal: var(--charcoal);
+  --color-fresh: var(--fresh);
   --color-installment: var(--installment);
   --color-installment-foreground: var(--installment-foreground);
   --font-sans: "Vazirmatn", ui-sans-serif, system-ui, sans-serif;
-  --shadow-soft: 0 2px 10px oklch(0.4 0.1 292 / 0.07);
-  --shadow-lift: 0 10px 30px oklch(0.4 0.12 292 / 0.12);
+  --shadow-soft: 0 2px 10px oklch(0.3 0.02 60 / 0.08);
+  --shadow-lift: 0 10px 30px oklch(0.3 0.02 60 / 0.14);
 }
 
 :root {
   --radius: 1rem;
   --background: oklch(1 0 0);
-  --foreground: oklch(0.26 0.04 285);
+  --foreground: oklch(0.27 0.005 60);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.26 0.04 285);
+  --card-foreground: oklch(0.27 0.005 60);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.26 0.04 285);
-  --primary: oklch(0.52 0.24 292);
-  --primary-foreground: oklch(0.99 0.005 285);
-  --secondary: oklch(0.96 0.02 292);
-  --secondary-foreground: oklch(0.35 0.12 292);
-  --muted: oklch(0.97 0.012 292);
-  --muted-foreground: oklch(0.53 0.03 285);
-  --accent: oklch(0.7 0.19 2);
+  --popover-foreground: oklch(0.27 0.005 60);
+  --primary: oklch(0.7 0.18 52);
+  --primary-foreground: oklch(0.995 0 0);
+  --secondary: oklch(0.965 0.002 60);
+  --secondary-foreground: oklch(0.3 0.02 60);
+  --muted: oklch(0.97 0.002 60);
+  --muted-foreground: oklch(0.55 0.01 60);
+  --accent: oklch(0.68 0.17 25);
   --accent-foreground: oklch(0.99 0.005 285);
   --destructive: oklch(0.58 0.2 25);
   --destructive-foreground: oklch(0.99 0.005 285);
-  --border: oklch(0.92 0.015 292);
-  --input: oklch(0.92 0.015 292);
-  --ring: oklch(0.52 0.24 292);
-  --brand: oklch(0.52 0.24 292);
-  --brand-soft: oklch(0.955 0.03 292);
-  --bubble: oklch(0.97 0.02 292);
-  --sale: oklch(0.65 0.21 15);
+  --border: oklch(0.92 0.003 60);
+  --input: oklch(0.92 0.003 60);
+  --ring: oklch(0.7 0.18 52);
+  --brand: oklch(0.7 0.18 52);
+  --brand-soft: oklch(0.96 0.03 60);
+  --bubble: oklch(0.965 0.002 60);
+  --sale: oklch(0.66 0.17 25);
   --sale-foreground: oklch(0.99 0.005 285);
+  --charcoal: oklch(0.3 0.004 60);
+  --fresh: oklch(0.72 0.17 145);
   --mint: oklch(0.93 0.06 165);
   --cream: oklch(0.96 0.045 80);
   --sky: oklch(0.92 0.06 220);
-  --sun: oklch(0.83 0.15 80);
+  --sun: oklch(0.72 0.15 30);
   --installment: oklch(0.96 0.03 165);
   --installment-foreground: oklch(0.45 0.1 165);
-  --chart-1: oklch(0.52 0.24 292);
+  --chart-1: oklch(0.7 0.18 52);
   --chart-2: oklch(0.7 0.19 2);
   --chart-3: oklch(0.68 0.15 165);
   --chart-4: oklch(0.83 0.15 80);
   --chart-5: oklch(0.65 0.16 220);
-  --sidebar: oklch(0.985 0.008 292);
-  --sidebar-foreground: oklch(0.26 0.04 285);
-  --sidebar-primary: oklch(0.52 0.24 292);
+  --sidebar: oklch(0.985 0.002 60);
+  --sidebar-foreground: oklch(0.27 0.005 60);
+  --sidebar-primary: oklch(0.7 0.18 52);
   --sidebar-primary-foreground: oklch(0.99 0.005 285);
-  --sidebar-accent: oklch(0.955 0.03 292);
-  --sidebar-accent-foreground: oklch(0.35 0.12 292);
-  --sidebar-border: oklch(0.92 0.015 292);
-  --sidebar-ring: oklch(0.52 0.24 292);
+  --sidebar-accent: oklch(0.96 0.03 60);
+  --sidebar-accent-foreground: oklch(0.3 0.02 60);
+  --sidebar-border: oklch(0.92 0.003 60);
+  --sidebar-ring: oklch(0.7 0.18 52);
 }
 
 @layer base {
@@ -160,5 +164,30 @@
   mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 60' preserveAspectRatio='none'%3E%3Cpath d='M0,0 L1200,0 L1200,30 C1160,30 1150,52 1110,52 C1075,52 1065,34 1035,34 C1005,34 995,56 955,56 C915,56 905,32 870,32 C835,32 825,50 790,50 C750,50 740,30 705,30 C670,30 660,54 620,54 C580,54 570,32 535,32 C500,32 490,52 450,52 C412,52 402,30 365,30 C330,30 320,54 282,54 C243,54 233,32 196,32 C160,32 150,50 112,50 C74,50 60,30 0,30 Z' fill='%23fff'/%3E%3C/svg%3E");
   mask-size: 100% 100%;
   mask-repeat: no-repeat;
+  pointer-events: none;
+}
+
+/* Small zigzag teeth used under the cloud edge of colored sections. */
+@utility zigzag-bottom {
+  position: absolute;
+  inset-inline: 0;
+  bottom: -1px;
+  height: 11px;
+  background-color: var(--color-background);
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='11' viewBox='0 0 22 11'%3E%3Cpath d='M0 0 L11 11 L22 0 Z' fill='%23fff'/%3E%3C/svg%3E");
+  mask-size: 22px 11px;
+  mask-repeat: repeat-x;
+  pointer-events: none;
+}
+
+@utility zigzag-top {
+  position: absolute;
+  inset-inline: 0;
+  top: -1px;
+  height: 11px;
+  background-color: var(--color-background);
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='11' viewBox='0 0 22 11'%3E%3Cpath d='M0 11 L11 0 L22 11 Z' fill='%23fff'/%3E%3C/svg%3E");
+  mask-size: 22px 11px;
+  mask-repeat: repeat-x;
   pointer-events: none;
 }
