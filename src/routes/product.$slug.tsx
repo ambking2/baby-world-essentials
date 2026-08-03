@@ -45,6 +45,31 @@ export const Route = createFileRoute("/product/$slug")({
         { property: "og:type", content: "product" },
         { name: "twitter:card", content: "summary_large_image" },
       ],
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Product",
+            name: loaderData.title,
+            sku: loaderData.sku,
+            brand: { "@type": "Brand", name: loaderData.brand },
+            aggregateRating: {
+              "@type": "AggregateRating",
+              ratingValue: loaderData.rating,
+              reviewCount: loaderData.reviewCount,
+            },
+            offers: {
+              "@type": "Offer",
+              priceCurrency: "IRT",
+              price: loaderData.price,
+              availability: loaderData.inStock
+                ? "https://schema.org/InStock"
+                : "https://schema.org/OutOfStock",
+            },
+          }),
+        },
+      ],
     };
   },
   errorComponent: ({ error }) => (
