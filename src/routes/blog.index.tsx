@@ -10,7 +10,7 @@ const title = "مجله جهان کودک | راهنمای خرید سیسمون
 const description =
   "یادداشت‌های فروشگاه جهان کودک درباره انتخاب سرویس خواب، چک‌لیست سیسمونی و نگهداری از لوازم نوزاد.";
 
-export const Route = createFileRoute("/blog")({
+export const Route = createFileRoute("/blog/")({
   loader: ({ context }) => context.queryClient.ensureQueryData(postsQuery()),
   head: () => ({
     meta: [
