@@ -1,51 +1,127 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { Menu, Phone, Search, ShoppingCart, User } from "lucide-react";
+import { Heart, Menu, Phone, Search, ShoppingCart, User } from "lucide-react";
 
+import logoBear from "@/assets/logo-bear.png";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { categoriesQuery } from "@/lib/api/catalog";
 import { toFaDigits } from "@/lib/format";
 
-const navLinks = [
+const navRight = [
   { to: "/", label: "خانه" },
-  { to: "/shop", label: "فروشگاه" },
-  { to: "/categories", label: "دسته‌بندی‌ها" },
-  { to: "/brands", label: "برندها" },
-  { to: "/offers", label: "تخفیف‌ها" },
-  { to: "/blog", label: "مجله" },
   { to: "/about", label: "درباره ما" },
-  { to: "/contact", label: "تماس" },
+  { to: "/categories", label: "دسته‌بندی‌ها" },
+  { to: "/blog", label: "مجله" },
 ] as const;
+
+const navLeft = [
+  { to: "/shop", label: "فروشگاه" },
+  { to: "/offers", label: "تخفیف‌ها" },
+  { to: "/brands", label: "برندها" },
+  { to: "/contact", label: "تماس با ما" },
+] as const;
+
+const navLinks = [...navRight, ...navLeft];
+
+const navClass =
+  "rounded-full px-3 py-1.5 text-[13px] font-bold tracking-wide text-foreground/80 transition-colors hover:text-primary";
+
+function Logo({ small = false }: { small?: boolean }) {
+  return (
+    <Link to="/" className="flex shrink-0 items-center gap-2">
+      <img
+        src={logoBear}
+        alt=""
+        width={512}
+        height={512}
+        className={small ? "size-9" : "size-11 md:size-14"}
+      />
+      <span className={small ? "text-base font-black text-primary" : "text-lg font-black text-primary md:text-2xl"}>
+        جهان کودک
+        <span className="mt-0.5 block text-[10px] font-medium text-muted-foreground">
+          سیسمونی و اتاق کودک
+        </span>
+      </span>
+    </Link>
+  );
+}
 
 export function Header() {
   const { data: categories } = useSuspenseQuery(categoriesQuery());
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40">
-      <div className="bg-primary text-primary-foreground">
-        <div className="container-page flex h-9 items-center justify-between text-[11px] md:text-xs">
-          <a href="tel:+982435223344" className="flex items-center gap-1.5 hover:opacity-90">
-            <Phone className="size-3.5" aria-hidden="true" />
-            {toFaDigits("024-35223344")}
-          </a>
-          <p className="hidden sm:block">
-            ارسال رایگان سفارش‌های بالای {toFaDigits("۳٬۰۰۰٬۰۰۰")} تومان در ابهر و زنجان
-          </p>
-          <Link to="/contact" className="hover:opacity-90">
-            پیگیری سفارش
-          </Link>
+    <header className="sticky top-0 z-40 bg-background">
+      {/* floating info pill – desktop */}
+      <div className="container-page hidden pt-3 md:block">
+        <div className="flex h-11 items-center justify-between rounded-full border border-border bg-card px-5 text-xs shadow-soft">
+          <div className="flex items-center gap-4">
+            <a href="tel:+982435223344" className="flex items-center gap-1.5 font-bold hover:text-primary">
+              <Phone className="size-3.5 text-primary" aria-hidden="true" />
+              {toFaDigits("024-35223344")}
+            </a>
+            <span className="hidden text-muted-foreground lg:inline">
+              ارسال رایگان سفارش‌های بالای {toFaDigits("۳٬۰۰۰٬۰۰۰")} تومان در ابهر و زنجان
+            </span>
+          </div>
+          <div className="flex items-center gap-4 text-muted-foreground">
+            <Link to="/contact" className="flex items-center gap-1.5 hover:text-primary">
+              <User className="size-3.5" aria-hidden="true" />
+              ورود / ثبت‌نام
+            </Link>
+            <Link to="/offers" className="flex items-center gap-1.5 hover:text-primary">
+              <Heart className="size-3.5" aria-hidden="true" />
+              علاقه‌مندی‌ها
+            </Link>
+            <button type="button" className="flex items-center gap-1.5 font-bold text-foreground hover:text-primary">
+              <ShoppingCart className="size-3.5 text-primary" aria-hidden="true" />
+              سبد خرید ({toFaDigits(0)})
+            </button>
+          </div>
         </div>
       </div>
 
-      <div className="border-b border-border bg-background">
-        <div className="container-page flex h-16 items-center gap-3 md:h-20 md:gap-6">
+      {/* logo + split navigation – desktop */}
+      <div className="container-page hidden items-center justify-between gap-4 py-3 md:flex">
+        <nav className="flex flex-1 items-center gap-1">
+          {navRight.map((l) => (
+            <Link
+              key={l.label}
+              to={l.to}
+              className={navClass}
+              activeProps={{ className: "text-primary underline underline-offset-8 decoration-2" }}
+              activeOptions={{ exact: l.to === "/" }}
+            >
+              {l.label}
+            </Link>
+          ))}
+        </nav>
+
+        <Logo />
+
+        <nav className="flex flex-1 items-center justify-end gap-1">
+          {navLeft.map((l) => (
+            <Link
+              key={l.label}
+              to={l.to}
+              className={navClass}
+              activeProps={{ className: "text-primary underline underline-offset-8 decoration-2" }}
+            >
+              {l.label}
+            </Link>
+          ))}
+        </nav>
+      </div>
+
+      {/* mobile bar */}
+      <div className="border-b border-border md:hidden">
+        <div className="container-page flex h-16 items-center gap-2">
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="lg:hidden" aria-label="منوی اصلی">
+              <Button variant="ghost" size="icon" aria-label="منوی اصلی">
                 <Menu aria-hidden="true" />
               </Button>
             </SheetTrigger>
@@ -56,7 +132,7 @@ export function Header() {
               <nav className="flex flex-col gap-1 px-4 pb-8">
                 {navLinks.map((l) => (
                   <Link
-                    key={l.to}
+                    key={l.label}
                     to={l.to}
                     onClick={() => setOpen(false)}
                     className="rounded-lg px-3 py-2.5 text-sm font-medium text-foreground hover:bg-secondary"
@@ -81,23 +157,19 @@ export function Header() {
             </SheetContent>
           </Sheet>
 
-          <Link to="/" className="flex shrink-0 items-center gap-2">
-            <span className="grid size-9 place-items-center rounded-full bg-primary text-base font-black text-primary-foreground">
-              ج
-            </span>
-            <span className="text-lg font-black leading-none text-primary md:text-xl">
-              جهان کودک
-              <span className="mt-0.5 block text-[10px] font-medium text-muted-foreground">
-                سیسمونی و اتاق کودک
-              </span>
-            </span>
-          </Link>
+          <Logo small />
 
-          <form
-            className="relative hidden flex-1 md:block"
-            onSubmit={(e) => e.preventDefault()}
-            role="search"
-          >
+          <div className="ms-auto flex items-center">
+            <Button variant="ghost" size="icon" className="relative" aria-label="سبد خرید">
+              <ShoppingCart aria-hidden="true" />
+              <span className="absolute -top-0.5 end-0.5 grid size-4 place-items-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
+                ۰
+              </span>
+            </Button>
+          </div>
+        </div>
+        <div className="container-page pb-3">
+          <form className="relative" onSubmit={(e) => e.preventDefault()} role="search">
             <Search
               className="pointer-events-none absolute inset-y-0 start-3 my-auto size-4 text-muted-foreground"
               aria-hidden="true"
@@ -106,49 +178,11 @@ export function Header() {
               type="search"
               placeholder="جست‌وجوی کالا، برند یا دسته‌بندی…"
               aria-label="جست‌وجو در فروشگاه"
-              className="h-11 rounded-full border-border bg-secondary/60 ps-10 pe-28 text-sm"
+              className="h-10 rounded-full border-border bg-secondary ps-10 text-sm"
             />
-            <Button
-              type="submit"
-              size="sm"
-              className="absolute inset-y-1.5 end-1.5 rounded-full px-5 text-xs"
-            >
-              جست‌وجو
-            </Button>
           </form>
-
-          <div className="ms-auto flex items-center gap-1 md:ms-0">
-            <Button variant="ghost" size="icon" className="md:hidden" aria-label="جست‌وجو">
-              <Search aria-hidden="true" />
-            </Button>
-            <Button variant="ghost" size="icon" aria-label="حساب کاربری">
-              <User aria-hidden="true" />
-            </Button>
-            <Button variant="ghost" size="icon" className="relative" aria-label="سبد خرید">
-              <ShoppingCart aria-hidden="true" />
-              <span className="absolute -top-0.5 end-0.5 grid size-4 place-items-center rounded-full bg-accent text-[10px] font-bold text-accent-foreground">
-                ۰
-              </span>
-            </Button>
-          </div>
         </div>
       </div>
-
-      <nav className="hidden border-b border-border bg-background lg:block">
-        <div className="container-page flex h-11 items-center gap-1 text-sm">
-          {navLinks.map((l) => (
-            <Link
-              key={l.to}
-              to={l.to}
-              className="rounded-full px-3.5 py-1.5 font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-primary"
-              activeProps={{ className: "bg-secondary text-primary" }}
-              activeOptions={{ exact: l.to === "/" }}
-            >
-              {l.label}
-            </Link>
-          ))}
-        </div>
-      </nav>
     </header>
   );
 }
