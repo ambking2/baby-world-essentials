@@ -9,10 +9,7 @@ export function Hero() {
     <section className="relative overflow-hidden bg-primary text-primary-foreground">
       <div className="container-page relative grid items-center gap-6 pb-20 pt-8 md:grid-cols-2 md:pb-24 md:pt-12">
         <div>
-          <span className="inline-block rounded-full bg-white/15 px-3 py-1 text-xs">
-            ارسال رایگان در ابهر و زنجان
-          </span>
-          <h1 className="mt-4 text-2xl font-black leading-relaxed md:text-4xl md:leading-[1.4]">
+          <h1 className="text-2xl font-black leading-relaxed md:text-4xl md:leading-[1.4]">
             سیسمونی نوزاد را یک‌جا از جهان کودک بخرید
           </h1>
           <p className="mt-4 max-w-lg text-sm leading-7 text-white/85 md:text-base">
