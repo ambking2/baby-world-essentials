@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 
 import heroKid from "@/assets/hero-kid.png";
 import { toFaDigits } from "@/lib/format";
@@ -68,16 +68,6 @@ export function Hero() {
             className="relative w-44 max-w-full md:w-[26rem]"
           />
         </div>
-      </div>
-
-      {/* slider chrome, matching the store banner layout */}
-      <div className="pointer-events-none absolute inset-x-4 top-1/2 hidden -translate-y-1/2 justify-between md:flex">
-        <span className="grid size-11 place-items-center rounded-full border-2 border-white/60 bg-primary/90 text-primary-foreground">
-          <ChevronRight className="size-5" aria-hidden="true" />
-        </span>
-        <span className="grid size-11 place-items-center rounded-full border-2 border-white/60 bg-primary/90 text-primary-foreground">
-          <ChevronLeft className="size-5" aria-hidden="true" />
-        </span>
       </div>
 
       <div className="cloud-bottom" aria-hidden="true" />
