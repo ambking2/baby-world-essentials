@@ -9,8 +9,22 @@ export const Route = createFileRoute("/stores")({
   component: StoresPage,
 });
 
+const PAD = 0.01;
+
 function StoresPage() {
-  const mapUrl = "https://www.google.com/maps/search/?api=1&query=" + business.geo.lat + "," + business.geo.lng;
+  const lat = business.geo.lat;
+  const lng = business.geo.lng;
+
+  const mapUrl = "https://www.google.com/maps/search/?api=1&query=" + lat + "," + lng;
+
+  const bbox = [lng - PAD, lat - PAD, lng + PAD, lat + PAD].join("%2C");
+  const embedUrl =
+    "https://www.openstreetmap.org/export/embed.html?bbox=" +
+    bbox +
+    "&layer=mapnik&marker=" +
+    lat +
+    "%2C" +
+    lng;
 
   return (
     <StoreShell>
@@ -20,7 +34,9 @@ function StoresPage() {
         <div className="grid gap-5 lg:grid-cols-[380px_1fr]">
           <div className="space-y-4">
             <div className="rounded-3xl border border-border bg-card p-6">
-              <h1 className="text-lg font-extrabold text-foreground">{business.shortName} — شعبهٔ {business.city}</h1>
+              <h1 className="text-lg font-extrabold text-foreground">
+                {business.shortName} — شعبهٔ {business.city}
+              </h1>
               <div className="mt-3 space-y-2 text-xs leading-7 text-muted-foreground">
                 <p className="flex items-start gap-2">
                   <MapPin className="mt-1 size-4 text-brand" aria-hidden />
@@ -65,7 +81,7 @@ function StoresPage() {
           <div className="overflow-hidden rounded-3xl border border-border bg-card">
             <iframe
               title="نقشهٔ فروشگاه جهان کودک"
-              src={`https://www.openstreetmap.org/export/embed.html?bbox=${business.geo.lng - 0.01}%2C${business.geo.lat - 0.01}%2C${business.geo.lng + 0.01}%2C${business.geo.lat + 0.01}&layer=mapnik&marker=${business.geo.lat}%2C${business.geo.lng}`}
+              src={embedUrl}
               className="h-[420px] w-full border-0"
               loading="lazy"
             />
