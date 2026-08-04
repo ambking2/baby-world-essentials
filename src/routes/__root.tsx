@@ -10,25 +10,33 @@ import {
 import { useEffect, type ReactNode } from "react";
 
 import { Toaster } from "@/components/ui/sonner";
+import { business } from "@/data/business";
 import appCss from "../styles.css?url";
+import storeCss from "../styles/store.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
 function NotFoundComponent() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
-        <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
+        <p className="text-7xl font-extrabold text-brand">۴۰۴</p>
+        <h1 className="mt-4 text-xl font-bold text-foreground">این صفحه پیدا نشد</h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          The page you're looking for doesn't exist or has been moved.
+          شاید نشانی را اشتباه وارد کرده‌اید یا این محصول جمع‌آوری شده است.
         </p>
-        <div className="mt-6">
+        <div className="mt-6 flex flex-wrap justify-center gap-2">
           <Link
             to="/"
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+            className="inline-flex items-center justify-center rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
           >
-            Go home
+            بازگشت به صفحهٔ اول
           </Link>
+          <a
+            href={business.phoneHref}
+            className="inline-flex items-center justify-center rounded-full border border-input bg-background px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-accent/10"
+          >
+            تماس با فروشگاه
+          </a>
         </div>
       </div>
     </div>
@@ -45,11 +53,9 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
-        <h1 className="text-xl font-semibold tracking-tight text-foreground">
-          This page didn't load
-        </h1>
+        <h1 className="text-xl font-bold tracking-tight text-foreground">این صفحه بارگزاری نشد</h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Something went wrong on our end. You can try refreshing or head back home.
+          مشکلی در سمت ما پیش آمد. دوباره تلاش کنید یا به صفحهٔ اول برگردید.
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
@@ -57,15 +63,15 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
               router.invalidate();
               reset();
             }}
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+            className="inline-flex items-center justify-center rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
           >
-            Try again
+            تلاش دوباره
           </button>
           <a
             href="/"
-            className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
+            className="inline-flex items-center justify-center rounded-full border border-input bg-background px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-accent/10"
           >
-            Go home
+            صفحهٔ اول
           </a>
         </div>
       </div>
@@ -78,12 +84,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "سیسمونی جهان کودک ابهر" },
+      { title: `${business.name} | فروشگاه اینترنتی سیسمونی و لوازم نوزاد` },
       {
         name: "description",
-        content: "فروشگاه و کارگاه تولید سیسمونی نوزاد در ابهر، استان زنجان.",
+        content: `خرید اینترنتی سیسمونی نوزاد: تخت و سرویس خواب، لباس، کالسکه، اسباب‌بازی و لوازم شیردهی. ارسال به سراسر ایران و تحویل حضوری در ${business.city}.`,
       },
+      { name: "theme-color", content: "#f6efe9" },
       { property: "og:type", content: "website" },
+      { property: "og:site_name", content: business.name },
+      { property: "og:locale", content: "fa_IR" },
+      { property: "og:image", content: business.ogImage },
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
@@ -93,11 +103,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap",
       },
-      {
-        rel: "stylesheet",
-        href: appCss,
-      },
-      { rel: "icon", href: "/favicon.png", type: "image/png" },
+      { rel: "stylesheet", href: appCss },
+      { rel: "stylesheet", href: storeCss },
+      { rel: "icon", href: "/favicon.ico" },
     ],
   }),
 
@@ -115,7 +123,7 @@ function RootShell({ children }: { children: ReactNode }) {
       </head>
       <body>
         {children}
-        <Toaster position="top-center" />
+        <Toaster position="top-center" dir="rtl" />
         <Scripts />
       </body>
     </html>
