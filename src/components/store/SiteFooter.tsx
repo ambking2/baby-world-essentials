@@ -24,6 +24,7 @@ const HELP_LINKS: Array<{ label: string; href: string }> = [
 /** فوتر فروشگاه با دسته‌بندی‌ها، خبرنامه و اطلاعات تماس. */
 export function SiteFooter({ categories, onSubscribe, subscribing = false }: SiteFooterProps) {
   const [email, setEmail] = useState("");
+  const instagramUrl = "https://instagram.com/" + business.instagramHandle;
 
   return (
     <footer className="mt-16 border-t border-border bg-secondary/40">
@@ -122,7 +123,7 @@ export function SiteFooter({ categories, onSubscribe, subscribing = false }: Sit
           </form>
 
           <a
-            href={`https://instagram.com/${business.instagramHandle}`}
+            href={instagramUrl}
             target="_blank"
             rel="noreferrer"
             className="inline-flex items-center gap-2 rounded-full border border-border px-3 py-1.5 text-xs font-semibold transition-colors hover:border-brand hover:text-brand"
