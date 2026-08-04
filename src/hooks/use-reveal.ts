@@ -1,9 +1,9 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 /**
  * نمایش تدریجی عناصر هنگام اسکرول، با IntersectionObserver.
  *
- * روی عنصر کلاس `reveal` را بگذارید و ref را به والد بدهید:
+ * روی عناصر داخلی کلاس `reveal` را بگذارید و ref را به والد بدهید:
  *
  * const ref = useReveal<HTMLDivElement>();
  * <section ref={ref}><div className="reveal">...</div></section>
@@ -12,7 +12,7 @@ export function useReveal<T extends HTMLElement>(options?: {
   selector?: string;
   threshold?: number;
   stagger?: number;
-}): React.RefObject<T | null> {
+}) {
   const containerRef = useRef<T | null>(null);
   const selector = options?.selector ?? ".reveal";
   const threshold = options?.threshold ?? 0.14;
@@ -25,21 +25,21 @@ export function useReveal<T extends HTMLElement>(options?: {
     const targets = Array.from(root.querySelectorAll<HTMLElement>(selector));
     if (targets.length === 0) return;
 
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduced) {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       for (const target of targets) target.classList.add("reveal-in");
       return;
     }
 
     const observer = new IntersectionObserver(
       (entries) => {
-        const visible = entries.filter((entry) => entry.isIntersecting);
-        visible.forEach((entry, index) => {
-          const element = entry.target as HTMLElement;
-          element.style.animationDelay = `${index * stagger}ms`;
-          element.classList.add("reveal-in");
-          observer.unobserve(element);
-        });
+        entries
+          .filter((entry) => entry.isIntersecting)
+          .forEach((entry, index) => {
+            const element = entry.target as HTMLElement;
+            element.style.animationDelay = `${index * stagger}ms`;
+            element.classList.add("reveal-in");
+            observer.unobserve(element);
+          });
       },
       { threshold, rootMargin: "0px 0px -10% 0px" },
     );
@@ -51,31 +51,28 @@ export function useReveal<T extends HTMLElement>(options?: {
   return containerRef;
 }
 
-/**
- * شمارش معکوس برای تخفیف‌های زمان‌دار — هر ثانیه به‌روز می‌شود.
- */
+/** زمان جاری که هر ثانیه به‌روز می‌شود — برای شمارش معکوس تخفیف. */
 export function useNow(intervalMs = 1000): number {
-  const ref = useRef<number>(Date.now());
-  const [, force] = useRerender();
+  const [now, setNow] = useState<number>(() => Date.now());
 
   useEffect(() => {
-    const timer = window.setInterval(() => {
-      ref.current = Date.now();
-      force();
-    }, intervalMs);
+    const timer = window.setInterval(() => setNow(Date.now()), intervalMs);
     return () => window.clearInterval(timer);
-  }, [intervalMs, force]);
+  }, [intervalMs]);
 
-  return ref.current;
+  return now;
 }
 
-function useRerender(): [number, () => void] {
-  const [tick, setTick] = useStateSafe(0);
-  return [tick, () => setTick((value) => value + 1)];
-}
+/** رفتار چسبندهٔ هدر پس از اسکرول به پایین. */
+export function useScrolled(offset = 24): boolean {
+  const [scrolled, setScrolled] = useState(false);
 
-/* جداسازی useState تا ایمپورتهای بالای فایل کوتاه بماند. */
-import { useState } from "react";
-function useStateSafe(initial: number) {
-  return useState<number>(initial);
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > offset);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [offset]);
+
+  return scrolled;
 }
