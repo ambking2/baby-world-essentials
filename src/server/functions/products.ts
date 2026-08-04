@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
 import { currentUser } from "../context";
+import { one } from "../db";
 import {
   addReview,
   bestSellers,
@@ -64,13 +65,11 @@ export const getProductPage = createServerFn({ method: "GET" })
     if (!product) return { product: null, related: [] };
 
     incrementProductView(product.id);
-    const categoryRow = product.categorySlug === null ? null : product.id;
-    void categoryRow;
 
-    return {
-      product,
-      related: relatedProducts(product.id, product.categorySlug === null ? null : (product.categoryId ?? null), 4),
-    };
+    const categoryRow = one<{ category_id: number | null }>("SELECT category_id FROM products WHERE id = ?", product.id);
+    const categoryId = categoryRow?.category_id ?? null;
+
+    return { product, related: relatedProducts(product.id, categoryId, 4) };
   });
 
 /** ثبت دیدگاه کاربر — پس از تأیید مدیر نمایش داده می‌شود. */
