@@ -1,121 +1,104 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
+import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
 
-import { SiteLayout } from "@/components/site/SiteLayout";
-import { PageHeader } from "@/components/site/PageHeader";
-import { postsQuery } from "@/lib/api/catalog";
+import { BlogCard } from "@/components/store/BlogCard";
+import { BlogSidebar } from "@/components/store/BlogSidebar";
+import { Breadcrumb } from "@/components/store/Breadcrumb";
+import { Pagination } from "@/components/store/Pagination";
+import { StoreShell } from "@/components/store/StoreShell";
+import { useReveal } from "@/hooks/use-reveal";
 import { toFaDigits } from "@/lib/format";
-
-const title = "مجله جهان کودک | راهنمای خرید سیسمونی";
-const description =
-  "یادداشت‌های فروشگاه جهان کودک درباره انتخاب سرویس خواب، چک‌لیست سیسمونی و نگهداری از لوازم نوزاد.";
+import { getBlogIndex } from "@/server/functions/blog";
 
 export const Route = createFileRoute("/blog/")({
-  loader: ({ context }) => context.queryClient.ensureQueryData(postsQuery()),
-  head: () => ({
-    meta: [
-      { title },
-      { name: "description", content: description },
-      { property: "og:title", content: title },
-      { property: "og:description", content: description },
-      { property: "og:type", content: "website" },
-      { property: "og:url", content: "https://baby-world-essentials.lovable.app/blog" },
-    ],
-    links: [{ rel: "canonical", href: "https://baby-world-essentials.lovable.app/blog" }],
-  }),
-  component: BlogPage,
-  errorComponent: ({ error }) => (
-    <div role="alert" className="container-page py-20 text-center text-sm">
-      {error.message}
-    </div>
-  ),
-  notFoundComponent: () => <div className="container-page py-20 text-center">یافت نشد</div>,
+  component: BlogIndexPage,
 });
 
-function BlogPage() {
-  const { data: posts } = useSuspenseQuery(postsQuery());
+function BlogIndexPage() {
+  const [page, setPage] = useState(1);
+  const [tag, setTag] = useState<string | undefined>(undefined);
+  const [searchText, setSearchText] = useState("");
+  const [appliedSearch, setAppliedSearch] = useState("");
+
+  const blogQuery = useQuery({
+    queryKey: ["blog", page, tag ?? "", appliedSearch],
+    queryFn: () =>
+      getBlogIndex({
+        data: {
+          page,
+          perPage: 12,
+          ...(tag === undefined ? {} : { tag }),
+          ...(appliedSearch.trim().length > 0 ? { q: appliedSearch.trim() } : {}),
+        },
+      }),
+  });
+
+  const containerRef = useReveal<HTMLDivElement>();
+
+  const posts = blogQuery.data?.posts.items ?? [];
+  const total = blogQuery.data?.posts.total ?? 0;
+  const pageCount = blogQuery.data?.posts.pageCount ?? 1;
 
   return (
-    <SiteLayout>
-      <PageHeader
-        tone="sky"
-        title="مجله فروشگاه"
-        description="چیزهایی که در فروشگاه بارها از ما پرسیده می‌شود، اینجا نوشته‌ایم."
-        crumbs={[{ label: "مجله" }]}
-      />
-      <div className="container-page grid gap-8 py-10 lg:grid-cols-[1fr_280px]">
-        <div className="flex flex-col gap-8">
-          {posts.map((p) => (
-            <article key={p.slug} className="border-b border-border pb-8 last:border-0">
-              <p className="text-center text-[11px] tracking-widest text-muted-foreground">
-                مجله جهان کودک
-              </p>
-              <h2 className="mt-1 text-center text-lg font-black leading-8 text-foreground md:text-xl">
-                <Link to="/blog/$slug" params={{ slug: p.slug }} className="hover:text-primary">
-                  {p.title}
-                </Link>
-              </h2>
-              <p className="mt-3 text-center text-[11px] text-muted-foreground">
-                نوشته {p.author} — {p.date} — {toFaDigits(p.readMinutes)} دقیقه مطالعه
-              </p>
-              <p className="mt-4 text-sm leading-8 text-muted-foreground">{p.excerpt}</p>
-              <Link
-                to="/blog/$slug"
-                params={{ slug: p.slug }}
-                className="mt-4 inline-block text-xs font-black tracking-widest text-primary hover:underline"
-              >
-                ادامه مطلب
-              </Link>
-            </article>
-          ))}
+    <StoreShell>
+      <div className="container-page py-6">
+        <Breadcrumb items={[{ title: "مجلهٔ جهان کودک" }]} />
+
+        <div className="mb-5 rounded-3xl border border-border bg-brand-soft/40 p-6">
+          <h1 className="text-lg font-extrabold text-foreground">مجلهٔ جهان کودک</h1>
+          <p className="mt-2 text-xs leading-6 text-muted-foreground">
+            راهنمای خرید سیسمونی، مراقبت از نوزاد و تجربهٔ ۱۵ سال فروشگاه در ابهر — {toFaDigits(total)} مقاله.
+          </p>
         </div>
 
-        <aside className="flex flex-col gap-4">
-          <section className="rounded-2xl border border-border bg-card p-5">
-            <h2 className="text-sm font-black">آخرین مطلب‌ها</h2>
-            <ul className="mt-4 flex flex-col gap-3 text-sm">
-              {posts.slice(0, 4).map((p) => (
-                <li key={p.slug}>
-                  <Link
-                    to="/blog/$slug"
-                    params={{ slug: p.slug }}
-                    className="leading-6 text-muted-foreground hover:text-primary"
-                  >
-                    {p.title}
-                  </Link>
-                  <p className="mt-0.5 text-[11px] text-muted-foreground">{p.date}</p>
-                </li>
-              ))}
-            </ul>
-          </section>
+        <div className="grid gap-5 lg:grid-cols-[1fr_300px]">
+          <div ref={containerRef}>
+            {blogQuery.isLoading ? (
+              <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+                {Array.from({ length: 6 }).map((_, index) => (
+                  <div key={index} className="skeleton h-72 rounded-3xl" />
+                ))}
+              </div>
+            ) : posts.length === 0 ? (
+              <div className="rounded-3xl border border-border bg-card p-12 text-center text-xs text-muted-foreground">
+                مقاله‌ای مطابق جستجوی شما پیدا نشد.
+              </div>
+            ) : (
+              <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+                {posts.map((post) => (
+                  <BlogCard key={post.slug} post={post} />
+                ))}
+              </div>
+            )}
 
-          <section className="rounded-2xl border border-border bg-card p-5">
-            <h2 className="text-sm font-black">خرید از فروشگاه</h2>
-            <ul className="mt-4 flex flex-col gap-2.5 text-sm">
-              <li>
-                <Link to="/shop" className="text-muted-foreground hover:text-primary">
-                  همه کالاها
-                </Link>
-              </li>
-              <li>
-                <Link to="/categories" className="text-muted-foreground hover:text-primary">
-                  دسته‌بندی‌ها
-                </Link>
-              </li>
-              <li>
-                <Link to="/offers" className="text-muted-foreground hover:text-primary">
-                  تخفیف‌های این هفته
-                </Link>
-              </li>
-              <li>
-                <Link to="/contact" className="text-muted-foreground hover:text-primary">
-                  آدرس فروشگاه ابهر
-                </Link>
-              </li>
-            </ul>
-          </section>
-        </aside>
+            <Pagination
+              page={page}
+              pageCount={pageCount}
+              onChange={(next) => {
+                setPage(next);
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+            />
+          </div>
+
+          <BlogSidebar
+            recent={blogQuery.data?.recent ?? []}
+            tags={blogQuery.data?.tags ?? []}
+            search={searchText}
+            onSearchChange={setSearchText}
+            onSearchSubmit={() => {
+              setAppliedSearch(searchText);
+              setPage(1);
+            }}
+            {...(tag === undefined ? {} : { activeTag: tag })}
+            onTagSelect={(next) => {
+              setTag(next);
+              setPage(1);
+            }}
+          />
+        </div>
       </div>
-    </SiteLayout>
+    </StoreShell>
   );
 }
