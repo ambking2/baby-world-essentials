@@ -1,115 +1,130 @@
+import { useMutation } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { Clock, Mail, MapPin, Phone } from "lucide-react";
+import { Clock, Instagram, Mail, MapPin, Phone } from "lucide-react";
+import { useState } from "react";
 import { toast } from "sonner";
 
-import { SiteLayout } from "@/components/site/SiteLayout";
-import { PageHeader } from "@/components/site/PageHeader";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { toFaDigits } from "@/lib/format";
-
-const title = "تماس با فروشگاه جهان کودک ابهر";
-const description =
-  "آدرس، تلفن و ساعت کار فروشگاه جهان کودک در ابهر؛ برای مشاوره خرید سیسمونی و سفارش سرویس خواب تماس بگیرید.";
+import { Breadcrumb } from "@/components/store/Breadcrumb";
+import { StoreShell } from "@/components/store/StoreShell";
+import { business } from "@/data/business";
+import { sendContactMessage } from "@/server/functions/catalog";
 
 export const Route = createFileRoute("/contact")({
-  head: () => ({
-    meta: [
-      { title },
-      { name: "description", content: description },
-      { property: "og:title", content: title },
-      { property: "og:description", content: description },
-      { property: "og:type", content: "website" },
-      { property: "og:url", content: "https://baby-world-essentials.lovable.app/contact" },
-    ],
-    links: [{ rel: "canonical", href: "https://baby-world-essentials.lovable.app/contact" }],
-  }),
   component: ContactPage,
-  errorComponent: ({ error }) => (
-    <div role="alert" className="container-page py-20 text-center text-sm">
-      {error.message}
-    </div>
-  ),
-  notFoundComponent: () => <div className="container-page py-20 text-center">یافت نشد</div>,
 });
 
+const inputClass =
+  "w-full rounded-xl border border-border bg-background px-3 py-2.5 text-xs outline-none transition-colors focus:border-brand";
+
 function ContactPage() {
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [subject, setSubject] = useState("");
+  const [body, setBody] = useState("");
+
+  const instagramUrl = "https://instagram.com/" + business.instagramHandle;
+
+  const send = useMutation({
+    mutationFn: () =>
+      sendContactMessage({
+        data: {
+          name,
+          body,
+          ...(phone.trim().length > 0 ? { phone: phone.trim() } : {}),
+          ...(email.trim().length > 0 ? { email: email.trim() } : {}),
+          ...(subject.trim().length > 0 ? { subject: subject.trim() } : {}),
+        },
+      }),
+    onSuccess: (result) => {
+      toast.success(result.message);
+      setSubject("");
+      setBody("");
+    },
+    onError: (error) => toast.error(error instanceof Error ? error.message : "ارسال پیام انجام نشد."),
+  });
+
   return (
-    <SiteLayout>
-      <PageHeader
-        title="تماس با ما"
-        description="برای موجودی، سفارش سرویس خواب یا پیگیری ارسال تماس بگیرید."
-        crumbs={[{ label: "تماس" }]}
-      />
+    <StoreShell>
+      <div className="container-page py-6">
+        <Breadcrumb items={[{ title: "تماس با ما" }]} />
 
-      <div className="container-page grid gap-8 py-10 lg:grid-cols-2">
-        <div>
-          <ul className="flex flex-col gap-4 text-sm">
-            <li className="flex gap-3">
-              <MapPin className="mt-0.5 size-5 shrink-0 text-primary" aria-hidden="true" />
-              <span>
-                زنجان، ابهر، خیابان طالقانی، روبه‌روی بانک ملت، پلاک {toFaDigits(142)}
-              </span>
-            </li>
-            <li className="flex gap-3">
-              <Phone className="mt-0.5 size-5 shrink-0 text-primary" aria-hidden="true" />
-              <a href="tel:+982435223344">{toFaDigits("024-35223344")}</a>
-            </li>
-            <li className="flex gap-3">
-              <Mail className="mt-0.5 size-5 shrink-0 text-primary" aria-hidden="true" />
-              info@jahankoodak.ir
-            </li>
-            <li className="flex gap-3">
-              <Clock className="mt-0.5 size-5 shrink-0 text-primary" aria-hidden="true" />
-              شنبه تا پنجشنبه {toFaDigits("۹:۰۰")} تا {toFaDigits("۲۱:۰۰")} — جمعه‌ها تعطیل
-            </li>
-          </ul>
+        <div className="grid gap-5 lg:grid-cols-[1fr_340px]">
+          <form
+            onSubmit={(event) => {
+              event.preventDefault();
+              send.mutate();
+            }}
+            className="space-y-3 rounded-3xl border border-border bg-card p-6"
+          >
+            <h1 className="text-lg font-extrabold text-foreground">پیام به جهان کودک</h1>
+            <p className="text-xs leading-6 text-muted-foreground">
+              برای مشاورهٔ خرید، پیگیری سفارش یا سفارش ساخت سرویس خواب فرم زیر را پر کنید.
+            </p>
 
-          <iframe
-            title="نقشه محل فروشگاه جهان کودک در ابهر"
-            src="https://www.openstreetmap.org/export/embed.html?bbox=49.19%2C36.13%2C49.24%2C36.16&layer=mapnik"
-            className="mt-6 h-72 w-full rounded-2xl border border-border"
-            loading="lazy"
-          />
-        </div>
-
-        <form
-          className="rounded-2xl border border-border bg-card p-6"
-          onSubmit={(e) => {
-            e.preventDefault();
-            toast.success("پیام شما ثبت شد؛ همان روز کاری تماس می‌گیریم");
-          }}
-        >
-          <p className="text-sm font-bold text-foreground">فرم تماس</p>
-          <div className="mt-5 flex flex-col gap-4">
-            <div className="flex flex-col gap-2">
-              <Label htmlFor="name">نام و نام خانوادگی</Label>
-              <Input id="name" name="name" required placeholder="مریم رحیمی" />
-            </div>
-            <div className="flex flex-col gap-2">
-              <Label htmlFor="phone">شماره موبایل</Label>
-              <Input
-                id="phone"
-                name="phone"
-                type="tel"
-                inputMode="numeric"
-                required
-                pattern="[0-9۰-۹]{11}"
-                placeholder="۰۹۱۲۳۴۵۶۷۸۹"
+            <div className="grid gap-3 sm:grid-cols-2">
+              <input required value={name} onChange={(event) => setName(event.target.value)} placeholder="نام و نام خانوادگی" className={inputClass} />
+              <input value={phone} onChange={(event) => setPhone(event.target.value)} placeholder="شمارهٔ تماس" inputMode="tel" className={inputClass} />
+              <input
+                type="email"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                placeholder="ایمیل (اختیاری)"
+                dir="ltr"
+                className={inputClass}
               />
+              <input value={subject} onChange={(event) => setSubject(event.target.value)} placeholder="موضوع" className={inputClass} />
             </div>
-            <div className="flex flex-col gap-2">
-              <Label htmlFor="message">پیام شما</Label>
-              <Textarea id="message" name="message" required rows={5} placeholder="سؤال یا سفارش شما" />
-            </div>
-            <Button type="submit" className="rounded-full">
-              ارسال پیام
-            </Button>
-          </div>
-        </form>
+
+            <textarea
+              required
+              value={body}
+              onChange={(event) => setBody(event.target.value)}
+              rows={5}
+              placeholder="متن پیام…"
+              className={inputClass}
+            />
+
+            <button
+              type="submit"
+              disabled={send.isPending}
+              className="rounded-full bg-brand px-6 py-3 text-xs font-bold text-primary-foreground disabled:opacity-60"
+            >
+              {send.isPending ? "در حال ارسال…" : "ارسال پیام"}
+            </button>
+          </form>
+
+          <aside className="h-fit space-y-3 rounded-3xl border border-border bg-card p-6 text-xs leading-7">
+            <h2 className="text-sm font-extrabold text-foreground">راه‌های ارتباط</h2>
+            <p className="flex items-center gap-2 text-muted-foreground">
+              <Phone className="size-4 text-brand" aria-hidden />
+              <a href={business.phoneHref} className="hover:text-brand">
+                {business.phoneDisplay}
+              </a>
+            </p>
+            <p className="flex items-center gap-2 text-muted-foreground">
+              <Mail className="size-4 text-brand" aria-hidden />
+              <a href={`mailto:${business.supportEmail}`} className="hover:text-brand" dir="ltr">
+                {business.supportEmail}
+              </a>
+            </p>
+            <p className="flex items-center gap-2 text-muted-foreground">
+              <Instagram className="size-4 text-brand" aria-hidden />
+              <a href={instagramUrl} target="_blank" rel="noreferrer" className="hover:text-brand" dir="ltr">
+                @{business.instagramHandle}
+              </a>
+            </p>
+            <p className="flex items-start gap-2 text-muted-foreground">
+              <MapPin className="mt-1 size-4 text-brand" aria-hidden />
+              {business.addressLine}
+            </p>
+            <p className="flex items-center gap-2 text-muted-foreground">
+              <Clock className="size-4 text-brand" aria-hidden />
+              {business.hoursFull}
+            </p>
+          </aside>
+        </div>
       </div>
-    </SiteLayout>
+    </StoreShell>
   );
 }
