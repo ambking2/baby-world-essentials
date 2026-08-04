@@ -3,23 +3,28 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
 
-import { Breadcrumb } from "@/components/store/Breadcrumb";
 import { FilterSidebar, type FilterState } from "@/components/store/FilterSidebar";
 import { Pagination } from "@/components/store/Pagination";
 import { ProductGrid } from "@/components/store/ProductGrid";
 import { SortBar, type SortKeyUi } from "@/components/store/SortBar";
 import { StoreShell, storeKeys } from "@/components/store/StoreShell";
 import { toFaDigits } from "@/lib/format";
-import { getCatalogShell, getCategoryPage } from "@/server/functions/catalog";
+import { getCatalogShell } from "@/server/functions/catalog";
 import { addCartItem } from "@/server/functions/cart";
+import { getProducts } from "@/server/functions/products";
 import type { ProductCard } from "@/server/repo/products";
 
-export const Route = createFileRoute("/category/$slug")({
-  component: CategoryPage,
+type SearchParams = { q: string };
+
+export const Route = createFileRoute("/search")({
+  validateSearch: (search: Record<string, unknown>): SearchParams => ({
+    q: typeof search["q"] === "string" ? (search["q"] as string) : "",
+  }),
+  component: SearchPage,
 });
 
-function CategoryPage() {
-  const { slug } = Route.useParams();
+function SearchPage() {
+  const { q } = Route.useSearch();
   const queryClient = useQueryClient();
 
   const [page, setPage] = useState(1);
@@ -37,14 +42,15 @@ function CategoryPage() {
     staleTime: 5 * 60 * 1000,
   });
 
-  const pageQuery = useQuery({
-    queryKey: ["category", slug, page, sort, filters],
+  const listQuery = useQuery({
+    queryKey: ["search", q, page, sort, filters],
     queryFn: () =>
-      getCategoryPage({
+      getProducts({
         data: {
-          slug,
           page,
           sort,
+          perPage: 12,
+          ...(q.trim().length > 0 ? { q: q.trim() } : {}),
           ...(filters.minPrice === undefined ? {} : { minPrice: filters.minPrice }),
           ...(filters.maxPrice === undefined ? {} : { maxPrice: filters.maxPrice }),
           ...(filters.sizes.length > 0 ? { sizes: filters.sizes } : {}),
@@ -64,25 +70,17 @@ function CategoryPage() {
     onError: () => toast.error("افزودن به سبد انجام نشد."),
   });
 
-  const data = pageQuery.data;
-  const products = data?.products;
-  const categories = shellQuery.data?.categories ?? [];
+  const products = listQuery.data;
 
   return (
     <StoreShell>
       <div className="container-page py-6">
-        <Breadcrumb
-          items={(data?.breadcrumb ?? []).map((crumb) => ({ title: crumb.title, href: `/category/${crumb.slug}` }))}
-          className="mb-4"
-        />
-
         <div className="mb-5 rounded-3xl border border-border bg-card p-5">
-          <h1 className="text-xl font-extrabold text-foreground">{data?.category?.title ?? "دسته‌بندی محصولات"}</h1>
-          {data?.category?.blurb ? (
-            <p className="mt-2 max-w-2xl text-sm leading-7 text-muted-foreground">{data.category.blurb}</p>
-          ) : null}
+          <h1 className="text-xl font-extrabold text-foreground">
+            {q.trim().length > 0 ? `نتایج جستجو برای «${q}»` : "همهٔ محصولات فروشگاه"}
+          </h1>
           {products ? (
-            <p className="mt-2 text-xs text-muted-foreground">{toFaDigits(products.total)} کالا در این دسته پیدا شد</p>
+            <p className="mt-2 text-xs text-muted-foreground">{toFaDigits(products.total)} کالا پیدا شد</p>
           ) : null}
         </div>
 
@@ -96,8 +94,7 @@ function CategoryPage() {
             priceBounds={products?.priceBounds ?? { min: 0, max: 20_000_000 }}
             availableSizes={products?.availableSizes ?? []}
             availableColors={products?.availableColors ?? []}
-            categories={categories}
-            activeSlug={slug}
+            categories={shellQuery.data?.categories ?? []}
             className="hidden lg:block"
           />
 
@@ -116,7 +113,7 @@ function CategoryPage() {
               columns={3}
               onAddToCart={(product) => addToCart.mutate(product)}
               busyId={addToCart.isPending ? (addToCart.variables?.id ?? null) : null}
-              emptyMessage={pageQuery.isLoading ? "در حال بارگزاری محصولات…" : "محصولی با این فیلترها پیدا نشد."}
+              emptyMessage={listQuery.isLoading ? "در حال جستجو…" : "نتیجه‌ای پیدا نشد؛ عبارت دیگری را امتحان کنید."}
             />
 
             <Pagination
