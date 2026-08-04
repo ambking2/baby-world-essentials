@@ -1,50 +1,79 @@
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { toast } from "sonner";
 
-import { SiteLayout } from "@/components/site/SiteLayout";
-import { PageHeader } from "@/components/site/PageHeader";
-import { ProductGrid } from "@/components/site/ProductGrid";
-import { productsQuery } from "@/lib/api/catalog";
-
-const title = "تخفیف‌های این هفته | جهان کودک";
-const description =
-  "کالاهای تخفیف‌دار فروشگاه جهان کودک ابهر؛ قیمت ویژه تا پایان موجودی انبار.";
+import { Countdown } from "@/components/store/Countdown";
+import { ProductGrid } from "@/components/store/ProductGrid";
+import { SectionHeading } from "@/components/store/SectionHeading";
+import { StoreShell, storeKeys } from "@/components/store/StoreShell";
+import { addCartItem } from "@/server/functions/cart";
+import { getHomeProducts, getProducts } from "@/server/functions/products";
+import type { ProductCard } from "@/server/repo/products";
 
 export const Route = createFileRoute("/offers")({
-  loader: ({ context }) => context.queryClient.ensureQueryData(productsQuery({ tag: "offer" })),
-  head: () => ({
-    meta: [
-      { title },
-      { name: "description", content: description },
-      { property: "og:title", content: title },
-      { property: "og:description", content: description },
-      { property: "og:type", content: "website" },
-      { property: "og:url", content: "https://baby-world-essentials.lovable.app/offers" },
-    ],
-    links: [{ rel: "canonical", href: "https://baby-world-essentials.lovable.app/offers" }],
-  }),
   component: OffersPage,
-  errorComponent: ({ error }) => (
-    <div role="alert" className="container-page py-20 text-center text-sm">
-      {error.message}
-    </div>
-  ),
-  notFoundComponent: () => <div className="container-page py-20 text-center">یافت نشد</div>,
 });
 
 function OffersPage() {
-  const { data: products } = useSuspenseQuery(productsQuery({ tag: "offer" }));
+  const queryClient = useQueryClient();
+
+  const homeQuery = useQuery({ queryKey: ["home-products"], queryFn: () => getHomeProducts(), staleTime: 60 * 1000 });
+
+  const discountedQuery = useQuery({
+    queryKey: ["offers"],
+    queryFn: () => getProducts({ data: { onlyDiscounted: true, sort: "discount", perPage: 24 } }),
+  });
+
+  const addToCart = useMutation({
+    mutationFn: (product: ProductCard) => addCartItem({ data: { productId: product.id, qty: 1 } }),
+    onSuccess: (result) => {
+      toast.success(result.message);
+      void queryClient.invalidateQueries({ queryKey: storeKeys.cart });
+    },
+    onError: () => toast.error("افزودن به سبد انجام نشد."),
+  });
+
+  const gridProps = {
+    onAddToCart: (product: ProductCard) => addToCart.mutate(product),
+    busyId: addToCart.isPending ? (addToCart.variables?.id ?? null) : null,
+  };
+
+  const flash = homeQuery.data?.flashSale ?? [];
+  const firstEnd = flash[0]?.saleEndsAt ?? null;
 
   return (
-    <SiteLayout>
-      <PageHeader
-        title="تخفیف‌های این هفته"
-        description="قیمت‌ها تا پایان موجودی انبار معتبر است."
-        crumbs={[{ label: "تخفیف‌ها" }]}
-      />
+    <StoreShell>
       <div className="container-page py-8">
-        <ProductGrid products={products} />
+        <div className="mb-6 rounded-3xl border border-sale/30 bg-sale/5 p-6">
+          <h1 className="text-xl font-extrabold text-sale">تخفیف‌ها و پیشنهادهای ویژه</h1>
+          <p className="mt-2 max-w-2xl text-sm leading-7 text-muted-foreground">
+            فروش ویژهٔ سیسمونی، لباس نوزاد و تجهیزات اتاق کودک. موجودی محدود است.
+          </p>
+          {firstEnd ? (
+            <div className="mt-4">
+              <p className="mb-1.5 text-xs font-bold text-sale">نزدیک‌ترین تخفیف در حال پایان:</p>
+              <Countdown endsAt={firstEnd} />
+            </div>
+          ) : null}
+        </div>
+
+        {flash.length > 0 ? (
+          <section className="mb-10">
+            <SectionHeading title="حراج زمان‌دار" subtitle="تا پایان مهلت، با قیمت ویژه" />
+            <ProductGrid products={flash} columns={4} {...gridProps} />
+          </section>
+        ) : null}
+
+        <section>
+          <SectionHeading title="همهٔ کالاهای دارای تخفیف" subtitle="مرتب‌شده بر اساس بیشترین میزان تخفیف" />
+          <ProductGrid
+            products={discountedQuery.data?.items ?? []}
+            columns={4}
+            {...gridProps}
+            emptyMessage={discountedQuery.isLoading ? "در حال بارگزاری…" : "فعلاً تخفیف فعالی ثبت نشده است."}
+          />
+        </section>
       </div>
-    </SiteLayout>
+    </StoreShell>
   );
 }
