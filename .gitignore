@@ -20,6 +20,11 @@ dist-ssr
 .wrangler/
 .dev.vars
 
+# Local data (sqlite database + uploaded files)
+data/
+public/uploads/*
+!public/uploads/.gitkeep
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
