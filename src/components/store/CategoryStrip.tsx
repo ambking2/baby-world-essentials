@@ -1,4 +1,6 @@
 import { Link } from "@tanstack/react-router";
+import { Sparkles } from "lucide-react";
+
 
 import { SectionHeading } from "@/components/store/SectionHeading";
 import { useReveal } from "@/hooks/use-reveal";
