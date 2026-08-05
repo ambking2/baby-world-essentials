@@ -1,10 +1,16 @@
 /**
  * پرکردن دیتابیس با دادهٔ اولیه.
- * اجرا: npm run seed
+ *
+ * محلی (node:sqlite):   npm run seed
+ * روی Cloudflare D1:
+ *   1) npx wrangler d1 migrations apply jahankoodak --remote
+ *   2) npx wrangler d1 execute jahankoodak --remote --file=./migrations/0002_seed.sql
+ *      (یا موقتاً DATABASE_PATH را خالی کنید و همین اسکریپت را محلی بگیرید و فایل sqlite را با
+ *      wrangler d1 execute منتقل کنید)
  */
 import { business } from "../data/business";
 import { hashPassword } from "./auth";
-import { getDb, nowIso, one, run, transaction } from "./db";
+import { ensureSchema, nowIso, one, run } from "./db";
 import { setSetting } from "./repo/catalog";
 import { CATEGORIES, POSTS, PRODUCTS, type SeedCategory } from "./seed-data";
 
@@ -16,8 +22,12 @@ function daysAgo(days: number): string {
   return new Date(Date.now() - days * 86_400_000).toISOString();
 }
 
-function insertCategory(category: SeedCategory, parentId: number | null, sort: number): number {
-  const result = run(
+async function insertCategory(
+  category: SeedCategory,
+  parentId: number | null,
+  sort: number,
+): Promise<number> {
+  const result = await run(
     `INSERT INTO categories (slug, title, blurb, image, parent_id, kind, sort, is_active)
      VALUES (?, ?, ?, ?, ?, ?, ?, 1)`,
     category.slug,
@@ -31,27 +41,34 @@ function insertCategory(category: SeedCategory, parentId: number | null, sort: n
   return result.lastInsertRowid;
 }
 
-function seedCategories(): Map<string, number> {
+async function seedCategories(): Promise<Map<string, number>> {
   const ids = new Map<string, number>();
-  CATEGORIES.forEach((parent, parentIndex) => {
-    const parentId = insertCategory(parent, null, parentIndex);
+
+  for (const [parentIndex, parent] of CATEGORIES.entries()) {
+    const parentId = await insertCategory(parent, null, parentIndex);
     ids.set(parent.slug, parentId);
-    (parent.children ?? []).forEach((child, childIndex) => {
-      ids.set(child.slug, insertCategory(child, parentId, childIndex));
-    });
-  });
+
+    const children = parent.children ?? [];
+    for (const [childIndex, child] of children.entries()) {
+      ids.set(child.slug, await insertCategory(child, parentId, childIndex));
+    }
+  }
+
   return ids;
 }
 
-function seedProducts(categoryIds: Map<string, number>): void {
+async function seedProducts(categoryIds: Map<string, number>): Promise<void> {
   const now = nowIso();
 
   for (const product of PRODUCTS) {
     const categoryId = categoryIds.get(product.category) ?? null;
     const timed = typeof product.salePercent === "number" && typeof product.saleDays === "number";
-    const variantStock = (product.variants ?? []).reduce((total, variant) => total + (variant.stock ?? 0), 0);
+    const variantStock = (product.variants ?? []).reduce(
+      (total, variant) => total + (variant.stock ?? 0),
+      0,
+    );
 
-    const result = run(
+    const result = await run(
       `INSERT INTO products (
          code, slug, title, subtitle, description, category_id, price, discount_percent,
          sale_percent, sale_starts_at, sale_ends_at, stock, weight_grams,
@@ -79,28 +96,29 @@ function seedProducts(categoryIds: Map<string, number>): void {
     );
     const productId = result.lastInsertRowid;
 
-    product.images.forEach((url, index) => {
-      run(
+    for (const [index, url] of product.images.entries()) {
+      await run(
         "INSERT INTO product_images (product_id, url, alt, sort) VALUES (?, ?, ?, ?)",
         productId,
         url,
         product.title,
         index,
       );
-    });
+    }
 
-    product.attributes.forEach((attribute, index) => {
-      run(
+    for (const [index, attribute] of product.attributes.entries()) {
+      await run(
         "INSERT INTO product_attributes (product_id, name, value, sort) VALUES (?, ?, ?, ?)",
         productId,
         attribute.name,
         attribute.value,
         index,
       );
-    });
+    }
 
-    (product.variants ?? []).forEach((variant, index) => {
-      run(
+    const variants = product.variants ?? [];
+    for (const [index, variant] of variants.entries()) {
+      await run(
         `INSERT INTO product_variants (product_id, size, color, color_hex, price_delta, stock, sort)
          VALUES (?, ?, ?, ?, ?, ?, ?)`,
         productId,
@@ -111,13 +129,13 @@ function seedProducts(categoryIds: Map<string, number>): void {
         variant.stock ?? 0,
         index,
       );
-    });
+    }
   }
 }
 
-function seedPosts(): void {
+async function seedPosts(): Promise<void> {
   for (const post of POSTS) {
-    run(
+    await run(
       `INSERT INTO blog_posts (slug, title, excerpt, body, cover, tag, author, status, published_at, view_count)
        VALUES (?, ?, ?, ?, ?, ?, ?, 'published', ?, ?)`,
       post.slug,
@@ -133,20 +151,20 @@ function seedPosts(): void {
   }
 }
 
-function seedSettings(): void {
-  setSetting("free_shipping_threshold", String(business.freeShippingThreshold));
-  setSetting("shipping_flat_fee", String(business.shippingFlatFee));
-  setSetting("card_number", business.cardNumber);
-  setSetting("card_holder", business.cardHolder);
-  setSetting("card_bank", business.cardBank);
-  setSetting(
+async function seedSettings(): Promise<void> {
+  await setSetting("free_shipping_threshold", String(business.freeShippingThreshold));
+  await setSetting("shipping_flat_fee", String(business.shippingFlatFee));
+  await setSetting("card_number", business.cardNumber);
+  await setSetting("card_holder", business.cardHolder);
+  await setSetting("card_bank", business.cardBank);
+  await setSetting(
     "announcement",
     "ارسال رایگان برای سفارش‌های بالای پنج میلیون تومان — مشاورهٔ خرید در فروشگاه ابهر",
   );
 }
 
-function seedCoupon(): void {
-  run(
+async function seedCoupon(): Promise<void> {
+  await run(
     `INSERT INTO coupons (code, kind, value, min_total, max_off, max_uses, used_count, starts_at, ends_at, is_active, created_at)
      VALUES ('JAHAN10', 'percent', 10, 2000000, 800000, 100, 0, ?, ?, 1, ?)`,
     nowIso(),
@@ -160,7 +178,7 @@ async function seedAdmin(): Promise<string> {
   const password = process.env["ADMIN_PASSWORD"] ?? "Jahan@1404";
   const passwordHash = await hashPassword(password);
 
-  run(
+  await run(
     `INSERT INTO users (email, password_hash, name, phone, role, email_verified_at, created_at)
      VALUES (?, ?, ?, ?, 'admin', ?, ?)`,
     email,
@@ -175,24 +193,20 @@ async function seedAdmin(): Promise<string> {
 }
 
 async function seed(): Promise<void> {
-  getDb();
+  await ensureSchema();
 
-  const existing = one<{ c: number }>("SELECT COUNT(*) AS c FROM products");
+  const existing = await one<{ c: number }>("SELECT COUNT(*) AS c FROM products");
   if (existing && Number(existing.c) > 0) {
     console.log("دیتابیس از قبل داده دارد؛ برای پرکردن مجدد، فایل data/store.db را حذف کنید.");
     return;
   }
 
   const adminEmail = await seedAdmin();
-
-  transaction(() => {
-    const categoryIds = seedCategories();
-    seedProducts(categoryIds);
-    seedPosts();
-    seedSettings();
-    seedCoupon();
-    return true;
-  });
+  const categoryIds = await seedCategories();
+  await seedProducts(categoryIds);
+  await seedPosts();
+  await seedSettings();
+  await seedCoupon();
 
   console.log("دادهٔ اولیه با موفقیت وارد شد.");
   console.log(`تعداد محصولات: ${PRODUCTS.length} — تعداد مقالات: ${POSTS.length}`);
