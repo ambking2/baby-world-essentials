@@ -21,7 +21,7 @@ const SLIDES: Array<Slide> = [
     body: "مجموعه‌ای از بهترین برندهای جهانی و تولیدات اختصاصی کارگاه با بالاترین استاندارد کیفی برای دلبند شما.",
     cta: "مشاهده جدیدترین‌ها",
     href: "/search",
-    image: "https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?q=80&w=2075&auto=format&fit=crop",
+    image: "/assets/images/nursery-3.jpg",
   },
   {
     subtitle: "سرویس خواب نوردیک",
@@ -29,7 +29,7 @@ const SLIDES: Array<Slide> = [
     body: "طراحی مینیمال و ارگونومیک با استفاده از چوب طبیعی و رنگ‌های گیاهی برای سلامت نوزاد شما.",
     cta: "خرید سرویس خواب",
     href: "/category/servis-khab",
-    image: "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?q=80&w=2071&auto=format&fit=crop",
+    image: "/assets/images/nursery-7.jpg",
   },
 ];
 
