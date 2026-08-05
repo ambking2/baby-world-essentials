@@ -159,8 +159,8 @@ function ProductPage() {
                         key={s}
                         onClick={() => setSize(s)}
                         className={cn(
-                          "min-w-12 border px-4 py-2 text-sm font-medium transition-premium",
-                          size === s ? "border-foreground bg-foreground text-white" : "border-border hover:border-foreground"
+                          "min-w-12 border px-4 py-2 text-sm font-medium transition-premium rounded-md",
+                          size === s ? "border-primary bg-primary text-white" : "border-border hover:border-primary/50"
                         )}
                       >
                         {s}
