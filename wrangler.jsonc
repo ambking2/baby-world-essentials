@@ -8,7 +8,7 @@
   // سپس اسکیمای دیتابیس را اعمال کنید:
   //   npx wrangler d1 migrations apply jahankoodak --remote
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "baby-world-essentials2",
+  "name": "baby-world-essentials",
   "main": ".output/server/index.mjs",
   "compatibility_date": "2025-06-01",
   "compatibility_flags": ["nodejs_compat"],
