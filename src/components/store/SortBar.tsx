@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import { toFaDigits } from "@/lib/format";
+import { ChevronDown } from "lucide-react";
 
 export type SortKeyUi = "newest" | "cheapest" | "expensive" | "popular" | "rating" | "discount";
 
@@ -12,7 +13,6 @@ const OPTIONS: Array<{ key: SortKeyUi; label: string }> = [
   { key: "discount", label: "بیشترین تخفیف" },
 ];
 
-/** نوار مرتب‌سازی و شمارش نتایج. */
 export function SortBar({
   sort,
   total,
@@ -24,25 +24,34 @@ export function SortBar({
   onChange: (sort: SortKeyUi) => void;
   className?: string;
 }) {
+  const activeLabel = OPTIONS.find(o => o.key === sort)?.label;
+
   return (
-    <div className={cn("mb-8 flex flex-wrap items-center gap-4 lg:gap-8 border-b border-border pb-2", className)}>
-      <span className="text-[9px] font-bold uppercase tracking-widest text-gray-400">مرتب‌سازی:</span>
-      <div className="hide-scrollbar flex items-center gap-1.5 overflow-x-auto">
-        {OPTIONS.map((option) => (
-          <button
-            key={option.key}
-            type="button"
-            onClick={() => onChange(option.key)}
-            className={cn(
-              "whitespace-nowrap text-[9px] font-bold uppercase tracking-widest transition-colors",
-              sort === option.key ? "text-gray-900 border-b-2 border-gray-900 pb-4 -mb-[18px]" : "text-gray-400 hover:text-gray-900 pb-4 -mb-[18px]",
-            )}
-          >
-            {option.label}
-          </button>
-        ))}
+    <div className={cn("mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border pb-6", className)}>
+      <div className="flex items-center gap-6 overflow-x-auto hide-scrollbar">
+        <span className="hidden md:inline text-[10px] font-bold uppercase tracking-widest text-muted-foreground shrink-0">مرتب‌سازی براساس:</span>
+        <div className="flex items-center gap-6">
+          {OPTIONS.map((option) => (
+            <button
+              key={option.key}
+              type="button"
+              onClick={() => onChange(option.key)}
+              className={cn(
+                "whitespace-nowrap text-[12px] font-bold transition-all relative pb-1",
+                sort === option.key 
+                  ? "text-gray-900 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-primary" 
+                  : "text-muted-foreground hover:text-gray-900"
+              )}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
       </div>
-      <span className="ms-auto text-[9px] font-bold uppercase tracking-widest text-gray-400">{toFaDigits(total)} کالا</span>
+      
+      <div className="flex items-center justify-between sm:justify-end gap-4 shrink-0">
+        <span className="text-[11px] font-medium text-muted-foreground">نمایش {toFaDigits(total)} کالا</span>
+      </div>
     </div>
   );
 }
