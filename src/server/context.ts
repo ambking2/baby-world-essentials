@@ -5,14 +5,24 @@ import { CART_COOKIE, SESSION_COOKIE, userFromSessionToken, type PublicUser } fr
 /**
  * تمام دسترسی به کوکی و درخواست فقط از این فایل انجام می‌شود، تا اگر
  * API فریم‌ورک عوض شد فقط همین یک فایل نیاز به تغییر داشته باشد.
+ *
+ * روی Cloudflare تشخیص محیط تولید از process.env قابل اتکا نیست؛ بنابراین
+ * امن بودن کوکی را از پروتکل خود درخواست تشخیص می‌دهیم.
  */
-
-const isProd = process.env["NODE_ENV"] === "production";
 
 type CookieOptions = {
   maxAgeSeconds?: number;
   expires?: Date;
 };
+
+/** روی HTTPS کوکی‌ها secure می‌شوند؛ روی localhost نه. */
+function isSecureRequest(): boolean {
+  try {
+    return new URL(getRequest().url).protocol === "https:";
+  } catch {
+    return process.env["NODE_ENV"] === "production";
+  }
+}
 
 export function readCookie(name: string): string | undefined {
   return getCookie(name) ?? undefined;
@@ -22,7 +32,7 @@ export function writeCookie(name: string, value: string, options: CookieOptions 
   setCookie(name, value, {
     httpOnly: true,
     sameSite: "lax",
-    secure: isProd,
+    secure: isSecureRequest(),
     path: "/",
     ...(options.maxAgeSeconds === undefined ? {} : { maxAge: options.maxAgeSeconds }),
     ...(options.expires === undefined ? {} : { expires: options.expires }),
@@ -33,8 +43,16 @@ export function clearCookie(name: string): void {
   deleteCookie(name, { path: "/" });
 }
 
+/**
+ * نشانی IP کاربر.
+ *
+ * روی Cloudflare هدر دقیق CF-Connecting-IP است، پس اول آن را می‌خوانیم.
+ */
 export function clientIp(): string {
-  const forwarded = getRequest().headers.get("x-forwarded-for");
+  const headers = getRequest().headers;
+  const cloudflareIp = headers.get("cf-connecting-ip");
+  if (cloudflareIp) return cloudflareIp;
+  const forwarded = headers.get("x-forwarded-for");
   return forwarded?.split(",")[0]?.trim() ?? "unknown";
 }
 
@@ -42,7 +60,7 @@ export function clientIp(): string {
 /* کاربر جاری                                                         */
 /* ------------------------------------------------------------------ */
 
-export function currentUser(): PublicUser | null {
+export async function currentUser(): Promise<PublicUser | null> {
   return userFromSessionToken(readCookie(SESSION_COOKIE));
 }
 
@@ -55,14 +73,14 @@ export class AuthError extends Error {
   }
 }
 
-export function requireUser(): PublicUser {
-  const user = currentUser();
+export async function requireUser(): Promise<PublicUser> {
+  const user = await currentUser();
   if (!user) throw new AuthError("برای ادامه باید وارد حساب خود شوید.");
   return user;
 }
 
-export function requireAdmin(): PublicUser {
-  const user = requireUser();
+export async function requireAdmin(): Promise<PublicUser> {
+  const user = await requireUser();
   if (user.role !== "admin") throw new AuthError("دسترسی به پنل مدیریت مجاز نیست.", 403);
   return user;
 }
