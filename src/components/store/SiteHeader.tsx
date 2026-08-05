@@ -163,7 +163,7 @@ export function SiteHeader({
           </div>
           
           <div className="hidden xl:block text-[9px] text-muted-foreground max-w-[150px] leading-tight text-left">
-            داخل موبایل این از اسکیل اصلی موبایل خارج میشه و به هم میزنه سایت رو
+            پیاده‌سازی استایل‌های ریسپانسیو برای هدر سایت من در حالت موبایل را انجام بده تا به هم نریزد.
           </div>
         </div>
       </nav>
