@@ -165,8 +165,8 @@ function CartPage() {
 
             {/* Summary Sidebar */}
             <aside className="h-fit">
-              <div className="sticky top-24 space-y-6 rounded-[24px] border border-border bg-white p-8 shadow-soft">
-                <h2 className="text-base font-bold text-gray-900 uppercase tracking-widest border-b border-border pb-4 mb-2">خلاصه خرید</h2>
+              <div className="sticky top-24 space-y-6 rounded-[24px] border border-border bg-white p-6 md:p-8 shadow-soft">
+                <h2 className="text-sm font-bold text-gray-900 uppercase tracking-widest border-b border-border pb-4 mb-2">خلاصه خرید</h2>
                 
                 <div className="space-y-4">
                   <div className="flex items-center justify-between text-sm">
