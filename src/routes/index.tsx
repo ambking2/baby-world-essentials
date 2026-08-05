@@ -135,41 +135,7 @@ function HomePage() {
         </div>
       </section>
 
-      {/* Trust Badges - Clean & Minimal */}
-      <section className="border-t border-border section-spacing">
-        <div className="container-page">
-          <div className="grid grid-cols-1 gap-16 text-center sm:grid-cols-2 lg:grid-cols-4">
-            <div>
-              <div className="mx-auto mb-6 flex size-12 items-center justify-center rounded-full bg-secondary">
-                <Heart className="size-6 text-primary" />
-              </div>
-              <h4 className="mb-2 text-sm font-bold uppercase tracking-wide">اصالت کالا</h4>
-              <p className="text-xs text-muted-foreground">تضمین ۱۰۰٪ کیفیت محصولات</p>
-            </div>
-            <div>
-              <div className="mx-auto mb-6 flex size-12 items-center justify-center rounded-full bg-secondary">
-                <Truck className="size-6 text-primary" />
-              </div>
-              <h4 className="mb-2 text-sm font-bold uppercase tracking-wide">ارسال سریع</h4>
-              <p className="text-xs text-muted-foreground">به تمام نقاط ایران</p>
-            </div>
-            <div>
-              <div className="mx-auto mb-6 flex size-12 items-center justify-center rounded-full bg-secondary">
-                <ShieldCheck className="size-6 text-primary" />
-              </div>
-              <h4 className="mb-2 text-sm font-bold uppercase tracking-wide">پرداخت امن</h4>
-              <p className="text-xs text-muted-foreground">درگاه‌های معتبر بانکی</p>
-            </div>
-            <div>
-              <div className="mx-auto mb-6 flex size-12 items-center justify-center rounded-full bg-secondary">
-                <Headphones className="size-6 text-primary" />
-              </div>
-              <h4 className="mb-2 text-sm font-bold uppercase tracking-wide">پشتیبانی ۲۴/۷</h4>
-              <p className="text-xs text-muted-foreground">همیشه پاسخگوی شما هستیم</p>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Additional Trust Section Removed as it is now integrated in HeroSlider */}
     </StoreShell>
   );
 }
