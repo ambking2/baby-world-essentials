@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { type ReactNode } from "react";
+import { type ReactNode, useEffect } from "react";
 import { toast } from "sonner";
+import { reportLovableError } from "@/lib/lovable-error-reporting";
 
 import { SiteFooter } from "@/components/store/SiteFooter";
 import { SiteHeader } from "@/components/store/SiteHeader";
@@ -22,6 +23,12 @@ export function StoreShell({ children }: { children: ReactNode }) {
     queryFn: () => getCatalogShell(),
     staleTime: 5 * 60 * 1000,
   });
+
+  useEffect(() => {
+    if (shellQuery.error) {
+      reportLovableError(shellQuery.error as Error, { boundary: "StoreShell_shellQuery" });
+    }
+  }, [shellQuery.error]);
 
   const cartQuery = useQuery({
     queryKey: storeKeys.cart,
