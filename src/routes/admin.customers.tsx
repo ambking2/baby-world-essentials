@@ -5,7 +5,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 import { formatJalali, formatJalaliTime, formatToman, toFaDigits } from "@/lib/format";
-import { getAdminCustomers, markAdminMessageRead } from "@/server/functions/admin";
+import { getAdminCustomers, markAdminMessageRead, updateUserRole } from "@/server/functions/admin";
 
 export const Route = createFileRoute("/admin/customers")({
   component: AdminCustomers,
@@ -26,6 +26,17 @@ function AdminCustomers() {
     onSuccess: () => {
       toast.success("وضعیت پیام به‌روز شد.");
       void queryClient.invalidateQueries({ queryKey: ["admin-customers"] });
+    },
+  });
+
+  const changeRole = useMutation({
+    mutationFn: (input: { userId: number; role: "customer" | "admin" | "sales" }) => updateUserRole({ data: input }),
+    onSuccess: (result) => {
+      toast.success(result.message);
+      void queryClient.invalidateQueries({ queryKey: ["admin-customers"] });
+    },
+    onError: () => {
+      toast.error("خطا در تغییر نقش.");
     },
   });
 
@@ -80,28 +91,13 @@ function AdminCustomers() {
                   <td className="p-2">{customer.emailVerified ? "تأییدشده" : "در انتطار"}</td>
                   <td className="p-2">
                     <select
-                      defaultValue={customer.role}
-                      onChange={async (e) => {
-                        const newRole = e.target.value;
-                        try {
-                          // Note: In a real app we'd have a dedicated server function for this.
-                          // For now, I'm providing the UI to change it.
-                          toast.promise(
-                            fetch('/api/admin/update-role', {
-                              method: 'POST',
-                              body: JSON.stringify({ userId: customer.id, role: newRole })
-                            }),
-                            {
-                              loading: 'در حال به‌روزرسانی نقش...',
-                              success: 'نقش با موفقیت تغییر کرد.',
-                              error: 'خطا در تغییر نقش.'
-                            }
-                          );
-                        } catch (err) {
-                          console.error(err);
-                        }
+                      value={customer.role}
+                      disabled={changeRole.isPending}
+                      onChange={(e) => {
+                        const newRole = e.target.value as "customer" | "admin" | "sales";
+                        changeRole.mutate({ userId: customer.id, role: newRole });
                       }}
-                      className="rounded-lg border border-border bg-background px-2 py-1 text-[10px] outline-none focus:border-brand"
+                      className="rounded-lg border border-border bg-background px-2 py-1 text-[10px] outline-none focus:border-brand disabled:opacity-50"
                     >
                       <option value="customer">مشتری</option>
                       <option value="sales">کارشناس فروش</option>
