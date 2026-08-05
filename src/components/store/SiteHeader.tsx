@@ -235,7 +235,7 @@ export function SiteHeader({
             <div className="flex justify-center gap-8 py-2">
                <div className="flex flex-col items-center gap-1">
                  <span className="text-[10px] text-muted-foreground uppercase tracking-widest">پشتیبانی</span>
-                 <a href={business.phoneHref} className="text-[12px] font-bold text-gray-900">{toFaDigits(business.phone)}</a>
+                 <a href={business.phoneHref} className="text-[12px] font-bold text-gray-900">{toFaDigits(business.phoneDisplay)}</a>
                </div>
             </div>
           </div>
