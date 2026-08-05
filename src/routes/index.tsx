@@ -42,7 +42,7 @@ function HomePage() {
     <StoreShell>
       <HeroSlider />
 
-      <div className="-mt-8 relative z-10 pt-8">
+      <div className="-mt-12 relative z-10 pt-12 zigzag-top bg-white">
         <TrustBadges />
       </div>
 

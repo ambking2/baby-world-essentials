@@ -29,8 +29,8 @@ export function ProductCard({ product }: { product: Product }) {
   const isNew = product.tags.includes("new");
 
   return (
-    <article className="group flex h-full flex-col text-center">
-      <div className="relative overflow-hidden rounded-2xl bg-secondary">
+    <article className="group flex h-full flex-col text-center p-3 rounded-[3rem] bg-white shadow-soft hover:shadow-deep transition-all duration-500 hover:-translate-y-2 border-2 border-transparent hover:border-brand/10">
+      <div className="relative overflow-hidden rounded-[2.5rem] bg-secondary shadow-inner">
         <Link to="/product/$slug" params={{ slug: product.slug }} className="block">
           <img
             src={product.image}
@@ -102,7 +102,7 @@ export function ProductCard({ product }: { product: Product }) {
               {formatToman(product.oldPrice)}
             </span>
           ) : null}
-          <span className="text-[15px] font-black text-primary md:text-base">
+          <span className="text-xl font-black text-brand md:text-2xl">
             {formatToman(product.price)}
           </span>
           <span className="text-[11px] text-muted-foreground">تومان</span>

@@ -112,16 +112,12 @@ export function SiteHeader({
               <Menu className="size-5" aria-hidden />
             </button>
 
-            <Link to="/" className="flex shrink-0 items-center gap-3">
-              <span className="toy-button relative grid size-16 place-items-center rounded-[2rem] bg-gradient-to-br from-brand to-sale text-3xl font-black text-white shadow-lift">
+            <Link to="/" className="flex shrink-0 items-center gap-4 lg:absolute lg:start-1/2 lg:-translate-x-1/2 lg:top-1/2 lg:-translate-y-1/2 lg:z-10">
+              <span className="toy-button relative grid size-20 lg:size-24 place-items-center rounded-[2.5rem] bg-gradient-to-br from-brand to-sun text-4xl font-black text-white shadow-deep border-4 border-white">
                 ج
-                <span className="absolute -bottom-2 start-1/2 -translate-x-1/2 rounded-full bg-white px-2 py-0.5 text-[9px] font-black text-brand shadow-soft">
+                <span className="absolute -bottom-3 start-1/2 -translate-x-1/2 rounded-full bg-white px-3 py-1 text-[11px] font-black text-brand shadow-soft uppercase tracking-wider">
                   kids
                 </span>
-              </span>
-              <span className="hidden leading-tight sm:block">
-                <span className="block text-base font-extrabold text-foreground">{business.shortName}</span>
-                <span className="block text-[11px] text-muted-foreground">سیسمونی، پوشاک و دکور اتاق کودک</span>
               </span>
             </Link>
 
@@ -210,59 +206,44 @@ export function SiteHeader({
             </div>
           </div>
 
-          <div className="mt-3 hidden items-center gap-2 lg:flex">
-            <div className="relative" onMouseEnter={() => setMegaOpen(true)} onMouseLeave={() => setMegaOpen(false)}>
-              <button
-                type="button"
-                className="inline-flex h-11 items-center gap-2 rounded-full bg-brand px-5 text-sm font-extrabold text-primary-foreground shadow-soft"
-              >
-                <LayoutGrid className="size-4" aria-hidden />
-                دسته‌بندی‌ها
-                <ChevronDown className={cn("size-4 transition-transform", megaOpen && "rotate-180")} aria-hidden />
-              </button>
-
-              {megaOpen ? (
-                <div className="pop-in absolute start-0 top-[calc(100%+12px)] z-50 grid w-[780px] grid-cols-3 gap-5 rounded-[2rem] border border-white/70 bg-white/96 p-6 shadow-lift backdrop-blur">
-                  {categories.map((category) => (
-                    <div key={category.slug} className="rounded-[1.5rem] border border-border/70 bg-background/90 p-4">
-                      <Link
-                        to="/category/$slug"
-                        params={{ slug: category.slug }}
-                        className="text-sm font-extrabold text-foreground transition-colors hover:text-brand"
-                      >
-                        {category.title}
-                      </Link>
-                      {category.blurb ? <p className="mt-1 text-[11px] leading-5 text-muted-foreground">{category.blurb}</p> : null}
-                      <ul className="mt-3 space-y-2">
-                        {category.children.map((child) => (
-                          <li key={child.slug}>
-                            <Link
-                              to="/category/$slug"
-                              params={{ slug: child.slug }}
-                              className="text-xs text-muted-foreground transition-colors hover:text-brand"
-                            >
-                              {child.title}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ))}
-                </div>
-              ) : null}
+          <div className="mt-3 hidden items-center justify-between lg:flex">
+            <div className="flex items-center gap-1">
+              <Link to="/" className="rounded-full px-5 py-2.5 text-sm font-black text-foreground hover:text-brand transition-colors">خانه</Link>
+              <Link to="/about" className="rounded-full px-5 py-2.5 text-sm font-black text-foreground hover:text-brand transition-colors">درباره ما</Link>
+              <Link to="/services" className="rounded-full px-5 py-2.5 text-sm font-black text-foreground hover:text-brand transition-colors">خدمات</Link>
+              <Link to="/testimonials" className="rounded-full px-5 py-2.5 text-sm font-black text-foreground hover:text-brand transition-colors">نظرات</Link>
             </div>
 
-            <div className="hide-scrollbar flex flex-1 items-center gap-1 overflow-x-auto rounded-full bg-white/75 px-2 py-1 shadow-inner backdrop-blur-sm">
-              {QUICK_LINKS.map((link) => (
-                <Link
-                  key={link.href}
-                  to={link.href}
-                  className="whitespace-nowrap rounded-full px-4 py-2 text-sm font-semibold text-foreground transition-colors hover:bg-brand-soft hover:text-brand"
-                >
-                  {link.label}
-                </Link>
-              ))}
+            <div className="w-28 h-10 invisible" /> {/* Placeholder for centered logo */}
+
+            <div className="flex items-center gap-1">
+              <Link to="/search" className="rounded-full px-5 py-2.5 text-sm font-black text-foreground hover:text-brand transition-colors">فروشگاه</Link>
+              <Link to="/blog" className="rounded-full px-5 py-2.5 text-sm font-black text-foreground hover:text-brand transition-colors">مجله</Link>
+              <Link to="/contact" className="rounded-full px-5 py-2.5 text-sm font-black text-foreground hover:text-brand transition-colors">تماس با ما</Link>
+              <div className="relative group/mega" onMouseEnter={() => setMegaOpen(true)} onMouseLeave={() => setMegaOpen(false)}>
+                <button type="button" className="inline-flex items-center gap-1.5 rounded-full px-5 py-2.5 text-sm font-black text-brand hover:bg-brand-soft transition-all">
+                  <LayoutGrid className="size-4" />
+                  دسته‌ها
+                </button>
+                {megaOpen && (
+                  <div className="pop-in absolute end-0 top-[calc(100%+12px)] z-50 grid w-[780px] grid-cols-3 gap-5 rounded-[2.5rem] border-4 border-white bg-white/98 p-8 shadow-deep backdrop-blur">
+                    {categories.map((category) => (
+                      <div key={category.slug} className="rounded-[2rem] bg-secondary/50 p-5 hover:bg-white transition-colors border border-transparent hover:border-brand/10">
+                        <Link to="/category/$slug" params={{ slug: category.slug }} className="text-sm font-black text-foreground hover:text-brand">{category.title}</Link>
+                        <ul className="mt-4 space-y-2.5">
+                          {category.children.map((child) => (
+                            <li key={child.slug}>
+                              <Link to="/category/$slug" params={{ slug: child.slug }} className="text-xs font-bold text-muted-foreground hover:text-brand">{child.title}</Link>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
+          </div>
 
             {isAdmin ? (
               <Link
