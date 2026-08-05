@@ -22,7 +22,7 @@ export function ProductSection({
   title,
   subtitle,
   query = {},
-  moreTo = "/shop",
+  moreTo = "/search",
   linkLabel = "مشاهده همه",
   rail = false,
   tone = "default",
