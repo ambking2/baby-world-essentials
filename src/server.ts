@@ -2,6 +2,7 @@ import "./lib/error-capture";
 
 import { consumeLastCapturedError } from "./lib/error-capture";
 import { renderErrorPage } from "./lib/error-page";
+import { uploadResponse } from "./server/uploads";
 
 type ServerEntry = {
   fetch: (request: Request, env: unknown, ctx: unknown) => Promise<Response> | Response;
@@ -44,9 +45,34 @@ function isH3SwallowedErrorBody(body: string): boolean {
   }
 }
 
+/**
+ * تصاویر بارگزاری‌شده روی Cloudflare داخل R2 هستند، نه در پوشه‌ی public.
+ * پس درخواست‌های /uploads/* را پیش از رسیدن به روتر اپ، مستقیم از R2 پاسخ می‌دهیم.
+ */
+async function serveUpload(request: Request): Promise<Response | null> {
+  if (request.method !== "GET" && request.method !== "HEAD") return null;
+
+  const { pathname } = new URL(request.url);
+  if (!pathname.startsWith("/uploads/")) return null;
+
+  const key = decodeURIComponent(pathname.slice("/uploads/".length));
+  // از خروج از مسیر جلوگیری می‌کند.
+  if (key.length === 0 || key.includes("..") || key.includes("/")) return null;
+
+  try {
+    return await uploadResponse(key);
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
     try {
+      const upload = await serveUpload(request);
+      if (upload) return upload;
+
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
       return await normalizeCatastrophicSsrResponse(response);

@@ -1,21 +1,15 @@
-import { randomBytes } from "node:crypto";
-import { mkdir, writeFile } from "node:fs/promises";
-import { resolve } from "node:path";
-
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
-import { AuthError, currentUser, requireAdmin } from "../context";
+import { currentUser, requireAdmin } from "../context";
+import { saveImage } from "../uploads";
 
-const UPLOAD_DIR = resolve(process.cwd(), "public/uploads");
-const MAX_BYTES = 4 * 1024 * 1024;
-
-const EXTENSIONS: Record<string, string> = {
-  "image/jpeg": "jpg",
-  "image/png": "png",
-  "image/webp": "webp",
-  "image/gif": "gif",
-};
+/**
+ * بارگزاری تصویر.
+ *
+ * محل ذخیره‌سازی در src/server/uploads.ts مدیریت می‌شود: R2 روی Cloudflare و
+ * دیسک در اجرای محلی.
+ */
 
 const uploadSchema = z.object({
   /** محتوای base64 بدون پیشوند data:. */
@@ -24,26 +18,11 @@ const uploadSchema = z.object({
   purpose: z.enum(["product", "category", "blog", "receipt"]).optional(),
 });
 
-async function saveImage(base64: string, mimeType: string, prefix: string): Promise<string> {
-  const extension = EXTENSIONS[mimeType];
-  if (!extension) throw new AuthError("فقط تصویر JPG، PNG، WEBP یا GIF قابل بارگزاری است.", 400);
-
-  const buffer = Buffer.from(base64, "base64");
-  if (buffer.byteLength === 0) throw new AuthError("فایل دریافتی خالی است.", 400);
-  if (buffer.byteLength > MAX_BYTES) throw new AuthError("حجم تصویر نباید بیشتر از ۴ مگابایت باشد.", 400);
-
-  await mkdir(UPLOAD_DIR, { recursive: true });
-  const name = `${prefix}-${Date.now()}-${randomBytes(4).toString("hex")}.${extension}`;
-  await writeFile(resolve(UPLOAD_DIR, name), buffer);
-
-  return `/uploads/${name}`;
-}
-
 /** بارگزاری تصویر در پنل مدیریت (محصول، دسته، مقاله). */
 export const uploadAdminImage = createServerFn({ method: "POST" })
   .validator((data: unknown) => uploadSchema.parse(data))
   .handler(async ({ data }) => {
-    requireAdmin();
+    await requireAdmin();
     const url = await saveImage(data.base64, data.mimeType, data.purpose ?? "product");
     return { ok: true, url, message: "تصویر بارگزاری شد." };
   });
@@ -52,7 +31,11 @@ export const uploadAdminImage = createServerFn({ method: "POST" })
 export const uploadReceiptImage = createServerFn({ method: "POST" })
   .validator((data: unknown) => uploadSchema.parse(data))
   .handler(async ({ data }) => {
-    const user = currentUser();
-    const url = await saveImage(data.base64, data.mimeType, user ? `receipt-u${user.id}` : "receipt");
+    const user = await currentUser();
+    const url = await saveImage(
+      data.base64,
+      data.mimeType,
+      user ? `receipt-u${user.id}` : "receipt",
+    );
     return { ok: true, url, message: "رسید بارگزاری شد." };
   });

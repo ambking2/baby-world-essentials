@@ -1,18 +1,21 @@
+import { envVar } from "./db";
+
 import { business } from "@/data/business";
 
 /**
  * ارسال ایمیل.
  *
- * پیش‌فرض روی حالت لاگ است: کد تأیید در کنسول سرور چاپ می‌شود تا بدون
- * هیچ سرویس پولی هم کل جریان ثبت‌نام قابل تست باشد.
+ * پیش‌فرض روی حالت لاگ است: کد تأیید در لاگ ورکر چاپ می‌شود تا بدون هیچ
+ * سرویس پولی هم کل جریان ثبت‌نام قابل تست باشد.
  *
- * برای ارسال واقعی کافی است متغیرهای محیطی زیر در فایل .env قرار گیرند:
+ * روی Cloudflare این مقادیر را با wrangler secret ثبت کنید:
  *
- *   MAIL_PROVIDER=resend        یا brevo
- *   MAIL_API_KEY=...
- *   MAIL_FROM="جهان کودک <no-reply@jahankoodak.ir>"
+ *   npx wrangler secret put MAIL_PROVIDER   # resend یا brevo
+ *   npx wrangler secret put MAIL_API_KEY
+ *   npx wrangler secret put MAIL_FROM
  *
- * هر دو سرویس Resend و Brevo طرح رایگان دارند.
+ * هر دو سرویس Resend و Brevo طرح رایگان دارند و از ورکر با fetch قابل استفاده‌اند
+ * (SMTP روی Cloudflare Workers پشتیبانی نمی‌شود، پس حتماً باید API باشد).
  */
 
 export type MailMessage = {
@@ -22,13 +25,8 @@ export type MailMessage = {
   text: string;
 };
 
-function env(key: string): string | undefined {
-  const value = process.env[key];
-  return value && value.length > 0 ? value : undefined;
-}
-
-function fromAddress(): string {
-  return env("MAIL_FROM") ?? `${business.name} <no-reply@jahankoodak.ir>`;
+async function fromAddress(): Promise<string> {
+  return (await envVar("MAIL_FROM")) ?? `${business.name} <no-reply@jahankoodak.ir>`;
 }
 
 async function sendViaResend(message: MailMessage, apiKey: string): Promise<void> {
@@ -36,7 +34,7 @@ async function sendViaResend(message: MailMessage, apiKey: string): Promise<void
     method: "POST",
     headers: { authorization: `Bearer ${apiKey}`, "content-type": "application/json" },
     body: JSON.stringify({
-      from: fromAddress(),
+      from: await fromAddress(),
       to: [message.to],
       subject: message.subject,
       html: message.html,
@@ -47,7 +45,7 @@ async function sendViaResend(message: MailMessage, apiKey: string): Promise<void
 }
 
 async function sendViaBrevo(message: MailMessage, apiKey: string): Promise<void> {
-  const raw = fromAddress();
+  const raw = await fromAddress();
   const match = /^(.*)<(.+)>$/.exec(raw);
   const senderName = match?.[1]?.trim() ?? business.name;
   const senderEmail = match?.[2]?.trim() ?? raw;
@@ -67,8 +65,8 @@ async function sendViaBrevo(message: MailMessage, apiKey: string): Promise<void>
 }
 
 export async function sendMail(message: MailMessage): Promise<void> {
-  const provider = env("MAIL_PROVIDER");
-  const apiKey = env("MAIL_API_KEY");
+  const provider = await envVar("MAIL_PROVIDER");
+  const apiKey = await envVar("MAIL_API_KEY");
 
   if (!provider || !apiKey) {
     console.info(
