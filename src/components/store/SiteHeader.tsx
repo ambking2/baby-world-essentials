@@ -224,7 +224,7 @@ export function SiteHeader({
               {megaOpen ? (
                 <div className="pop-in absolute start-0 top-[calc(100%+12px)] z-50 grid w-[780px] grid-cols-3 gap-5 rounded-[2rem] border border-white/70 bg-white/96 p-6 shadow-lift backdrop-blur">
                   {categories.map((category) => (
-                    <div key={category.id} className="rounded-[1.5rem] border border-border/70 bg-background/90 p-4">
+                    <div key={category.slug} className="rounded-[1.5rem] border border-border/70 bg-background/90 p-4">
                       <Link
                         to="/category/$slug"
                         params={{ slug: category.slug }}
