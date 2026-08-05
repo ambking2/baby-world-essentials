@@ -2,6 +2,7 @@ import "./lib/error-capture";
 
 import { consumeLastCapturedError } from "./lib/error-capture";
 import { renderErrorPage } from "./lib/error-page";
+import { ensureSchema } from "./server/db";
 import { uploadResponse } from "./server/uploads";
 
 type ServerEntry = {
@@ -9,6 +10,7 @@ type ServerEntry = {
 };
 
 let serverEntryPromise: Promise<ServerEntry> | undefined;
+let schemaReadyPromise: Promise<void> | undefined;
 
 async function getServerEntry(): Promise<ServerEntry> {
   if (!serverEntryPromise) {
@@ -17,6 +19,13 @@ async function getServerEntry(): Promise<ServerEntry> {
     );
   }
   return serverEntryPromise;
+}
+
+async function ensureAppSchema(): Promise<void> {
+  if (!schemaReadyPromise) {
+    schemaReadyPromise = ensureSchema();
+  }
+  await schemaReadyPromise;
 }
 
 // h3 swallows in-handler throws into a normal 500 Response with body
@@ -46,8 +55,8 @@ function isH3SwallowedErrorBody(body: string): boolean {
 }
 
 /**
- * تصاویر بارگزاری‌شده روی Cloudflare داخل R2 هستند، نه در پوشه‌ی public.
- * پس درخواست‌های /uploads/* را پیش از رسیدن به روتر اپ، مستقیم از R2 پاسخ می‌دهیم.
+ * تصاویر بارگزاری‌شده روی Cloudflare داخل D1/R2 هستند، نه در پوشه‌ی public.
+ * پس درخواست‌های /uploads/* را پیش از رسیدن به روتر اپ، مستقیم پاسخ می‌دهیم.
  */
 async function serveUpload(request: Request): Promise<Response | null> {
   if (request.method !== "GET" && request.method !== "HEAD") return null;
@@ -72,6 +81,8 @@ export default {
     try {
       const upload = await serveUpload(request);
       if (upload) return upload;
+
+      await ensureAppSchema();
 
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
