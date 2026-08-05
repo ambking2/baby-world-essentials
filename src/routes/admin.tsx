@@ -100,19 +100,31 @@ function AdminLayout() {
         </aside>
 
         <main className="min-w-0 flex-1 space-y-4">
-          <div className="flex flex-wrap gap-2 rounded-3xl border border-border bg-card p-3 lg:hidden">
-            {roleNav.map((item) => (
-              <Link
-                key={item.to}
-                to={item.to}
-                activeOptions={{ exact: item.exact }}
-                activeProps={{ className: "bg-primary text-white shadow-sm" }}
-                inactiveProps={{ className: "text-muted-foreground" }}
-                className="rounded-full border border-border px-3 py-1.5 text-[10px] font-bold transition-all focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none"
+          <div className="rounded-3xl border border-border bg-card p-3 lg:hidden">
+            <div className="flex flex-wrap gap-2">
+              {roleNav.map((item) => (
+                <Link
+                  key={item.to}
+                  to={item.to}
+                  activeOptions={{ exact: item.exact }}
+                  activeProps={{ className: "bg-primary text-white shadow-sm" }}
+                  inactiveProps={{ className: "text-muted-foreground" }}
+                  className="rounded-full border border-border px-3 py-1.5 text-[10px] font-bold transition-all focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none"
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+            
+            <div className="mt-3 border-t border-border/50 pt-3">
+              <Link 
+                to="/" 
+                className="flex items-center justify-center gap-2 rounded-xl border border-primary/20 bg-primary/5 px-3 py-2.5 text-[11px] font-bold text-primary transition-all active:scale-95 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none"
               >
-                {item.label}
+                <ShoppingBag className="size-3.5" />
+                مشاهدهٔ سایت
               </Link>
-            ))}
+            </div>
           </div>
 
           <Outlet />
