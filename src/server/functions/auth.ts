@@ -31,9 +31,9 @@ import { resetPasswordEmail, sendMail, verificationEmail } from "../mailer";
 import { attachCartToUser, findCartByToken } from "../repo/cart";
 
 /** پس از ورود، سبد مهمان به حساب کاربر متصل می‌شود. */
-function mergeGuestCart(userId: number): void {
-  const cart = findCartByToken(readCartToken());
-  if (cart && cart.user_id === null) attachCartToUser(cart.id, userId);
+async function mergeGuestCart(userId: number): Promise<void> {
+  const cart = await findCartByToken(readCartToken());
+  if (cart && cart.user_id === null) await attachCartToUser(cart.id, userId);
 }
 
 function guard(action: string): void {
@@ -42,8 +42,10 @@ function guard(action: string): void {
   }
 }
 
-/** کاربر جاری برای هدر و مسیرهای محافظت‌شده. */
-export const getSession = createServerFn({ method: "GET" }).handler(async () => ({ user: currentUser() }));
+/** کاربر جاری برای هدر و مسیرهای محافطت‌شده. */
+export const getSession = createServerFn({ method: "GET" }).handler(async () => ({
+  user: await currentUser(),
+}));
 
 /** ثبت‌نام با ایمیل و رمز + ارسال کد تأیید به ایمیل. */
 export const registerUser = createServerFn({ method: "POST" })
@@ -64,18 +66,18 @@ export const registerUser = createServerFn({ method: "POST" })
     if (problem) throw new AuthError(problem, 400);
 
     const email = normalizeEmail(data.email);
-    if (findUserByEmail(email)) {
+    if (await findUserByEmail(email)) {
       throw new AuthError("این ایمیل قبلاً ثبت شده است. از همین ایمیل وارد شوید.", 400);
     }
 
-    const user = createUser({
+    const user = await createUser({
       email,
       password: data.password,
       name: data.name.trim(),
       phone: data.phone ?? null,
     });
 
-    const code = issueEmailCode(user.id, "verify_email");
+    const code = await issueEmailCode(user.id, "verify_email");
     await sendMail(verificationEmail(user.email, code));
 
     return {
@@ -90,12 +92,15 @@ export const resendVerificationCode = createServerFn({ method: "POST" })
   .validator((data: unknown) => z.object({ email: z.string().email().max(160) }).parse(data))
   .handler(async ({ data }) => {
     guard("resend-code");
-    const user = findUserByEmail(data.email);
+    const user = await findUserByEmail(data.email);
     if (user && user.email_verified_at === null) {
-      const code = issueEmailCode(user.id, "verify_email");
+      const code = await issueEmailCode(user.id, "verify_email");
       await sendMail(verificationEmail(user.email, code));
     }
-    return { ok: true, message: "اگر حساب تأییدنشده‌ای با این ایمیل وجود داشته باشد، کد جدید ارسال شد." };
+    return {
+      ok: true,
+      message: "اگر حساب تأییدنشده‌ای با این ایمیل وجود داشته باشد، کد جدید ارسال شد.",
+    };
   });
 
 /** تأیید ایمیل با کد ۶ رقمی و ورود خودکار. */
@@ -111,19 +116,21 @@ export const verifyEmailCode = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     guard("verify-email");
 
-    const user = findUserByEmail(data.email);
+    const user = await findUserByEmail(data.email);
     if (!user) throw new AuthError("حسابی با این ایمیل پیدا نشد.", 404);
 
-    if (!consumeEmailCode(user.id, "verify_email", data.code)) {
-      throw new AuthError("کد واردشده نادرست یا منقضی شده است.", 400);
-    }
+    const valid = await consumeEmailCode(user.id, "verify_email", data.code);
+    if (!valid) throw new AuthError("کد واردشده نادرست یا منقضی شده است.", 400);
 
-    markEmailVerified(user.id);
-    const session = createSession(user.id);
+    await markEmailVerified(user.id);
+    const session = await createSession(user.id);
     setSessionCookie(session.token, session.expiresAt);
-    mergeGuestCart(user.id);
+    await mergeGuestCart(user.id);
 
-    return { ok: true, user: toPublicUser({ ...user, email_verified_at: new Date().toISOString() }) };
+    return {
+      ok: true,
+      user: toPublicUser({ ...user, email_verified_at: new Date().toISOString() }),
+    };
   });
 
 /** ورود با ایمیل و رمز عبور. */
@@ -139,27 +146,33 @@ export const loginUser = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     guard("login");
 
-    const user = findUserByEmail(data.email);
-    if (!user || !verifyPassword(data.password, user.password_hash)) {
+    const user = await findUserByEmail(data.email);
+    const valid = user ? await verifyPassword(data.password, user.password_hash) : false;
+    if (!user || !valid) {
       throw new AuthError("ایمیل یا رمز عبور درست نیست.", 400);
     }
 
     if (user.email_verified_at === null) {
-      const code = issueEmailCode(user.id, "verify_email");
+      const code = await issueEmailCode(user.id, "verify_email");
       await sendMail(verificationEmail(user.email, code));
-      return { ok: false, needsVerification: true, email: user.email, message: "ابتدا ایمیل خود را تأیید کنید؛ کد جدید ارسال شد." };
+      return {
+        ok: false,
+        needsVerification: true,
+        email: user.email,
+        message: "ابتدا ایمیل خود را تأیید کنید؛ کد جدید ارسال شد.",
+      };
     }
 
-    const session = createSession(user.id);
+    const session = await createSession(user.id);
     setSessionCookie(session.token, session.expiresAt);
-    mergeGuestCart(user.id);
+    await mergeGuestCart(user.id);
 
     return { ok: true, needsVerification: false, user: toPublicUser(user) };
   });
 
 /** خروج از حساب. */
 export const logoutUser = createServerFn({ method: "POST" }).handler(async () => {
-  destroySession(readSessionToken());
+  await destroySession(readSessionToken());
   clearSessionCookie();
   return { ok: true };
 });
@@ -169,9 +182,9 @@ export const requestPasswordReset = createServerFn({ method: "POST" })
   .validator((data: unknown) => z.object({ email: z.string().email().max(160) }).parse(data))
   .handler(async ({ data }) => {
     guard("reset-request");
-    const user = findUserByEmail(data.email);
+    const user = await findUserByEmail(data.email);
     if (user) {
-      const code = issueEmailCode(user.id, "reset_password");
+      const code = await issueEmailCode(user.id, "reset_password");
       await sendMail(resetPasswordEmail(user.email, code));
     }
     return { ok: true, message: "اگر این ایمیل در سایت ثبت شده باشد، کد بازیابی ارسال شد." };
@@ -194,15 +207,15 @@ export const resetPassword = createServerFn({ method: "POST" })
     const problem = passwordProblem(data.password);
     if (problem) throw new AuthError(problem, 400);
 
-    const user = findUserByEmail(data.email);
+    const user = await findUserByEmail(data.email);
     if (!user) throw new AuthError("حسابی با این ایمیل پیدا نشد.", 404);
 
-    if (!consumeEmailCode(user.id, "reset_password", data.code)) {
-      throw new AuthError("کد واردشده نادرست یا منقضی شده است.", 400);
-    }
+    const valid = await consumeEmailCode(user.id, "reset_password", data.code);
+    if (!valid) throw new AuthError("کد واردشده نادرست یا منقضی شده است.", 400);
 
-    run("UPDATE users SET password_hash = ? WHERE id = ?", hashPassword(data.password), user.id);
-    destroyAllSessions(user.id);
+    const passwordHash = await hashPassword(data.password);
+    await run("UPDATE users SET password_hash = ? WHERE id = ?", passwordHash, user.id);
+    await destroyAllSessions(user.id);
     clearSessionCookie();
 
     return { ok: true, message: "رمز عبور تغییر کرد. دوباره وارد شوید." };
