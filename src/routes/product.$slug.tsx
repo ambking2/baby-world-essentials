@@ -203,7 +203,7 @@ function ProductPage() {
                 <button
                   disabled={stock <= 0 || addToCart.isPending || needsSelection}
                   onClick={() => addToCart.mutate()}
-                  className="btn-primary flex-1 py-4 text-sm font-bold uppercase tracking-widest"
+                  className="btn-primary flex-1 py-4 text-sm font-bold uppercase tracking-widest shadow-md hover:bg-primary/90 transition-premium"
                 >
                   {stock <= 0 ? "ناموجود" : needsSelection ? "انتخاب مشخصات" : "افزودن به سبد خرید"}
                 </button>
