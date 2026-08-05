@@ -51,10 +51,10 @@ function AdminLayout() {
         <h1 className="text-lg font-extrabold text-foreground">دسترسی محدود به مدیر فروشگاه است</h1>
         <p className="mt-2 text-xs text-muted-foreground">با حساب مدیر وارد شوید تا پنل نمایش داده شود.</p>
         <div className="mt-4 flex justify-center gap-2">
-          <Link to="/auth/login" className="rounded-full bg-brand px-5 py-2.5 text-xs font-bold text-primary-foreground">
+          <Link to="/auth/login" className="rounded-full bg-primary px-5 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-primary/95">
             ورود مدیر
           </Link>
-          <Link to="/" className="rounded-full border border-border px-5 py-2.5 text-xs font-bold hover:border-brand hover:text-brand">
+          <Link to="/" className="rounded-full border border-border px-5 py-2.5 text-xs font-bold hover:border-primary hover:text-primary transition-colors">
             بازگشت به فروشگاه
           </Link>
         </div>
@@ -66,7 +66,7 @@ function AdminLayout() {
     <div className="min-h-screen bg-secondary/40">
       <div className="mx-auto flex max-w-[100rem] gap-4 p-4">
         <aside className="sticky top-4 hidden h-fit w-56 shrink-0 space-y-3 rounded-3xl border border-border bg-card p-4 lg:block">
-          <div className="rounded-2xl bg-brand-soft/60 p-3">
+          <div className="rounded-2xl bg-secondary p-3">
             <p className="text-xs font-extrabold text-foreground">پنل مدیریت</p>
             <p className="mt-1 text-[10px] text-muted-foreground">{business.name}</p>
           </div>
@@ -77,7 +77,7 @@ function AdminLayout() {
                 key={item.to}
                 to={item.to}
                 activeOptions={{ exact: item.exact }}
-                activeProps={{ className: "bg-primary text-white" }}
+                activeProps={{ className: "bg-primary text-white shadow-sm" }}
                 inactiveProps={{ className: "text-muted-foreground hover:bg-secondary/60 hover:text-foreground" }}
                 className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-[11px] font-bold transition-colors"
               >
@@ -87,7 +87,7 @@ function AdminLayout() {
             ))}
           </nav>
 
-          <Link to="/" className="block rounded-xl border border-border px-3 py-2.5 text-center text-[11px] font-bold text-muted-foreground hover:border-brand hover:text-brand">
+          <Link to="/" className="block rounded-xl border border-border px-3 py-2.5 text-center text-[11px] font-bold text-muted-foreground hover:border-primary hover:text-primary transition-colors">
             مشاهدهٔ سایت
           </Link>
         </aside>
@@ -99,7 +99,7 @@ function AdminLayout() {
                 key={item.to}
                 to={item.to}
                 activeOptions={{ exact: item.exact }}
-                activeProps={{ className: "bg-brand text-primary-foreground" }}
+                activeProps={{ className: "bg-primary text-white shadow-sm" }}
                 inactiveProps={{ className: "text-muted-foreground" }}
                 className="rounded-full border border-border px-3 py-1.5 text-[10px] font-bold"
               >

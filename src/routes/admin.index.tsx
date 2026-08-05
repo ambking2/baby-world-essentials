@@ -53,10 +53,10 @@ function AdminDashboard() {
         >
           رسیدهای در انتطار بررسی: {toFaDigits(stats?.pendingReviewCount ?? 0)}
         </Link>
-        <Link to="/admin/comments" className="rounded-3xl border border-border bg-card p-4 text-xs font-bold hover:border-brand hover:text-brand">
+        <Link to="/admin/comments" className="rounded-3xl border border-border bg-card p-4 text-xs font-bold hover:border-primary hover:text-primary transition-colors">
           دیدگاه‌های تأیید‌نشده: {toFaDigits(stats?.pendingCommentCount ?? 0)}
         </Link>
-        <Link to="/admin/comments" className="rounded-3xl border border-border bg-card p-4 text-xs font-bold hover:border-brand hover:text-brand">
+        <Link to="/admin/comments" className="rounded-3xl border border-border bg-card p-4 text-xs font-bold hover:border-primary hover:text-primary transition-colors">
           نقدهای محصول در انتطار: {toFaDigits(stats?.pendingReviewsCount ?? 0)}
         </Link>
       </div>
@@ -94,7 +94,7 @@ function AdminDashboard() {
       <section className="rounded-3xl border border-border bg-card p-5">
         <div className="mb-3 flex items-center justify-between">
           <h2 className="text-sm font-extrabold text-foreground">آخرین سفارش‌ها</h2>
-          <Link to="/admin/orders" className="text-[11px] font-bold text-brand hover:underline">
+          <Link to="/admin/orders" className="text-[11px] font-bold text-primary hover:underline">
             همهٔ سفارش‌ها
           </Link>
         </div>
@@ -115,7 +115,7 @@ function AdminDashboard() {
               {orders.map((order) => (
                 <tr key={order.code} className="border-b border-border/60 last:border-0">
                   <td className="p-2 font-extrabold">
-                    <Link to="/admin/orders" search={{ q: order.code }} className="hover:text-brand">
+                    <Link to="/admin/orders" search={{ q: order.code }} className="hover:text-primary">
                       {toFaDigits(order.code)}
                     </Link>
                   </td>

@@ -80,7 +80,7 @@ function AdminSettings() {
         <button
           type="submit"
           disabled={save.isPending}
-          className="rounded-full bg-brand px-6 py-2.5 text-[11px] font-bold text-primary-foreground disabled:opacity-60"
+          className="rounded-full bg-primary px-8 py-2.5 text-[11px] font-bold text-white shadow-sm hover:bg-primary/95 disabled:opacity-60 transition-colors"
         >
           {save.isPending ? "در حال ذخیره…" : "ذخیرهٔ تنطیمات"}
         </button>

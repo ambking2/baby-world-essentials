@@ -165,13 +165,13 @@ function AdminProductForm() {
           {productId === null ? "افزودن محصول جدید" : `ویرایش محصول: ${title}`}
         </h1>
         <div className="flex gap-2">
-          <Link to="/admin/products" className="rounded-full border border-border px-4 py-2 text-[11px] font-bold hover:border-brand hover:text-brand">
+          <Link to="/admin/products" className="rounded-full border border-border px-4 py-2 text-[11px] font-bold hover:border-primary hover:text-primary transition-colors">
             بازگشت
           </Link>
           <button
             type="submit"
             disabled={save.isPending}
-            className="rounded-full bg-brand px-5 py-2 text-[11px] font-bold text-primary-foreground disabled:opacity-60"
+            className="rounded-full bg-primary px-6 py-2 text-[11px] font-bold text-white shadow-sm hover:bg-primary/95 disabled:opacity-60"
           >
             {save.isPending ? "در حال ذخیره…" : "ذخیرهٔ محصول"}
           </button>
@@ -230,7 +230,7 @@ function AdminProductForm() {
           <section className="space-y-3 rounded-3xl border border-border bg-card p-5">
             <div className="flex items-center justify-between">
               <h2 className="text-xs font-extrabold text-foreground">تصاویر محصول</h2>
-              <label className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-brand px-4 py-2 text-[11px] font-bold text-primary-foreground">
+              <label className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-primary px-4 py-2 text-[11px] font-bold text-white shadow-sm hover:bg-primary/95 transition-colors">
                 <ImagePlus className="size-4" aria-hidden />
                 {upload.isPending ? "در حال بارگزاری…" : "بارگزاری تصویر"}
                 <input
@@ -283,7 +283,7 @@ function AdminProductForm() {
               <button
                 type="button"
                 onClick={() => setAttributes((current) => [...current, { name: "", value: "" }])}
-                className="inline-flex items-center gap-1 rounded-full border border-border px-3 py-1.5 text-[10px] font-bold hover:border-brand hover:text-brand"
+                className="inline-flex items-center gap-1 rounded-full border border-border px-3 py-1.5 text-[10px] font-bold hover:border-primary hover:text-primary transition-colors"
               >
                 <Plus className="size-3" aria-hidden />
                 افزودن ویژگی
@@ -332,7 +332,7 @@ function AdminProductForm() {
                 onClick={() =>
                   setVariants((current) => [...current, { size: "", color: "", colorHex: "", priceDelta: 0, stock: 0 }])
                 }
-                className="inline-flex items-center gap-1 rounded-full border border-border px-3 py-1.5 text-[10px] font-bold hover:border-brand hover:text-brand"
+                className="inline-flex items-center gap-1 rounded-full border border-border px-3 py-1.5 text-[10px] font-bold hover:border-primary hover:text-primary transition-colors"
               >
                 <Plus className="size-3" aria-hidden />
                 افزودن تنوع
