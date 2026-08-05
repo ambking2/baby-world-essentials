@@ -101,7 +101,7 @@ export function SiteHeader({
           </div>
         </div>
 
-        <div className={cn("glass-panel rounded-[2rem] px-3 py-3 shadow-lift", scrolled && "shadow-[0_20px_60px_rgba(130,65,28,0.18)]")}>
+        <div className={cn("glass-panel rounded-[2.5rem] px-3 py-3 shadow-lift backdrop-blur-md transition-all duration-300", scrolled && "mx-auto max-w-[95%] shadow-[0_20px_60px_rgba(130,65,28,0.12)]")}>
           <div className="flex items-center gap-3 md:gap-4">
             <button
               type="button"
@@ -113,7 +113,7 @@ export function SiteHeader({
             </button>
 
             <Link to="/" className="flex shrink-0 items-center gap-3">
-              <span className="toy-button relative grid size-14 place-items-center rounded-[1.7rem] bg-gradient-to-br from-brand to-sale text-2xl font-black text-white shadow-soft">
+              <span className="toy-button relative grid size-16 place-items-center rounded-[2rem] bg-gradient-to-br from-brand to-sale text-3xl font-black text-white shadow-lift">
                 ج
                 <span className="absolute -bottom-2 start-1/2 -translate-x-1/2 rounded-full bg-white px-2 py-0.5 text-[9px] font-black text-brand shadow-soft">
                   kids
