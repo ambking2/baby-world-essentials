@@ -41,7 +41,7 @@ function CommentBranch({
           <div className="rounded-2xl border border-border bg-white p-4 shadow-sm">
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-2">
-                <span className="grid size-9 place-items-center rounded-full bg-brand-soft text-brand">
+                <span className="grid size-9 place-items-center rounded-full bg-primary/10 text-primary">
                   <UserRound className="size-4" aria-hidden />
                 </span>
                 <div>
