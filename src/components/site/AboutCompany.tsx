@@ -32,6 +32,7 @@ export function AboutCompany() {
         eyebrow="اصالت و اعتماد از سال ۱۳۸۹"
         title="داستان جهان کودک ابهر"
         subtitle="ما ترکیبی از هنر نجاران محلی و بهترین برندهای سیسمونی هستیم تا تجربه‌ای گرم و مطمئن برای فرزند شما بسازیم."
+        align="center"
       />
 
       <div className="mt-12 grid gap-6 md:grid-cols-3">

@@ -35,6 +35,7 @@ export function SpecialPowers() {
           title="چرا والدین جهان کودک را انتخاب می‌کنند؟" 
           subtitle="ما فقط فروشنده نیستیم؛ ما با عشق و دقت، امن‌ترین فضا را برای فرشته‌های کوچک شما می‌سازیم."
           tone="onDark" 
+          align="center"
         />
 
         <div className="mt-16 grid gap-6 md:grid-cols-3">
