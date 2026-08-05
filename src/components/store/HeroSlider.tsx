@@ -69,22 +69,22 @@ export function HeroSlider() {
                 
                 <div className="container-page relative flex h-full items-center">
                   <div className="max-w-2xl px-4 lg:px-0">
-                    <div className="inline-flex items-center gap-2 mb-6 rounded-full bg-white/90 px-4 py-1.5 shadow-sm backdrop-blur-sm">
-                      <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary sm:text-xs">
+                    <div className="inline-flex items-center gap-2 mb-4">
+                      <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary sm:text-[11px]">
                         {slide.subtitle}
                       </span>
                     </div>
-                    <h2 className="mb-6 text-3xl font-bold leading-tight text-foreground lg:text-6xl drop-shadow-sm">
+                    <h2 className="mb-4 text-3xl font-bold leading-tight text-gray-900 lg:text-6xl">
                       {slide.title}
                     </h2>
-                    <p className="mb-10 max-w-lg text-base leading-relaxed text-foreground/80 lg:text-xl drop-shadow-sm">
+                    <p className="mb-8 max-w-lg text-sm leading-relaxed text-gray-600 lg:text-lg">
                       {slide.body}
                     </p>
                     <div className="flex flex-wrap gap-4">
-                      <Link to={slide.href} className="btn-primary min-w-[180px] py-4 text-center shadow-lg hover:shadow-primary/20">
+                      <Link to={slide.href} className="btn-primary">
                         {slide.cta}
                       </Link>
-                      <Link to="/about" className="inline-flex items-center justify-center rounded-full bg-white px-8 py-4 text-sm font-bold text-foreground shadow-md transition-all hover:bg-muted min-w-[180px]">
+                      <Link to="/about" className="btn-secondary">
                         درباره ما
                       </Link>
                     </div>
@@ -130,7 +130,7 @@ export function HeroSlider() {
 
       {/* Trust Badges - Horizontal Benefits Section */}
       <div className="relative z-20 -mt-10 lg:-mt-16 container-page">
-        <div className="grid grid-cols-2 gap-4 rounded-2xl border border-border bg-white p-6 shadow-xl lg:grid-cols-4 lg:p-10">
+        <div className="grid grid-cols-2 gap-4 rounded-xl border border-border bg-white p-6 shadow-xl lg:grid-cols-4 lg:p-10">
           <div className="flex items-center gap-4 border-l border-border/50 pl-4 last:border-0">
             <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/5 text-primary lg:size-12">
               <ShieldCheck className="size-6" />

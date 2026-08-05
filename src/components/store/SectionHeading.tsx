@@ -27,26 +27,26 @@ export function SectionHeading({
   return (
     <div
       className={cn(
-        "mb-12 lg:mb-20 flex flex-wrap items-end gap-6",
+        "mb-10 lg:mb-16 flex flex-wrap items-end gap-6",
         align === "center" ? "flex-col items-center text-center" : "justify-between",
         className,
       )}
     >
-      <div className={cn("max-w-2xl space-y-3", align === "center" && "mx-auto")}>
+      <div className={cn("max-w-2xl space-y-2", align === "center" && "mx-auto")}>
         {eyebrow && (
-          <span className="mb-2 block text-xs font-bold uppercase tracking-widest text-primary/80">
+          <span className="mb-1 block text-[10px] font-bold uppercase tracking-widest text-primary">
             {eyebrow}
           </span>
         )}
         <h2 className={cn(
-          "text-3xl font-bold lg:text-4xl tracking-tight",
-          tone === "onDark" ? "text-white" : "text-foreground"
+          "text-2xl font-bold lg:text-3xl tracking-tight text-gray-900",
+          tone === "onDark" ? "text-white" : "text-gray-900"
         )}>
           {title}
         </h2>
         {subtitle && (
           <p className={cn(
-            "text-base leading-relaxed lg:text-lg",
+            "text-sm leading-relaxed lg:text-base",
             tone === "onDark" ? "text-white/70" : "text-muted-foreground"
           )}>
             {subtitle}
@@ -56,7 +56,7 @@ export function SectionHeading({
       {moreHref && (
         <Link
           to={moreHref as any}
-          className="group flex items-center gap-2 text-sm font-bold transition-premium text-primary hover:opacity-80 border-b-2 border-primary/20 pb-0.5"
+          className="group flex items-center gap-1 text-[11px] font-bold uppercase tracking-widest transition-all duration-300 text-gray-900 hover:text-primary border-b border-gray-900 hover:border-primary pb-0.5"
         >
           {moreLabel}
           <ChevronLeft className="size-4 shrink-0 transition-transform group-hover:-translate-x-1" aria-hidden />

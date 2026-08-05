@@ -75,12 +75,12 @@ function SearchPage() {
   return (
     <StoreShell>
       <div className="container-page py-6">
-        <div className="mb-5 rounded-2xl border border-border bg-secondary/30 p-8 shadow-sm">
-          <h1 className="text-xl font-extrabold text-foreground">
+        <div className="mb-8 rounded-xl border border-border bg-gray-50 p-8">
+          <h1 className="text-xl font-bold text-gray-900">
             {q.trim().length > 0 ? `نتایج جستجو برای «${q}»` : "همهٔ محصولات فروشگاه"}
           </h1>
           {products ? (
-            <p className="mt-2 text-xs text-muted-foreground">{toFaDigits(products.total)} کالا پیدا شد</p>
+            <p className="mt-2 text-[11px] font-bold uppercase tracking-widest text-gray-400">{toFaDigits(products.total)} کالا پیدا شد</p>
           ) : null}
         </div>
 
