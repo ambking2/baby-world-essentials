@@ -59,7 +59,7 @@ export function ProductCard({
           <button
             onClick={() => onAddToCart ? onAddToCart(product) : toast.success("به سبد خرید اضافه شد")}
             disabled={outOfStock}
-            className="flex w-full items-center justify-center gap-2 bg-white py-2.5 text-xs font-bold text-foreground shadow-sm transition-premium hover:bg-foreground hover:text-white"
+            className="flex w-full items-center justify-center gap-2 bg-white py-2.5 text-xs font-bold text-foreground shadow-sm transition-premium hover:bg-foreground hover:text-white disabled:opacity-50"
           >
             <ShoppingCart className="size-4" />
             {busy ? "در حال افزودن..." : "افزودن به سبد"}
