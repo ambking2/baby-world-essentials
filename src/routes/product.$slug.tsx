@@ -284,7 +284,7 @@ function ProductPage() {
                           {[1,2,3,4,5].map(i => <Star key={i} className={cn("size-3", i <= r.rating ? "fill-primary text-primary" : "text-border")} />)}
                         </div>
                       </div>
-                      <span className="text-xs text-muted-foreground">{toFaDigits(r.createdAt ? String(r.createdAt).split('T')[0] : '')}</span>
+                      <span className="text-xs text-muted-foreground">{toFaDigits((r.createdAt ? String(r.createdAt).split('T')[0] : '') as string)}</span>
                     </div>
                     <p className="text-sm leading-relaxed text-muted-foreground">{r.body}</p>
                   </div>
