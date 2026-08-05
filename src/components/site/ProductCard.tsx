@@ -26,9 +26,9 @@ export function ProductCard({
   const outOfStock = product.stock <= 0;
 
   return (
-    <div className={cn("group flex h-full flex-col bg-white border border-transparent hover:border-border transition-premium", className)}>
+    <div className={cn("group flex h-full flex-col bg-white border border-border/50 hover:border-primary/30 transition-premium shadow-sm hover:shadow-md", className)}>
       {/* Image Container */}
-      <div className="relative aspect-[3/4] overflow-hidden bg-secondary">
+      <div className="relative aspect-[3/4] overflow-hidden bg-muted/30">
         <Link to="/product/$slug" params={{ slug: product.slug }} className="block h-full w-full">
           <img
             src={product.image || product.cover || "https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?q=80&w=2070&auto=format&fit=crop"}
@@ -59,7 +59,7 @@ export function ProductCard({
           <button
             onClick={() => onAddToCart ? onAddToCart(product) : toast.success("به سبد خرید اضافه شد")}
             disabled={outOfStock}
-            className="flex w-full items-center justify-center gap-2 bg-white py-2.5 text-xs font-bold text-foreground shadow-sm transition-premium hover:bg-foreground hover:text-white disabled:opacity-50"
+            className="flex w-full items-center justify-center gap-2 bg-primary py-2.5 text-xs font-bold text-white shadow-sm transition-premium hover:bg-primary/90 disabled:opacity-50"
           >
             <ShoppingCart className="size-4" />
             {busy ? "در حال افزودن..." : "افزودن به سبد"}
@@ -71,7 +71,7 @@ export function ProductCard({
           onClick={() => onToggleWishlist ? onToggleWishlist(product) : toast.success("به علاقه‌مندی‌ها اضافه شد")}
           className="absolute left-4 top-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
         >
-          <Heart className={cn("size-5 text-foreground hover:fill-foreground", inWishlist && "fill-foreground")} />
+          <Heart className={cn("size-5 text-foreground hover:text-primary hover:fill-primary", inWishlist && "fill-primary text-primary")} />
         </button>
       </div>
 
