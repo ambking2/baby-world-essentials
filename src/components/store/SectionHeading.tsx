@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 export type SectionHeadingProps = {
   title: string;
   eyebrow?: string;
-  subtitle?: string;
+  subtitle?: string | null;
   moreHref?: string;
   moreLabel?: string;
   align?: "start" | "center";

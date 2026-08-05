@@ -23,10 +23,10 @@ function ProductSectionSkeleton({ rail, title, subtitle, moreTo, linkLabel }: Pa
   return (
     <section className="container-page section-spacing opacity-50">
       <SectionHeading 
-        title={title ?? ""} 
-        subtitle={subtitle ?? undefined} 
+        title={title} 
+        subtitle={subtitle} 
         moreHref={moreTo as string} 
-        moreLabel={linkLabel ?? undefined}
+        moreLabel={linkLabel}
         align="start"
       />
       <div className={rail ? "hide-scrollbar -mx-4 flex gap-3 overflow-x-auto px-4 pb-8 md:mx-0 md:grid-products md:px-0 md:gap-6 lg:gap-8" : "grid-products"}>
