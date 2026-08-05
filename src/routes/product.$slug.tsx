@@ -82,7 +82,7 @@ function ProductPage() {
   if (pageQuery.isLoading) return <StoreShell><div className="container-page py-20">در حال بارگذاری...</div></StoreShell>;
   if (!product) return <StoreShell><div className="container-page py-20 text-center">محصول پیدا نشد.</div></StoreShell>;
 
-  const images = product.images.length > 0 ? product.images : [{ url: product.cover ?? "/images/cat-toys.jpg", alt: product.title }];
+  const images = product.images.length > 0 ? product.images : [{ url: product.cover ?? "https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?q=80&w=2070&auto=format&fit=crop", alt: product.title }];
   const stock = selectedVariant ? selectedVariant.stock : product.stock;
   const unitPrice = product.effectivePrice + (selectedVariant?.priceDelta ?? 0);
   const needsSelection = hasVariants && !selectedVariant;
