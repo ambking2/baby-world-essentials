@@ -103,11 +103,11 @@ function ProductPage() {
         <div className="grid gap-16 lg:grid-cols-2">
           {/* Gallery */}
           <div className="space-y-6">
-            <div className="aspect-square overflow-hidden bg-muted/20 border border-border/50 rounded-2xl shadow-sm">
+            <div className="aspect-square overflow-hidden bg-gray-50 border border-border rounded-xl">
               <img
                 src={images[activeImage]?.url ?? images[0]?.url}
                 alt={images[activeImage]?.alt ?? product.title}
-                className="h-full w-full object-cover transition-premium"
+                className="h-full w-full object-cover transition-all duration-700 hover:scale-110"
               />
             </div>
             {images.length > 1 && (
@@ -139,8 +139,8 @@ function ProductPage() {
               </div>
             </div>
 
-            <h1 className="mb-6 text-3xl font-bold lg:text-5xl">{product.title}</h1>
-            <p className="mb-8 text-lg leading-relaxed text-muted-foreground">{product.subtitle}</p>
+            <h1 className="mb-4 text-3xl font-bold lg:text-4xl text-gray-900">{product.title}</h1>
+            <p className="mb-6 text-base leading-relaxed text-gray-500">{product.subtitle}</p>
 
             <div className="mb-10 flex items-baseline gap-4">
               <span className="text-3xl font-bold">{formatToman(unitPrice)}</span>
@@ -151,8 +151,8 @@ function ProductPage() {
 
             <div className="mb-10 space-y-8 border-y border-border py-10">
               {sizes.length > 0 && (
-                <div>
-                  <span className="mb-4 block text-xs font-bold uppercase tracking-widest">انتخاب سایز</span>
+                <div className="mb-6">
+                  <span className="mb-3 block text-[10px] font-bold uppercase tracking-widest text-gray-400">انتخاب سایز</span>
                   <div className="flex flex-wrap gap-3">
                     {sizes.map(s => (
                       <button
@@ -172,7 +172,7 @@ function ProductPage() {
 
               {colors.length > 0 && (
                 <div>
-                  <span className="mb-4 block text-xs font-bold uppercase tracking-widest">انتخاب رنگ</span>
+                  <span className="mb-3 block text-[10px] font-bold uppercase tracking-widest text-gray-400">انتخاب رنگ</span>
                   <div className="flex flex-wrap gap-4">
                     {colors.map(c => (
                       <button
@@ -195,7 +195,7 @@ function ProductPage() {
               )}
 
               <div className="flex flex-wrap gap-4">
-                <div className="flex items-center border border-border px-4 py-2 rounded-md bg-white shadow-sm">
+                <div className="flex items-center border border-gray-900 px-4 py-2 rounded-sm bg-white">
                   <button onClick={() => setQty(q => Math.max(1, q - 1))} className="p-2"><Minus className="size-4" /></button>
                   <span className="w-12 text-center text-sm font-bold">{toFaDigits(qty)}</span>
                   <button onClick={() => setQty(q => Math.min(20, q + 1))} className="p-2"><Plus className="size-4" /></button>
@@ -203,11 +203,11 @@ function ProductPage() {
                 <button
                   disabled={stock <= 0 || addToCart.isPending || needsSelection}
                   onClick={() => addToCart.mutate()}
-                  className="btn-primary flex-1 py-4 text-sm font-bold uppercase tracking-widest shadow-md hover:bg-primary/90 transition-premium"
+                  className="btn-primary flex-1 py-4 text-[11px] font-bold uppercase tracking-widest"
                 >
                   {stock <= 0 ? "ناموجود" : needsSelection ? "انتخاب مشخصات" : "افزودن به سبد خرید"}
                 </button>
-                <button className="flex size-14 items-center justify-center border border-border transition-premium hover:bg-secondary rounded-md">
+                <button className="flex size-14 items-center justify-center border border-gray-900 transition-all duration-300 hover:bg-gray-50 rounded-sm">
                   <Heart className="size-5" />
                 </button>
               </div>
