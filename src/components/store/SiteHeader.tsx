@@ -116,7 +116,10 @@ export function SiteHeader({
       </div>
 
       {/* Navigation - Desktop */}
-      <nav className="hidden border-b border-border bg-white lg:block sticky top-[73px] z-40">
+      <nav className={cn(
+        "hidden border-b border-border bg-white lg:block z-40 transition-all duration-300",
+        isScrolled ? "fixed top-[57px] w-full" : "relative"
+      )}>
         <div className="container-page flex items-center justify-between">
           <div className="flex-1 flex justify-center">
             <ul className="flex gap-12">
