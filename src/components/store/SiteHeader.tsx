@@ -71,7 +71,7 @@ export function SiteHeader({
       {/* Main Header */}
       <div className={cn(
         "z-50 w-full border-b border-border bg-white transition-all duration-300",
-        isScrolled ? "sticky top-0 shadow-subtle py-2" : "py-5"
+        isScrolled ? "sticky top-0 shadow-subtle py-3" : "py-6"
       )}>
         <div className="container-page flex items-center justify-between gap-8">
           {/* Mobile Menu Toggle */}

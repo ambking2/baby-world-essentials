@@ -49,10 +49,10 @@ export function SiteFooter({ categories, onSubscribe, subscribing = false }: Sit
   const [email, setEmail] = useState("");
 
   return (
-    <footer className="border-t border-border bg-white pt-20 lg:pt-32">
+    <footer className="border-t border-border bg-white section-spacing !pb-0">
       <div className="container-page">
         {/* Newsletter Section */}
-        <div className="mb-20 grid items-center gap-12 border-b border-border pb-20 lg:grid-cols-2">
+        <div className="mb-20 grid items-center gap-16 border-b border-border pb-20 lg:grid-cols-2">
           <div>
             <h2 className="mb-4 text-2xl font-bold lg:text-3xl">به خبرنامه ما بپیوندید</h2>
             <p className="text-muted-foreground lg:text-lg">
@@ -88,7 +88,7 @@ export function SiteFooter({ categories, onSubscribe, subscribing = false }: Sit
         </div>
 
         {/* Main Footer Links */}
-        <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-20 md:grid-cols-2 lg:grid-cols-4">
           <div className="space-y-8">
             <Link to="/">
               <h1 className="text-xl font-bold tracking-tight text-foreground">{business.name}</h1>
