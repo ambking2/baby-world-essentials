@@ -117,48 +117,54 @@ export function SiteHeader({
 
       {/* Navigation - Desktop */}
       <nav className="hidden border-b border-border bg-white lg:block sticky top-[73px] z-40">
-        <div className="container-page flex justify-center">
-          <ul className="flex gap-12">
-            <li>
-              <Link to="/" className="relative block py-4 text-[11px] font-bold uppercase tracking-[0.15em] text-gray-900 hover:text-primary transition-colors after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all hover:after:w-full">خانه</Link>
-            </li>
-            <li className="group relative">
-              <button className="flex items-center gap-2 py-4 text-[11px] font-bold uppercase tracking-[0.15em] text-gray-900 group-hover:text-primary transition-colors">
-                دسته‌بندی‌ها
-                <ChevronDown className="size-3.5 transition-transform group-hover:rotate-180" />
-              </button>
-              {/* Mega Menu - Refined with shadows and spacing */}
-              <div className="invisible absolute right-0 top-full z-[100] w-[1000px] translate-y-4 bg-white p-12 opacity-0 shadow-deep transition-all duration-300 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 rounded-b-[24px] border border-border border-t-0">
-                <div className="grid grid-cols-4 gap-12">
-                  {categories.map((cat) => (
-                    <div key={cat.slug} className="space-y-6">
-                      <Link to="/category/$slug" params={{ slug: cat.slug }} className="block text-[13px] font-bold text-gray-900 hover:text-primary transition-colors uppercase tracking-wide">
-                        {cat.title}
-                      </Link>
-                      <ul className="space-y-3.5 border-r border-border/40 pr-5">
-                        {cat.children.map((child) => (
-                          <li key={child.slug}>
-                            <Link to="/category/$slug" params={{ slug: child.slug }} className="text-[12px] text-muted-foreground hover:text-primary hover:translate-x-[-4px] transition-all inline-block font-medium">
-                              {child.title}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ))}
+        <div className="container-page flex items-center justify-between">
+          <div className="flex-1 flex justify-center">
+            <ul className="flex gap-12">
+              <li>
+                <Link to="/" className="relative block py-4 text-[11px] font-bold uppercase tracking-[0.15em] text-gray-900 hover:text-primary transition-colors after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all hover:after:w-full">خانه</Link>
+              </li>
+              <li className="group relative">
+                <button className="flex items-center gap-2 py-4 text-[11px] font-bold uppercase tracking-[0.15em] text-gray-900 group-hover:text-primary transition-colors">
+                  دسته‌بندی‌ها
+                  <ChevronDown className="size-3.5 transition-transform group-hover:rotate-180" />
+                </button>
+                {/* Mega Menu - Refined with shadows and spacing */}
+                <div className="invisible absolute right-0 top-full z-[100] w-[1000px] translate-y-4 bg-white p-12 opacity-0 shadow-deep transition-all duration-300 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 rounded-b-[24px] border border-border border-t-0">
+                  <div className="grid grid-cols-4 gap-12">
+                    {categories.map((cat) => (
+                      <div key={cat.slug} className="space-y-6">
+                        <Link to="/category/$slug" params={{ slug: cat.slug }} className="block text-[13px] font-bold text-gray-900 hover:text-primary transition-colors uppercase tracking-wide">
+                          {cat.title}
+                        </Link>
+                        <ul className="space-y-3.5 border-r border-border/40 pr-5">
+                          {cat.children.map((child) => (
+                            <li key={child.slug}>
+                              <Link to="/category/$slug" params={{ slug: child.slug }} className="text-[12px] text-muted-foreground hover:text-primary hover:translate-x-[-4px] transition-all inline-block font-medium">
+                                {child.title}
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            </li>
-            <li>
-              <Link to="/search" search={{ q: "" }} className="relative block py-4 text-[11px] font-bold uppercase tracking-[0.15em] text-gray-900 hover:text-primary transition-colors after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all hover:after:w-full">فروشگاه</Link>
-            </li>
-            <li>
-              <Link to="/offers" className="relative block py-4 text-[11px] font-bold uppercase tracking-[0.15em] text-destructive hover:opacity-80 transition-colors">تخفیف‌های ویژه</Link>
-            </li>
-            <li>
-              <Link to="/blog" className="relative block py-4 text-[11px] font-bold uppercase tracking-[0.15em] text-gray-900 hover:text-primary transition-colors after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all hover:after:w-full">مجله آموزشی</Link>
-            </li>
-          </ul>
+              </li>
+              <li>
+                <Link to="/search" search={{ q: "" }} className="relative block py-4 text-[11px] font-bold uppercase tracking-[0.15em] text-gray-900 hover:text-primary transition-colors after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all hover:after:w-full">فروشگاه</Link>
+              </li>
+              <li>
+                <Link to="/offers" className="relative block py-4 text-[11px] font-bold uppercase tracking-[0.15em] text-destructive hover:opacity-80 transition-colors">تخفیف‌های ویژه</Link>
+              </li>
+              <li>
+                <Link to="/blog" className="relative block py-4 text-[11px] font-bold uppercase tracking-[0.15em] text-gray-900 hover:text-primary transition-colors after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all hover:after:w-full">مجله آموزشی</Link>
+              </li>
+            </ul>
+          </div>
+          
+          <div className="hidden xl:block text-[9px] text-muted-foreground max-w-[150px] leading-tight text-left">
+            داخل موبایل این از اسکیل اصلی موبایل خارج میشه و به هم میزنه سایت رو
+          </div>
         </div>
       </nav>
 
