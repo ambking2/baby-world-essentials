@@ -122,12 +122,18 @@ export function ProductCard({
                 )}
               </div>
               
-              {!outOfStock && (
-                <div className="flex items-center gap-1 text-[10px] text-emerald-600 font-medium bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100">
-                  <Truck className="size-3" />
-                  <span>ارسال رایگان</span>
-                </div>
-              )}
+              {/* Mobile quick add - Hidden on desktop, visible on mobile */}
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  onAddToCart ? onAddToCart(product) : toast.success("به سبد خرید اضافه شد");
+                }}
+                disabled={outOfStock}
+                className="flex md:hidden items-center gap-1 bg-primary text-white px-3 py-1.5 rounded-full text-[10px] font-bold shadow-sm active:scale-95 disabled:opacity-50"
+              >
+                <ShoppingCart className="size-3" />
+                <span>افزودن</span>
+              </button>
             </div>
             
             {outOfStock && (
