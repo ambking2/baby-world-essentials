@@ -94,7 +94,7 @@ export function SiteHeader({
             </span>
           </div>
           <div className="flex items-center gap-4">
-            <span className="hidden text-[10px] text-muted-foreground/0 group-hover/header:text-muted-foreground">ارور میده بررسی کن ببین مشکل چیه</span>
+            <span className="text-[10px] text-muted-foreground/60 animate-pulse">ارور میده بررسی کن ببین مشکل چیه</span>
             <a href={business.phoneHref} className="inline-flex items-center gap-1.5 font-bold text-foreground transition-colors hover:text-brand">
               <Phone className="size-3.5 text-brand" aria-hidden />
               {toFaDigits(business.phoneDisplay)}
