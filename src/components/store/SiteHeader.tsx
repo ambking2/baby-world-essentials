@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
-import brandLogo from "@/assets/logo/brand-logo-new.png.asset.json";
+const brandLogoUrl = "/assets/logo/brand-logo.png";
 import { business } from "@/data/business";
 import { formatToman, toFaDigits } from "@/lib/format";
 import { cn } from "@/lib/utils";
@@ -74,8 +74,8 @@ export function SiteHeader({
           <Link to="/" className="shrink-0 relative z-10 block group">
             <div className="flex items-center gap-3">
               <img 
-                src={brandLogo.url} 
-                alt={business.name} 
+                src={brandLogoUrl} 
+                alt={business.name}
                 className="h-10 w-auto sm:h-12 md:h-14 transition-transform group-hover:scale-105" 
               />
               <div className="flex flex-col leading-tight">
@@ -209,7 +209,7 @@ export function SiteHeader({
           {/* Header */}
           <div className="flex items-center justify-between border-b border-border/50 p-6">
             <Link to="/" onClick={() => setMobileOpen(false)} className="flex items-center gap-3">
-              <img src={brandLogo.url} alt={business.name} className="h-10 w-auto" />
+              <img src={brandLogoUrl} alt={business.name} className="h-10 w-auto" />
               <span className="text-lg font-bold tracking-tight text-gray-900">{business.name}</span>
             </Link>
             <button 
