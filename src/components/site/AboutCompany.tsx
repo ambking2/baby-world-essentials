@@ -1,60 +1,68 @@
 import { Link } from "@tanstack/react-router";
+import { Sparkles, Store, ShieldCheck, Hammer } from "lucide-react";
 
-import { SectionHeading } from "@/components/site/SectionHeading";
-import { Button } from "@/components/ui/button";
+import { SectionHeading } from "@/components/store/SectionHeading";
 import { toFaDigits } from "@/lib/format";
 
 const columns = [
   {
-    n: "۱",
-    title: "کارگاه چوب خودمان",
-    text: "سرویس خواب، دراور و تخت را در کارگاه ابهر با چوب راش خشک‌شده می‌سازیم؛ سفارش ابعاد دلخواه هم می‌گیریم.",
+    icon: Hammer,
+    title: "کارگاه چوب اختصاصی",
+    text: "سرویس خواب، دراور و تخت را در کارگاه خودمان با چوب راش و متریال درجه‌یک می‌سازیم؛ با امکان شخصی‌سازی کامل.",
+    tone: "bg-brand-soft text-brand",
   },
   {
-    n: "۲",
-    title: "فروشگاه حضوری در ابهر",
-    text: "خیابان طالقانی، روبه‌روی بانک ملت. کالاها را از نزدیک ببینید و بعد تصمیم بگیرید؛ شنبه تا پنجشنبه ۹ تا ۲۱.",
+    icon: Store,
+    title: "فروشگاه حضوری واقعی",
+    text: "ما فقط یک سایت نیستیم. در قلب ابهر فروشگاه حضوری داریم تا بتوانید کیفیت کالاها را از نزدیک لمس کنید.",
+    tone: "bg-sale/10 text-sale",
   },
   {
-    n: "۳",
-    title: "خرید بدون ریسک",
-    text: "فاکتور رسمی برای همه سفارش‌ها، ۱۸ ماه ضمانت کالاهای چوبی و ۷ روز مهلت مرجوعی کالای پلمب.",
+    icon: ShieldCheck,
+    title: "خرید امن و تضمین‌شده",
+    text: "فاکتور رسمی، ۱۸ ماه ضمانت واقعی سازه‌های چوبی و ۷ روز مهلت مرجوعی برای اطمینان کامل شما از خرید.",
+    tone: "bg-sky/20 text-sky",
   },
 ];
 
 export function AboutCompany() {
   return (
-    <section className="container-page py-10 md:py-14">
+    <section className="container-page py-16 md:py-24">
       <SectionHeading
-        eyebrow="از سال ۱۳۸۹ در ابهر"
-        title="درباره فروشگاه جهان کودک"
-        subtitle="یک مغازه واقعی سیسمونی با یک کارگاه چوب پشت آن. هرچه در سایت می‌بینید در همان فروشگاه هم موجود است و می‌توانید حضوری تحویل بگیرید."
+        eyebrow="اصالت و اعتماد از سال ۱۳۸۹"
+        title="داستان جهان کودک ابهر"
+        subtitle="ما ترکیبی از هنر نجاران محلی و بهترین برندهای سیسمونی هستیم تا تجربه‌ای گرم و مطمئن برای فرزند شما بسازیم."
       />
 
-      <div className="mt-8 grid gap-6 md:grid-cols-3 md:gap-8">
+      <div className="mt-12 grid gap-6 md:grid-cols-3">
         {columns.map((c) => (
-          <div key={c.n} className="flex gap-3 text-start">
-            <span className="grid size-11 shrink-0 place-items-center rounded-full bg-primary text-sm font-black text-primary-foreground">
-              {c.n}
+          <div key={c.title} className="group relative overflow-hidden rounded-[2.8rem] border-2 border-white/90 bg-white/40 p-8 shadow-lift transition-all duration-500 hover:bg-white/70 hover:shadow-deep hover:-translate-y-2">
+            <span className={`inline-flex size-14 items-center justify-center rounded-2xl ${c.tone} mb-5 shadow-inner transition-transform group-hover:scale-110`}>
+              <c.icon className="size-6" />
             </span>
-            <div>
-              <h3 className="text-sm font-black text-foreground">{c.title}</h3>
-              <p className="mt-1.5 text-xs leading-7 text-muted-foreground">{c.text}</p>
-            </div>
+            <h3 className="text-lg font-black text-foreground">{c.title}</h3>
+            <p className="mt-3 text-sm leading-8 text-muted-foreground">{c.text}</p>
           </div>
         ))}
       </div>
 
-      <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-        <Button asChild className="rounded-full px-6">
-          <Link to="/about">درباره ما</Link>
-        </Button>
-        <Button asChild variant="outline" className="rounded-full px-6">
-          <Link to="/contact">تماس با فروشگاه</Link>
-        </Button>
-        <span className="text-[11px] text-muted-foreground">
+      <div className="mt-12 flex flex-wrap items-center justify-center gap-6">
+        <Link 
+          to="/about" 
+          className="toy-button inline-flex items-center rounded-full bg-charcoal px-8 py-3.5 text-sm font-extrabold text-white shadow-lift transition-transform hover:scale-[1.03]"
+        >
+          بیشتر درباره ما
+        </Link>
+        <Link 
+          to="/contact" 
+          className="inline-flex items-center gap-2 rounded-full border-2 border-white/90 bg-white/80 px-8 py-3.5 text-sm font-bold text-foreground shadow-soft transition-all hover:border-brand hover:text-brand"
+        >
+          تماس با فروشگاه
+        </Link>
+        <div className="flex items-center gap-2 rounded-full bg-brand-soft px-4 py-2 text-xs font-black text-brand shadow-inner">
+          <Sparkles className="size-3.5" />
           {toFaDigits("۰۲۴-۳۵۲۲۳۳۴۴")}
-        </span>
+        </div>
       </div>
     </section>
   );
