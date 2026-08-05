@@ -1,11 +1,11 @@
-import furniture from "@/assets/cat-furniture.jpg";
-import stroller from "@/assets/cat-stroller.jpg";
-import clothing from "@/assets/cat-clothing.jpg";
-import toys from "@/assets/cat-toys.jpg";
-import feeding from "@/assets/cat-feeding.jpg";
-import dresser from "@/assets/cat-dresser.jpg";
-import hero from "@/assets/hero-nursery.jpg";
-import workshop from "@/assets/workshop.jpg";
+const furniture = "https://images.unsplash.com/photo-1595113316349-9fa4ee24f884?q=80&w=2072&auto=format&fit=crop";
+const stroller = "https://images.unsplash.com/photo-1519689680058-324335c77eba?q=80&w=2070&auto=format&fit=crop";
+const clothing = "https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?q=80&w=2075&auto=format&fit=crop";
+const toys = "https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?q=80&w=2070&auto=format&fit=crop";
+const feeding = "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?q=80&w=2070&auto=format&fit=crop";
+const dresser = "https://images.unsplash.com/photo-1537726235470-8504e3bdb28d?q=80&w=2070&auto=format&fit=crop";
+const hero = "https://images.unsplash.com/photo-1544124499-58912cbddaad?q=80&w=1974&auto=format&fit=crop";
+const workshop = "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?q=80&w=2071&auto=format&fit=crop";
 
 import type { ProductDetail } from "@/types/catalog";
 import { products } from "@/data/catalog";
