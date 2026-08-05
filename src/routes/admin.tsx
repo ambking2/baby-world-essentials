@@ -77,8 +77,8 @@ function AdminLayout() {
                 key={item.to}
                 to={item.to}
                 activeOptions={{ exact: item.exact }}
-                activeProps={{ className: "bg-brand text-primary-foreground" }}
-                inactiveProps={{ className: "text-muted-foreground hover:bg-secondary" }}
+                activeProps={{ className: "bg-primary text-white" }}
+                inactiveProps={{ className: "text-muted-foreground hover:bg-secondary/60 hover:text-foreground" }}
                 className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-[11px] font-bold transition-colors"
               >
                 <item.icon className="size-4" aria-hidden />

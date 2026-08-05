@@ -49,7 +49,7 @@ function AdminDashboard() {
         <Link
           to="/admin/orders"
           search={{ status: "awaiting_review" }}
-          className="rounded-3xl border border-brand/40 bg-card p-4 text-xs font-bold text-brand hover:bg-brand-soft/40"
+          className="rounded-3xl border border-primary/20 bg-secondary/30 p-4 text-xs font-bold text-primary hover:bg-secondary/50"
         >
           رسیدهای در انتطار بررسی: {toFaDigits(stats?.pendingReviewCount ?? 0)}
         </Link>
