@@ -35,7 +35,7 @@ export function SortBar({
             onClick={() => onChange(option.key)}
             className={cn(
               "whitespace-nowrap text-[10px] font-bold uppercase tracking-widest transition-colors",
-              sort === option.key ? "text-primary font-bold" : "text-muted-foreground hover:text-foreground",
+              sort === option.key ? "text-primary font-extrabold border-b-2 border-primary pb-1" : "text-muted-foreground hover:text-foreground",
             )}
           >
             {option.label}
