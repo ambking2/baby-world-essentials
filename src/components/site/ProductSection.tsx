@@ -33,7 +33,7 @@ export function ProductSection({
     <section id={id} className="container-page scroll-mt-28 py-12 md:py-16">
       <SectionHeading 
         title={title} 
-        subtitle={subtitle || undefined} 
+        subtitle={subtitle || ""} 
         moreHref={moreTo} 
         moreLabel={linkLabel}
         align="center"
