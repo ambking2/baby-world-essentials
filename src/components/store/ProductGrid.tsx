@@ -29,7 +29,7 @@ export function ProductGrid({
 
   if (products.length === 0) {
     return (
-      <div className="rounded-2xl border border-dashed border-border bg-muted/20 p-16 text-center text-sm text-muted-foreground">
+      <div className="rounded-xl border border-dashed border-border bg-gray-50 p-16 text-center text-xs text-gray-500">
         {emptyMessage}
       </div>
     );
@@ -42,7 +42,7 @@ export function ProductGrid({
   } as const;
 
   return (
-    <div ref={containerRef} className={cn("grid grid-cols-2 gap-3 sm:gap-5", columnClass[columns], className)}>
+    <div ref={containerRef} className={cn("grid grid-cols-2 gap-4 lg:gap-8", columnClass[columns], className)}>
       {products.map((product) => (
         <ProductCard
           key={product.id}
