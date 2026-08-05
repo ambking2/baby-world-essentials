@@ -3,7 +3,7 @@ import { ChevronLeft } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
-type SectionHeadingProps = {
+export type SectionHeadingProps = {
   title: string;
   eyebrow?: string;
   subtitle?: string;
