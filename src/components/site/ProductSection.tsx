@@ -23,7 +23,7 @@ function ProductSectionSkeleton({ rail, title, subtitle, moreTo, linkLabel }: Pa
   return (
     <section className="container-page section-spacing opacity-50">
       <SectionHeading 
-        title={title} 
+        title={title ?? ""} 
         subtitle={subtitle} 
         moreHref={moreTo as string} 
         moreLabel={linkLabel}
@@ -65,7 +65,7 @@ function ProductSectionContent({
     <section id={id} className="container-page section-spacing">
       <SectionHeading 
         title={title} 
-        subtitle={subtitle || ""} 
+        subtitle={subtitle} 
         moreHref={moreTo as string} 
         moreLabel={linkLabel}
         align="start"
