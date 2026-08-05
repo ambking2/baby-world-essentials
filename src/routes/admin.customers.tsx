@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { MailCheck, Search } from "lucide-react";
+import { MailCheck, Search, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -8,7 +8,9 @@ import { formatJalali, formatJalaliTime, formatToman, toFaDigits } from "@/lib/f
 import { 
   getAdminCustomers, 
   markAdminMessageRead, 
-  updateUserRole 
+  updateUserRole,
+  removeAdminMessage,
+  removeAdminNewsletter
 } from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/admin/customers")({
@@ -41,6 +43,22 @@ function AdminCustomers() {
     },
     onError: () => {
       toast.error("خطا در تغییر نقش.");
+    },
+  });
+
+  const removeMessage = useMutation({
+    mutationFn: (id: number) => removeAdminMessage({ data: { id } }),
+    onSuccess: (result) => {
+      toast.success(result.message);
+      void queryClient.invalidateQueries({ queryKey: ["admin-customers"] });
+    },
+  });
+
+  const removeNewsletter = useMutation({
+    mutationFn: (email: string) => removeAdminNewsletter({ data: { email } }),
+    onSuccess: (result) => {
+      toast.success(result.message);
+      void queryClient.invalidateQueries({ queryKey: ["admin-customers"] });
     },
   });
 
@@ -148,14 +166,28 @@ function AdminCustomers() {
               </div>
               {message.subject ? <p className="text-[11px] font-bold text-brand">{message.subject}</p> : null}
               <p className="whitespace-pre-line text-[11px] leading-6 text-muted-foreground">{message.body}</p>
-              <button
-                type="button"
-                onClick={() => markRead.mutate({ id: message.id, isRead: !message.isRead })}
-                className="inline-flex items-center gap-1 rounded-full border border-border px-3 py-1.5 text-[10px] font-bold hover:border-brand hover:text-brand"
-              >
-                <MailCheck className="size-3" aria-hidden />
-                {message.isRead ? "علامت‌زدن به عنوان خوانده‌نشده" : "خواندم"}
-              </button>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => markRead.mutate({ id: message.id, isRead: !message.isRead })}
+                  className="inline-flex items-center gap-1 rounded-full border border-border px-3 py-1.5 text-[10px] font-bold hover:border-brand hover:text-brand"
+                >
+                  <MailCheck className="size-3" aria-hidden />
+                  {message.isRead ? "علامت‌زدن به عنوان خوانده‌نشده" : "خواندم"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (confirm("آیا از حذف این پیام مطمئن هستید؟")) {
+                      removeMessage.mutate(message.id);
+                    }
+                  }}
+                  className="inline-flex items-center gap-1 rounded-full border border-border px-3 py-1.5 text-[10px] font-bold text-muted-foreground hover:border-destructive hover:text-destructive"
+                >
+                  <Trash2 className="size-3" aria-hidden />
+                  حذف
+                </button>
+              </div>
             </div>
           ))}
           {messages.length === 0 && !dataQuery.isLoading ? (
@@ -169,9 +201,22 @@ function AdminCustomers() {
           <h2 className="text-sm font-extrabold text-foreground">خبرنامه ({toFaDigits(newsletter.length)})</h2>
           <div className="space-y-1">
             {newsletter.map((item) => (
-              <p key={item.email} className="rounded-xl bg-secondary px-3 py-2 text-[10px] text-muted-foreground" dir="ltr">
-                {item.email}
-              </p>
+              <div key={item.email} className="group flex items-center justify-between rounded-xl bg-secondary px-3 py-2">
+                <span className="text-[10px] text-muted-foreground" dir="ltr">
+                  {item.email}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (confirm("آیا از حذف این ایمیل از خبرنامه مطمئن هستید؟")) {
+                      removeNewsletter.mutate(item.email);
+                    }
+                  }}
+                  className="invisible text-muted-foreground hover:text-destructive group-hover:visible"
+                >
+                  <Trash2 className="size-3" />
+                </button>
+              </div>
             ))}
             {newsletter.length === 0 ? (
               <p className="text-[11px] text-muted-foreground">هنوز کسی عضو خبرنامه نشده است.</p>
