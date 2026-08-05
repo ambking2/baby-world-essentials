@@ -5,7 +5,11 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 import { formatJalali, formatJalaliTime, formatToman, toFaDigits } from "@/lib/format";
-import { getAdminCustomers, markAdminMessageRead, updateUserRole } from "@/server/functions/admin";
+import { 
+  getAdminCustomers, 
+  markAdminMessageRead, 
+  updateUserRole 
+} from "@/server/functions/admin";
 
 export const Route = createFileRoute("/admin/customers")({
   component: AdminCustomers,
