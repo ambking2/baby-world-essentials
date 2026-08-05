@@ -179,9 +179,6 @@ export function SiteHeader({
             </ul>
           </div>
           
-          <div className="hidden xl:block text-[9px] text-muted-foreground max-w-[150px] leading-tight text-left">
-            منوی موبایل را به صورت آفلاین‌کَنواس/Offcanvas پیاده‌سازی کنم تا آیتم‌های ناوبری روی هم نیفتند.
-          </div>
         </div>
       </nav>
 
