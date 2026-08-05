@@ -4,7 +4,7 @@ import { AlertTriangle, Boxes, Coins, Receipt, ShoppingBag, Users } from "lucide
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 import { formatJalali, formatToman, toFaDigits } from "@/lib/format";
-import { getAdminDashboard } from "@/server/functions/admin";
+import { getAdminDashboard } from "@/@/lib/admin.functions";
 
 export const Route = createFileRoute("/admin/")({
   component: AdminDashboard,

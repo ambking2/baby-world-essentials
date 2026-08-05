@@ -5,7 +5,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 import { formatJalali, formatToman, toFaDigits } from "@/lib/format";
-import { getAdminCoupons, removeAdminCoupon, saveAdminCoupon } from "@/server/functions/admin";
+import { getAdminCoupons, removeAdminCoupon, saveAdminCoupon } from "@/@/lib/admin.functions";
 
 export const Route = createFileRoute("/admin/coupons")({
   component: AdminCoupons,

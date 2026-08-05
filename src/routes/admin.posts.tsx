@@ -5,7 +5,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 import { formatJalali, slugify, toFaDigits } from "@/lib/format";
-import { getAdminPosts, removeAdminPost, saveAdminPost } from "@/server/functions/admin";
+import { getAdminPosts, removeAdminPost, saveAdminPost } from "@/@/lib/admin.functions";
 import { uploadAdminImage } from "@/server/functions/upload";
 
 export const Route = createFileRoute("/admin/posts")({
