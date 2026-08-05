@@ -24,7 +24,7 @@ export function Rating({ value, count, size = 14, showValue = false, className }
             style={{ width: size, height: size }}
             className={cn(
               "shrink-0",
-              star <= rounded ? "fill-sun text-sun" : "fill-transparent text-muted-foreground/50",
+              star <= rounded ? "fill-primary text-primary" : "fill-transparent text-muted-foreground/30",
             )}
             aria-hidden
           />

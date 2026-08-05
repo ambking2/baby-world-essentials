@@ -25,15 +25,15 @@ export function Price({ price, effectivePrice, discountPercent, size = "md", cla
     <div className={cn("flex flex-wrap items-center gap-2", className)}>
       {hasDiscount ? (
         <>
-          <span className="ribbon-sale rounded-full px-2 py-0.5 text-[11px] font-bold">
+          <span className="bg-destructive px-2 py-0.5 text-[11px] font-bold text-white uppercase tracking-tight">
             {toFaDigits(percent)}٪
           </span>
-          <span className="text-xs text-muted-foreground line-through decoration-sale/70">
+          <span className="text-xs text-muted-foreground line-through decoration-destructive/30">
             {formatToman(price)}
           </span>
         </>
       ) : null}
-      <span className={cn("font-extrabold text-foreground", sizes[size])}>{formatToman(final)}</span>
+      <span className={cn("font-bold text-foreground", sizes[size])}>{formatToman(final)}</span>
     </div>
   );
 }
