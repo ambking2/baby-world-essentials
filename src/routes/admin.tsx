@@ -116,13 +116,23 @@ function AdminLayout() {
               ))}
             </div>
             
-            <div className="mt-3 border-t border-border/50 pt-3">
+            <div className="mt-3 grid grid-cols-2 gap-2 border-t border-border/50 pt-3">
               <Link 
                 to="/" 
                 className="flex items-center justify-center gap-2 rounded-xl border border-primary/20 bg-primary/5 px-3 py-2.5 text-[11px] font-bold text-primary transition-all active:scale-95 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none"
               >
                 <ShoppingBag className="size-3.5" />
                 مشاهدهٔ سایت
+              </Link>
+              <Link 
+                to="/admin" 
+                activeOptions={{ exact: true }}
+                activeProps={{ className: "bg-primary text-white border-primary shadow-sm" }}
+                inactiveProps={{ className: "border-border bg-card text-muted-foreground" }}
+                className="flex items-center justify-center gap-2 rounded-xl border px-3 py-2.5 text-[11px] font-bold transition-all active:scale-95 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none"
+              >
+                <LayoutDashboard className="size-3.5" />
+                داشبورد
               </Link>
             </div>
           </div>
