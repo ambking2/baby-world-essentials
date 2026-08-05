@@ -21,12 +21,9 @@ export function AdminFloatingButton() {
   // Only show floating button for staff
   if (!isStaff) return null;
 
-  // Show "Moshahede Site" button only when inside Admin panel
-  if (!isAdminPath) return null;
-
-  const targetPath = "/";
-  const label = "مشاهده سایت";
-  const Icon = ShoppingBag;
+  const targetPath = isAdminPath ? "/" : "/admin";
+  const label = isAdminPath ? "مشاهده سایت" : "پنل مدیریت";
+  const Icon = isAdminPath ? ShoppingBag : LayoutDashboard;
 
   return (
     <Link
