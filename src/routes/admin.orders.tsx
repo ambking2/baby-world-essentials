@@ -306,7 +306,7 @@ function AdminOrders() {
                           type="button"
                           disabled={reviewPayment.isPending}
                           onClick={() => reviewPayment.mutate({ paymentId: payment.id, approve: true })}
-                          className="rounded-full bg-primary px-4 py-2 text-[11px] font-bold text-white disabled:opacity-60 hover:bg-primary/95 shadow-sm"
+                          className="rounded-full bg-primary px-4 py-2 text-[11px] font-bold text-white disabled:opacity-60 hover:bg-primary/95 transition-all focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none shadow-sm"
                         >
                           تأیید این رسید
                         </button>
@@ -314,7 +314,7 @@ function AdminOrders() {
                           type="button"
                           disabled={reviewPayment.isPending}
                           onClick={() => reviewPayment.mutate({ paymentId: payment.id, approve: false })}
-                          className="rounded-full border border-border px-4 py-2 text-[11px] font-bold hover:border-sale hover:text-sale disabled:opacity-60"
+                          className="rounded-full border border-border px-4 py-2 text-[11px] font-bold hover:border-sale hover:text-sale disabled:opacity-60 transition-all focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none"
                         >
                           رد این رسید
                         </button>
