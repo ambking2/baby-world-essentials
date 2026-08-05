@@ -94,7 +94,7 @@ export function SiteHeader({
             </span>
           </div>
           <div className="flex items-center gap-4">
-            <span className="hidden text-[10px] text-muted-foreground/0 group-hover:text-muted-foreground">ارور میده بررسی کن ببین مشکل چیه</span>
+            <span className="hidden text-[10px] text-muted-foreground/0 group-hover/header:text-muted-foreground">ارور میده بررسی کن ببین مشکل چیه</span>
             <a href={business.phoneHref} className="inline-flex items-center gap-1.5 font-bold text-foreground transition-colors hover:text-brand">
               <Phone className="size-3.5 text-brand" aria-hidden />
               {toFaDigits(business.phoneDisplay)}
@@ -102,7 +102,7 @@ export function SiteHeader({
           </div>
         </div>
 
-        <div className={cn("glass-panel rounded-[2.8rem] border-white/90 px-3 py-3 shadow-lift backdrop-blur-xl transition-all duration-500", scrolled && "mx-auto max-w-[96%] translate-y-2 border-brand/10 shadow-deep")}>
+        <div className={cn("glass-panel group/header rounded-[2.8rem] border-white/90 px-3 py-3 shadow-lift backdrop-blur-xl transition-all duration-500", scrolled && "mx-auto max-w-[96%] translate-y-2 border-brand/10 shadow-deep")}>
           <div className="flex items-center gap-3 md:gap-4">
             <button
               type="button"
