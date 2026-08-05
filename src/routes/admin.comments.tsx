@@ -10,7 +10,7 @@ import {
   removeAdminComment,
   setAdminCommentStatus,
   setAdminReviewStatus,
-} from "@/server/functions/admin";
+} from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/admin/comments")({
   component: AdminComments,

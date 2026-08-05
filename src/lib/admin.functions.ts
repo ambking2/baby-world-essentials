@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
-import { requireAdmin } from "../context";
+import { requireAdmin } from "@/server/context";
 import {
   adminDeleteCategory,
   adminDeleteCoupon,
@@ -19,7 +19,7 @@ import {
   adminSetStock,
   adminToggleProduct,
   type ProductFormValues,
-} from "../repo/admin-products";
+} from "@/server/repo/admin-products";
 import {
   adminDeleteComment,
   adminDeletePost,
@@ -27,8 +27,8 @@ import {
   adminListPosts,
   adminSavePost,
   adminSetCommentStatus,
-} from "../repo/blog";
-import { allSettings, categoryTree, flatCategories, setSetting } from "../repo/catalog";
+} from "@/server/repo/blog";
+import { allSettings, categoryTree, flatCategories, setSetting } from "@/server/repo/catalog";
 import {
   adminListOrders,
   adminReviewPayment,
@@ -37,14 +37,14 @@ import {
   isOrderStatus,
   orderByCode,
   ORDER_STATUSES,
-} from "../repo/orders";
+} from "@/server/repo/orders";
 import {
   adminListCustomers,
   adminListMessages,
   adminListNewsletter,
   adminMarkMessageRead,
   adminUpdateUserRole,
-} from "../repo/users";
+} from "@/server/repo/users";
 
 const statusEnum = z.enum(["pending", "approved", "rejected"]);
 

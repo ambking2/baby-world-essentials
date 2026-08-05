@@ -3,7 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
-import { getAdminSettings, saveAdminSettings } from "@/server/functions/admin";
+import { getAdminSettings, saveAdminSettings } from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/admin/settings")({
   component: AdminSettings,

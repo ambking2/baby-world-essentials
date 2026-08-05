@@ -5,7 +5,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 import { slugify, toFaDigits } from "@/lib/format";
-import { getAdminCategories, removeAdminCategory, saveAdminCategory } from "@/server/functions/admin";
+import { getAdminCategories, removeAdminCategory, saveAdminCategory } from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/admin/categories")({
   component: AdminCategories,
