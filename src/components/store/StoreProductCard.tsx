@@ -29,8 +29,8 @@ export function StoreProductCard({
   const isClothing = product.categoryKind === "clothing";
 
   return (
-    <article className={cn("card-hover group storybook-panel flex h-full flex-col p-2", className)}>
-      <div className="relative overflow-hidden rounded-[1.7rem] bg-[linear-gradient(180deg,#fff8f2_0%,#ffffff_100%)]">
+    <article className={cn("card-hover group flex h-full flex-col overflow-hidden rounded-[2.5rem] border border-white/60 bg-white/40 p-2 backdrop-blur-sm transition-all duration-500 hover:bg-white/70 hover:shadow-lift", className)}>
+      <div className="relative aspect-[1/1.05] overflow-hidden rounded-[2.2rem] bg-[linear-gradient(180deg,#fff8f2_0%,#ffffff_100%)] shadow-inner">
         <div className="absolute start-3 top-3 z-10 flex flex-col gap-1.5">
           {product.badge ? (
             <span className="rounded-full bg-gradient-to-r from-brand to-sale px-3 py-1 text-[11px] font-extrabold text-primary-foreground shadow-soft">
@@ -56,12 +56,12 @@ export function StoreProductCard({
           <Heart className={cn("size-4", inWishlist && "fill-sale text-sale")} aria-hidden />
         </button>
 
-        <Link to="/product/$slug" params={{ slug: product.slug }} className="block overflow-hidden rounded-[1.7rem]">
+        <Link to="/product/$slug" params={{ slug: product.slug }} className="block h-full">
           <img
             src={product.cover ?? "/images/cat-clothing.jpg"}
             alt={product.title}
             loading="lazy"
-            className="aspect-[1/1.02] w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
           />
         </Link>
 

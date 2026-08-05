@@ -52,7 +52,7 @@ export function TrustBadges() {
           return (
             <div
               key={badge.title}
-              className={`reveal card-hover rounded-[1.9rem] border border-white/80 bg-gradient-to-br ${badge.tone} p-4 shadow-soft`}
+              className={`reveal card-hover rounded-[2.2rem] border border-white/80 bg-gradient-to-br ${badge.tone} p-4 shadow-soft transition-all duration-300 hover:shadow-lift`}
             >
               <span className="mb-4 grid size-12 place-items-center rounded-[1.3rem] bg-white/85 text-brand shadow-soft">
                 <Icon className="size-5" aria-hidden />
