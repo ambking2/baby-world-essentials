@@ -6,8 +6,8 @@ import { formatToman } from "@/lib/format";
 
 import { AuthError, currentUser, readCartToken, requireUser, setCartCookie } from "../context";
 import { orderReceivedEmail, sendMail } from "../mailer";
+import { cartSummary, createCart, findCartByToken, type CartRow } from "../repo/cart";
 import { allSettings, getSettingNumber } from "../repo/catalog";
-import { cartSummary, createCart, findCartByToken } from "../repo/cart";
 import {
   applyCoupon,
   CheckoutError,
@@ -18,26 +18,31 @@ import {
   type CheckoutInput,
 } from "../repo/orders";
 
-function currentCart() {
-  let cart = findCartByToken(readCartToken());
-  if (!cart) {
-    const user = currentUser();
-    cart = createCart(user?.id ?? null);
-    setCartCookie(cart.token);
-  }
+async function currentCart(): Promise<CartRow> {
+  const existing = await findCartByToken(readCartToken());
+  if (existing) return existing;
+
+  const user = await currentUser();
+  const cart = await createCart(user?.id ?? null);
+  setCartCookie(cart.token);
   return cart;
 }
 
 /** دادهٔ صفحهٔ پرداخت: سبد، روش‌های پرداخت و شمارهٔ کارت. */
 export const getCheckoutData = createServerFn({ method: "GET" }).handler(async () => {
-  const cart = currentCart();
-  const settings = allSettings();
+  const [cart, settings, user, freeShippingThreshold, shippingFlatFee] = await Promise.all([
+    currentCart(),
+    allSettings(),
+    currentUser(),
+    getSettingNumber("free_shipping_threshold", business.freeShippingThreshold),
+    getSettingNumber("shipping_flat_fee", business.shippingFlatFee),
+  ]);
 
   return {
-    cart: cartSummary(cart),
-    user: currentUser(),
-    freeShippingThreshold: getSettingNumber("free_shipping_threshold", business.freeShippingThreshold),
-    shippingFlatFee: getSettingNumber("shipping_flat_fee", business.shippingFlatFee),
+    cart: await cartSummary(cart),
+    user,
+    freeShippingThreshold,
+    shippingFlatFee,
     card: {
       number: settings["card_number"] ?? business.cardNumber,
       holder: settings["card_holder"] ?? business.cardHolder,
@@ -50,10 +55,15 @@ export const getCheckoutData = createServerFn({ method: "GET" }).handler(async (
 export const checkCoupon = createServerFn({ method: "POST" })
   .validator((data: unknown) => z.object({ code: z.string().min(2).max(40) }).parse(data))
   .handler(async ({ data }) => {
-    const summary = cartSummary(currentCart());
+    const summary = await cartSummary(await currentCart());
     try {
-      const result = applyCoupon(data.code, summary.itemsTotal);
-      return { ok: true, code: result.code, discount: result.discount, message: "کد تخفیف اعمال شد." };
+      const result = await applyCoupon(data.code, summary.itemsTotal);
+      return {
+        ok: true,
+        code: result.code,
+        discount: result.discount,
+        message: "کد تخفیف اعمال شد.",
+      };
     } catch (error) {
       const message = error instanceof CheckoutError ? error.message : "کد تخفیف معتبر نیست.";
       return { ok: false, code: null, discount: 0, message };
@@ -76,8 +86,7 @@ const checkoutSchema = z.object({
 export const submitCheckout = createServerFn({ method: "POST" })
   .validator((data: unknown) => checkoutSchema.parse(data))
   .handler(async ({ data }) => {
-    const cart = currentCart();
-    const user = currentUser();
+    const [cart, user] = await Promise.all([currentCart(), currentUser()]);
 
     const input: CheckoutInput = {
       userId: user?.id ?? null,
@@ -92,7 +101,7 @@ export const submitCheckout = createServerFn({ method: "POST" })
       couponCode: data.couponCode ?? null,
     };
 
-    const order = placeOrder(cart, input);
+    const order = await placeOrder(cart, input);
 
     if (user?.email) {
       await sendMail(orderReceivedEmail(user.email, order.code, formatToman(order.grandTotal)));
@@ -111,9 +120,9 @@ export const submitCheckout = createServerFn({ method: "POST" })
 export const getOrder = createServerFn({ method: "GET" })
   .validator((data: unknown) => z.object({ code: z.string().min(4).max(30) }).parse(data))
   .handler(async ({ data }) => {
-    const settings = allSettings();
+    const [settings, order] = await Promise.all([allSettings(), orderByCode(data.code)]);
     return {
-      order: orderByCode(data.code),
+      order,
       card: {
         number: settings["card_number"] ?? business.cardNumber,
         holder: settings["card_holder"] ?? business.cardHolder,
@@ -124,8 +133,8 @@ export const getOrder = createServerFn({ method: "GET" })
 
 /** فهرست سفارش‌های کاربر جاری. */
 export const getMyOrders = createServerFn({ method: "GET" }).handler(async () => {
-  const user = requireUser();
-  return { orders: ordersForUser(user.id) };
+  const user = await requireUser();
+  return { orders: await ordersForUser(user.id) };
 });
 
 /** ثبت رسید کارت‌به‌کارت توسط مشتری. */
@@ -142,10 +151,10 @@ export const submitReceipt = createServerFn({ method: "POST" })
       .parse(data),
   )
   .handler(async ({ data }) => {
-    const order = orderByCode(data.orderCode);
+    const order = await orderByCode(data.orderCode);
     if (!order) throw new AuthError("سفارشی با این کد پیدا نشد.", 404);
 
-    submitPaymentReceipt({
+    await submitPaymentReceipt({
       orderCode: data.orderCode,
       payerName: data.payerName.trim(),
       reference: data.reference.trim(),

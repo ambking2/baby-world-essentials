@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
-import { hashPassword, findUserById, passwordProblem, verifyPassword } from "../auth";
+import { findUserById, hashPassword, passwordProblem, verifyPassword } from "../auth";
 import { AuthError, requireUser } from "../context";
 import { ordersForUser } from "../repo/orders";
 import {
@@ -17,27 +17,27 @@ import {
 
 /** دادهٔ پنل کاربری: پروفایل، سفارش‌ها، نشانی‌ها و علاقه‌مندی‌ها. */
 export const getAccount = createServerFn({ method: "GET" }).handler(async () => {
-  const user = requireUser();
-  return {
-    user,
-    orders: ordersForUser(user.id),
-    addresses: listAddresses(user.id),
-    wishlist: listWishlist(user.id),
-  };
+  const user = await requireUser();
+  const [orders, addresses, wishlist] = await Promise.all([
+    ordersForUser(user.id),
+    listAddresses(user.id),
+    listWishlist(user.id),
+  ]);
+  return { user, orders, addresses, wishlist };
 });
 
 /** فقط شناسهٔ علاقه‌مندی‌ها — برای نمایش قلب روی کارت محصول. */
 export const getWishlistIds = createServerFn({ method: "GET" }).handler(async () => {
-  const user = requireUser();
-  return { ids: wishlistIds(user.id) };
+  const user = await requireUser();
+  return { ids: await wishlistIds(user.id) };
 });
 
 /** افزودن/حذف محصول از علاقه‌مندی‌ها. */
 export const toggleWishlistItem = createServerFn({ method: "POST" })
   .validator((data: unknown) => z.object({ productId: z.number().int().positive() }).parse(data))
   .handler(async ({ data }) => {
-    const user = requireUser();
-    const added = toggleWishlist(user.id, data.productId);
+    const user = await requireUser();
+    const added = await toggleWishlist(user.id, data.productId);
     return {
       ok: true,
       added,
@@ -56,8 +56,8 @@ export const updateMyProfile = createServerFn({ method: "POST" })
       .parse(data),
   )
   .handler(async ({ data }) => {
-    const user = requireUser();
-    updateProfile(user.id, { name: data.name ?? null, phone: data.phone ?? null });
+    const user = await requireUser();
+    await updateProfile(user.id, { name: data.name ?? null, phone: data.phone ?? null });
     return { ok: true, message: "اطلاعات حساب شما به‌روز شد." };
   });
 
@@ -72,17 +72,17 @@ export const changeMyPassword = createServerFn({ method: "POST" })
       .parse(data),
   )
   .handler(async ({ data }) => {
-    const user = requireUser();
-    const row = findUserById(user.id);
+    const user = await requireUser();
+    const row = await findUserById(user.id);
     if (!row) throw new AuthError("حساب کاربری پیدا نشد.", 404);
 
-    if (!verifyPassword(data.currentPassword, row.password_hash)) {
-      throw new AuthError("رمز فعلی درست نیست.", 400);
-    }
+    const valid = await verifyPassword(data.currentPassword, row.password_hash);
+    if (!valid) throw new AuthError("رمز فعلی درست نیست.", 400);
+
     const problem = passwordProblem(data.newPassword);
     if (problem) throw new AuthError(problem, 400);
 
-    updatePasswordHash(user.id, hashPassword(data.newPassword));
+    await updatePasswordHash(user.id, await hashPassword(data.newPassword));
     return { ok: true, message: "رمز عبور شما تغییر کرد." };
   });
 
@@ -103,8 +103,8 @@ export const saveMyAddress = createServerFn({ method: "POST" })
       .parse(data),
   )
   .handler(async ({ data }) => {
-    const user = requireUser();
-    const id = saveAddress(user.id, {
+    const user = await requireUser();
+    const id = await saveAddress(user.id, {
       id: data.id ?? null,
       receiver: data.receiver.trim(),
       phone: data.phone.trim(),
@@ -114,14 +114,14 @@ export const saveMyAddress = createServerFn({ method: "POST" })
       line: data.line.trim(),
       ...(data.isDefault === undefined ? {} : { isDefault: data.isDefault }),
     });
-    return { ok: true, id, addresses: listAddresses(user.id), message: "نشانی ذخیره شد." };
+    return { ok: true, id, addresses: await listAddresses(user.id), message: "نشانی ذخیره شد." };
   });
 
 /** حذف نشانی. */
 export const deleteMyAddress = createServerFn({ method: "POST" })
   .validator((data: unknown) => z.object({ id: z.number().int().positive() }).parse(data))
   .handler(async ({ data }) => {
-    const user = requireUser();
-    deleteAddress(user.id, data.id);
-    return { ok: true, addresses: listAddresses(user.id), message: "نشانی حذف شد." };
+    const user = await requireUser();
+    await deleteAddress(user.id, data.id);
+    return { ok: true, addresses: await listAddresses(user.id), message: "نشانی حذف شد." };
   });
