@@ -61,6 +61,10 @@
   --input: #E5E7EB;
   --ring: #3D5A40;
   --radius: 0.875rem;
+
+  /* Custom Design Tokens for consistency */
+  --color-brand: var(--primary);
+  --color-brand-soft: var(--secondary);
 }
 
 @layer base {

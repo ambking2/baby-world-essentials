@@ -116,7 +116,7 @@ function AdminCategories() {
                       isActive: true,
                     })
                   }
-                  className="rounded-lg border border-border px-3 py-1 text-[10px] font-bold hover:border-brand hover:text-brand"
+                  className="rounded-lg border border-border px-3 py-1 text-[10px] font-bold hover:border-primary hover:text-primary transition-colors"
                 >
                   ویرایش
                 </button>
@@ -159,7 +159,7 @@ function AdminCategories() {
                             isActive: true,
                           })
                         }
-                        className="rounded-lg border border-border px-3 py-1 text-[10px] font-bold hover:border-brand hover:text-brand"
+                        className="rounded-lg border border-border px-3 py-1 text-[10px] font-bold hover:border-primary hover:text-primary transition-colors"
                       >
                         ویرایش
                       </button>
@@ -269,7 +269,7 @@ function AdminCategories() {
           <button
             type="submit"
             disabled={save.isPending}
-            className="flex-1 rounded-full bg-brand px-4 py-2.5 text-[11px] font-bold text-primary-foreground disabled:opacity-60"
+            className="flex-1 rounded-full bg-primary px-4 py-2.5 text-[11px] font-bold text-white shadow-sm hover:bg-primary/95 disabled:opacity-60"
           >
             ذخیره
           </button>
@@ -277,7 +277,7 @@ function AdminCategories() {
             <button
               type="button"
               onClick={() => setForm(emptyForm)}
-              className="rounded-full border border-border px-4 py-2.5 text-[11px] font-bold hover:border-brand hover:text-brand"
+              className="rounded-full border border-border px-4 py-2.5 text-[11px] font-bold hover:border-primary hover:text-primary transition-colors"
             >
               لغو
             </button>

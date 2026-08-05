@@ -306,7 +306,7 @@ function AdminOrders() {
                           type="button"
                           disabled={reviewPayment.isPending}
                           onClick={() => reviewPayment.mutate({ paymentId: payment.id, approve: true })}
-                          className="rounded-full bg-brand px-4 py-2 text-[11px] font-bold text-primary-foreground disabled:opacity-60"
+                          className="rounded-full bg-primary px-4 py-2 text-[11px] font-bold text-white disabled:opacity-60 hover:bg-primary/95 shadow-sm"
                         >
                           تأیید این رسید
                         </button>
