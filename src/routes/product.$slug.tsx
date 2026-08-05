@@ -103,7 +103,7 @@ function ProductPage() {
         <div className="grid gap-16 lg:grid-cols-2">
           {/* Gallery */}
           <div className="space-y-6">
-            <div className="aspect-square overflow-hidden bg-secondary">
+            <div className="aspect-square overflow-hidden bg-muted/20 border border-border/50 rounded-2xl shadow-sm">
               <img
                 src={images[activeImage]?.url ?? images[0]?.url}
                 alt={images[activeImage]?.alt ?? product.title}
@@ -117,8 +117,8 @@ function ProductPage() {
                     key={idx}
                     onClick={() => setActiveImage(idx)}
                     className={cn(
-                      "size-20 shrink-0 border-b-2 bg-secondary p-1 transition-premium",
-                      idx === activeImage ? "border-primary opacity-100" : "border-transparent opacity-60 hover:opacity-100"
+                    "size-20 shrink-0 border-b-2 bg-muted/20 rounded-md p-1 transition-premium",
+                      idx === activeImage ? "border-primary opacity-100 shadow-sm" : "border-transparent opacity-60 hover:opacity-100"
                     )}
                   >
                     <img src={image.url} alt="" className="h-full w-full object-cover" />
@@ -207,7 +207,7 @@ function ProductPage() {
                 >
                   {stock <= 0 ? "ناموجود" : needsSelection ? "انتخاب مشخصات" : "افزودن به سبد خرید"}
                 </button>
-                <button className="flex size-14 items-center justify-center border border-border transition-premium hover:bg-secondary">
+                <button className="flex size-14 items-center justify-center border border-border transition-premium hover:bg-secondary rounded-md">
                   <Heart className="size-5" />
                 </button>
               </div>
@@ -252,7 +252,7 @@ function ProductPage() {
                 )}
               >
                 {t === "description" ? "توضیحات" : t === "attributes" ? "مشخصات" : "دیدگاه‌ها"}
-                {tab === t && <span className="absolute -bottom-[25px] left-0 h-0.5 w-full bg-foreground" />}
+                {tab === t && <span className="absolute -bottom-[25px] left-0 h-1 w-full bg-primary" />}
               </button>
             ))}
           </div>
