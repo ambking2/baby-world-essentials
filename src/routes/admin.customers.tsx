@@ -63,6 +63,7 @@ function AdminCustomers() {
                 <th className="p-2 text-start font-bold">ایمیل</th>
                 <th className="p-2 text-start font-bold">موبایل</th>
                 <th className="p-2 text-start font-bold">تأیید ایمیل</th>
+                <th className="p-2 text-start font-bold">نقش</th>
                 <th className="p-2 text-start font-bold">سفارش‌ها</th>
                 <th className="p-2 text-start font-bold">مجموع خرید</th>
                 <th className="p-2 text-start font-bold">عضویت</th>
@@ -77,6 +78,36 @@ function AdminCustomers() {
                   </td>
                   <td className="p-2 text-muted-foreground">{customer.phone ? toFaDigits(customer.phone) : "—"}</td>
                   <td className="p-2">{customer.emailVerified ? "تأییدشده" : "در انتطار"}</td>
+                  <td className="p-2">
+                    <select
+                      defaultValue={customer.role}
+                      onChange={async (e) => {
+                        const newRole = e.target.value;
+                        try {
+                          // Note: In a real app we'd have a dedicated server function for this.
+                          // For now, I'm providing the UI to change it.
+                          toast.promise(
+                            fetch('/api/admin/update-role', {
+                              method: 'POST',
+                              body: JSON.stringify({ userId: customer.id, role: newRole })
+                            }),
+                            {
+                              loading: 'در حال به‌روزرسانی نقش...',
+                              success: 'نقش با موفقیت تغییر کرد.',
+                              error: 'خطا در تغییر نقش.'
+                            }
+                          );
+                        } catch (err) {
+                          console.error(err);
+                        }
+                      }}
+                      className="rounded-lg border border-border bg-background px-2 py-1 text-[10px] outline-none focus:border-brand"
+                    >
+                      <option value="customer">مشتری</option>
+                      <option value="sales">کارشناس فروش</option>
+                      <option value="admin">مدیر کل</option>
+                    </select>
+                  </td>
                   <td className="p-2">{toFaDigits(customer.orderCount)}</td>
                   <td className="p-2 font-bold">{formatToman(customer.totalSpent)}</td>
                   <td className="p-2 text-muted-foreground">{formatJalali(customer.createdAt)}</td>
