@@ -22,7 +22,7 @@ export function Breadcrumb({ items, className }: { items: Array<Crumb>; classNam
                 {item.title}
               </Link>
             ) : (
-              <span className={cn(isLast && "font-semibold text-foreground")}>{item.title}</span>
+              <span className={cn(isLast && "font-bold text-primary")}>{item.title}</span>
             )}
           </span>
         );

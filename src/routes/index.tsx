@@ -108,7 +108,7 @@ function HomePage() {
                 <p className="text-xs text-muted-foreground">بسته‌بندی تخصصی و ارسال سریع به سراسر ایران با ضمانت سلامت کالا.</p>
               </div>
             </div>
-            <Link to="/about" className="btn-primary mt-12 inline-block">بیشتر بدانید</Link>
+            <Link to="/about" className="inline-flex items-center justify-center bg-primary px-8 py-3 text-sm font-bold text-white shadow-sm transition-premium hover:bg-primary/90 mt-12">بیشتر بدانید</Link>
           </div>
         </div>
       </section>
@@ -130,7 +130,7 @@ function HomePage() {
           </div>
           <BlogPreview />
           <div className="mt-16 text-center">
-            <Link to="/blog" className="btn-secondary">مشاهده همه مقالات</Link>
+            <Link to="/blog" className="inline-flex items-center justify-center border border-primary px-8 py-3 text-sm font-bold text-primary transition-premium hover:bg-primary hover:text-white">مشاهده همه مقالات</Link>
           </div>
         </div>
       </section>

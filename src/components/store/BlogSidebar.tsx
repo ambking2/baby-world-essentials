@@ -51,7 +51,7 @@ export function BlogSidebar({
             event.preventDefault();
             onSearchSubmit?.();
           }}
-          className="storybook-panel flex items-center gap-2 p-3"
+          className="rounded-2xl border border-border bg-white shadow-sm flex items-center gap-2 p-3"
         >
           <Search className="ms-1 size-4 text-muted-foreground" aria-hidden />
           <input
@@ -63,7 +63,7 @@ export function BlogSidebar({
         </form>
       ) : null}
 
-      <section className="storybook-panel p-4">
+      <section className="rounded-2xl border border-border bg-white shadow-sm p-4">
         <h2 className="mb-3 text-sm font-black text-foreground">آخرین مطالب</h2>
         <div className="space-y-3">
           {recent.map((post) => (
@@ -71,7 +71,7 @@ export function BlogSidebar({
               key={post.slug}
               to="/blog/$slug"
               params={{ slug: post.slug }}
-              className="flex items-center gap-3 rounded-[1.3rem] border border-white/70 bg-white/75 p-2.5 shadow-soft transition-colors hover:text-brand"
+              className="flex items-center gap-3 rounded-2xl border border-border bg-muted/20 p-2.5 transition-colors hover:text-primary shadow-sm hover:border-primary/30"
             >
               <img src={post.cover ?? "/images/workshop.jpg"} alt={post.title} className="size-16 rounded-[1rem] object-cover" />
               <div className="min-w-0">
@@ -84,7 +84,7 @@ export function BlogSidebar({
       </section>
 
       {tags.length > 0 ? (
-        <section className="storybook-panel p-4">
+        <section className="rounded-2xl border border-border bg-white shadow-sm p-4">
           <h2 className="mb-3 text-sm font-black text-foreground">برچسب‌ها</h2>
           <div className="flex flex-wrap gap-2">
             {tags.map((item) => {
@@ -95,7 +95,7 @@ export function BlogSidebar({
                   type="button"
                   onClick={() => onTagSelect?.(active ? undefined : item.tag)}
                   className={`rounded-full border px-3 py-1.5 text-[10px] font-extrabold transition-colors ${
-                    active ? "border-brand bg-gradient-to-r from-brand to-sale text-primary-foreground" : "border-white/80 bg-white/80 text-muted-foreground hover:border-brand hover:text-brand"
+                    active ? "border-primary bg-primary text-primary-foreground shadow-sm" : "border-border bg-muted/20 text-muted-foreground hover:border-primary/50 hover:text-primary"
                   }`}
                 >
                   {item.tag} ({toFaDigits(item.postCount)})
@@ -106,8 +106,8 @@ export function BlogSidebar({
         </section>
       ) : null}
 
-      <section className="storybook-panel p-5">
-        <div className="inline-flex items-center gap-2 rounded-full bg-brand-soft px-3 py-1 text-[11px] font-extrabold text-brand">
+      <section className="rounded-2xl border border-border bg-white shadow-sm p-5">
+        <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-[11px] font-extrabold text-primary">
           <Sparkles className="size-3.5" aria-hidden />
           خبرنامهٔ جهان کودک
         </div>
@@ -127,19 +127,19 @@ export function BlogSidebar({
             onChange={(event) => setEmail(event.target.value)}
             placeholder="ایمیل شما"
             dir="ltr"
-            className="w-full rounded-full border border-white/80 bg-white px-4 py-3 text-xs outline-none focus:border-brand"
+            className="w-full rounded-full border border-border bg-white px-4 py-3 text-xs outline-none focus:border-primary shadow-sm"
           />
           <button
             type="submit"
             disabled={subscribe.isPending}
-            className="toy-button w-full rounded-full bg-gradient-to-r from-brand to-sale px-4 py-3 text-[11px] font-extrabold text-primary-foreground disabled:opacity-60"
+            className="w-full rounded-full bg-primary px-4 py-3 text-[11px] font-extrabold text-primary-foreground disabled:opacity-60 shadow-md hover:bg-primary/90 transition-colors"
           >
             عضویت در خبرنامه
           </button>
         </form>
       </section>
 
-      <section className="storybook-panel p-4 text-[11px] leading-6 text-muted-foreground">
+      <section className="rounded-2xl border border-border bg-white shadow-sm p-4 text-[11px] leading-6 text-muted-foreground">
         <h2 className="mb-2 text-sm font-black text-foreground">مشاورهٔ خرید</h2>
         <p>تلفن فروشگاه: {business.phoneDisplay}</p>
         <p>{business.hoursFull}</p>

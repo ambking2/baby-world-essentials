@@ -66,20 +66,20 @@ export function SiteFooter({ categories, onSubscribe, subscribing = false }: Sit
               onSubscribe?.(email.trim());
               setEmail("");
             }}
-            className="flex items-center gap-2"
+            className="flex items-center gap-4 bg-secondary/30 p-2 rounded-full border border-border/50 focus-within:border-primary transition-premium"
           >
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="آدرس ایمیل شما"
-              className="flex-1 border-b border-border py-4 text-sm outline-none transition-colors focus:border-primary"
+              className="flex-1 bg-transparent px-4 py-2 text-sm outline-none placeholder:text-muted-foreground/60"
               dir="ltr"
             />
             <button
               type="submit"
               disabled={subscribing}
-              className="group flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-primary transition-opacity hover:opacity-80 disabled:opacity-50"
+              className="group flex items-center gap-2 rounded-full bg-primary px-6 py-2 text-sm font-bold text-white shadow-sm transition-premium hover:bg-primary/90 disabled:opacity-50"
             >
               عضویت
               <Send className="size-4" />
@@ -122,7 +122,7 @@ export function SiteFooter({ categories, onSubscribe, subscribing = false }: Sit
         </div>
 
         {/* Contact Info Row */}
-        <div className="mt-20 border-t border-border py-12">
+        <div className="mt-20 border-t border-border py-12 bg-secondary/10 -mx-[max(24px,calc((100vw-1320px)/2))] px-[max(24px,calc((100vw-1320px)/2))]">
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             <div className="flex items-start gap-4">
               <MapPin className="size-5 shrink-0 text-primary" />

@@ -29,7 +29,7 @@ export function ProductGrid({
 
   if (products.length === 0) {
     return (
-      <div className="rounded-3xl border border-dashed border-border bg-secondary/30 p-10 text-center text-sm text-muted-foreground">
+      <div className="rounded-2xl border border-dashed border-border bg-muted/20 p-16 text-center text-sm text-muted-foreground">
         {emptyMessage}
       </div>
     );

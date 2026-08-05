@@ -52,7 +52,7 @@ export function HeroSlider() {
   }, [emblaApi, onSelect]);
 
   return (
-    <section className="relative h-[600px] w-full overflow-hidden bg-secondary lg:h-[700px]">
+    <section className="relative h-[600px] w-full overflow-hidden bg-muted/20 lg:h-[700px]">
       <div ref={emblaRef} className="h-full cursor-grab active:cursor-grabbing">
         <div className="flex h-full">
           {SLIDES.map((slide, idx) => (

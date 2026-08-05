@@ -18,7 +18,7 @@ export function BlogPreview() {
           <Link
             to="/blog/$slug"
             params={{ slug: post.slug }}
-            className="relative mb-6 block aspect-[16/10] overflow-hidden bg-secondary"
+            className="relative mb-6 block aspect-[16/10] overflow-hidden bg-muted/20"
           >
             <img 
               src={(post as any).cover ?? "/images/cat-clothing.jpg"} 
