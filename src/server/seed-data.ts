@@ -14,19 +14,19 @@ export const CATEGORIES: Array<SeedCategory> = [
     slug: "servis-khab",
     title: "سرویس خواب نوزاد",
     blurb: "تخت، دراور و کمد با چوب سالم و رنگ بی‌بو",
-    image: "/assets/images/nursery-1.jpg",
+    image: "https://images.unsplash.com/photo-1544124499-58912cbddaad?q=80&w=1974&auto=format&fit=crop",
     children: [
       {
         slug: "takht-nozad",
         title: "تخت و گهواره",
         blurb: "تخت‌های ایمن با ارتفاع قابل تنظیم",
-        image: "/assets/images/nursery-1.jpg",
+        image: "https://images.unsplash.com/photo-1544124499-58912cbddaad?q=80&w=1974&auto=format&fit=crop",
       },
       {
         slug: "draver",
         title: "دراور و کمد",
         blurb: "دراور با ریل آرام‌بند و سطح تعویض پوشک",
-        image: "/assets/images/nursery-2.jpg",
+        image: "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?q=80&w=2071&auto=format&fit=crop",
       },
     ],
   },
@@ -34,28 +34,28 @@ export const CATEGORIES: Array<SeedCategory> = [
     slug: "lebas",
     title: "لباس نوزاد و کودک",
     blurb: "پنبهٔ نرم، دوخت تمیز، سایزبندی دقیق",
-    image: "/assets/images/nursery-3.jpg",
+    image: "https://images.unsplash.com/photo-1595113316349-9fa4ee24f884?q=80&w=2072&auto=format&fit=crop",
     kind: "clothing",
     children: [
       {
         slug: "lebas-dokhtaraneh",
         title: "لباس دخترانه",
         blurb: "ست و سرهمی دخترانه",
-        image: "/assets/images/nursery-3.jpg",
+        image: "https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?q=80&w=2075&auto=format&fit=crop",
         kind: "clothing",
       },
       {
         slug: "lebas-pesaraneh",
         title: "لباس پسرانه",
         blurb: "ست و پیراهن پسرانه",
-        image: "/assets/images/nursery-3.jpg",
+        image: "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?q=80&w=2071&auto=format&fit=crop",
         kind: "clothing",
       },
       {
         slug: "sarhami-khab",
         title: "سرهمی و لباس خواب",
         blurb: "سرهمی راحت برای خواب شب",
-        image: "/assets/images/nursery-3.jpg",
+        image: "https://images.unsplash.com/photo-1595113316349-9fa4ee24f884?q=80&w=2072&auto=format&fit=crop",
         kind: "clothing",
       },
     ],
@@ -64,19 +64,19 @@ export const CATEGORIES: Array<SeedCategory> = [
     slug: "kalaskeh",
     title: "کالسکه و کریر",
     blurb: "کالسکه سبک شهری و صندلی خودرو استاندارد",
-    image: "/assets/images/nursery-4.jpg",
+    image: "https://images.unsplash.com/photo-1519689680058-324335c77eba?q=80&w=1974&auto=format&fit=crop",
   },
   {
     slug: "shirdehi",
     title: "شیردهی و تغذیه",
     blurb: "شیردوش، بطری و لوازم استریل",
-    image: "/assets/images/nursery-5.jpg",
+    image: "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?q=80&w=2071&auto=format&fit=crop",
   },
   {
     slug: "asbab-bazi",
     title: "اسباب‌بازی و آموزشی",
     blurb: "اسباب‌بازی چوبی و تشک بازی",
-    image: "/assets/images/nursery-6.jpg",
+    image: "https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?q=80&w=2075&auto=format&fit=crop",
   },
   {
     slug: "dekor",
@@ -176,7 +176,7 @@ export const PRODUCTS: Array<SeedProduct> = [
     isFeatured: true,
     madeInWorkshop: true,
     soldCount: 33,
-    images: ["/assets/images/nursery-2.jpg", "/assets/images/nursery-8.jpg"],
+    images: ["https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?q=80&w=2071&auto=format&fit=crop"],
     attributes: [
       { name: "تعداد کشو", value: "۴ کشو" },
       { name: "جنس", value: "ام‌دی‌اف ضدرطوبت" },
@@ -198,7 +198,7 @@ export const PRODUCTS: Array<SeedProduct> = [
     weightGrams: 11_000,
     isFeatured: true,
     soldCount: 58,
-    images: ["/assets/images/nursery-1.jpg"],
+    images: ["https://images.unsplash.com/photo-1544124499-58912cbddaad?q=80&w=1974&auto=format&fit=crop"],
     attributes: [
       { name: "قابلیت", value: "اتصال به تخت بزرگسال" },
       { name: "وزن", value: "۱۱ کیلوگرم" },
@@ -218,7 +218,7 @@ export const PRODUCTS: Array<SeedProduct> = [
     weightGrams: 6_500,
     isFeatured: true,
     soldCount: 76,
-    images: ["/assets/images/nursery-4.jpg"],
+    images: ["https://images.unsplash.com/photo-1519689680058-324335c77eba?q=80&w=1974&auto=format&fit=crop"],
     attributes: [
       { name: "وزن", value: "۶.۵ کیلوگرم" },
       { name: "تحمل وزن", value: "تا ۲۲ کیلوگرم" },
@@ -237,7 +237,7 @@ export const PRODUCTS: Array<SeedProduct> = [
     stock: 10,
     weightGrams: 4_200,
     soldCount: 44,
-    images: ["/assets/images/nursery-4.jpg"],
+    images: ["https://images.unsplash.com/photo-1519689680058-324335c77eba?q=80&w=1974&auto=format&fit=crop"],
     attributes: [
       { name: "محدودهٔ وزن", value: "۰ تا ۱۳ کیلوگرم" },
       { name: "کمربند", value: "پنج‌نقطه" },
@@ -256,7 +256,7 @@ export const PRODUCTS: Array<SeedProduct> = [
     weightGrams: 400,
     isFeatured: true,
     soldCount: 132,
-    images: ["/assets/images/nursery-3.jpg"],
+    images: ["https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?q=80&w=2075&auto=format&fit=crop"],
     attributes: [
       { name: "جنس", value: "پنبهٔ ۱۰۰ درصد" },
       { name: "تعداد تکه", value: "۵ تکه" },
@@ -279,7 +279,7 @@ export const PRODUCTS: Array<SeedProduct> = [
     isFeatured: true,
     badge: "پرفروش",
     soldCount: 189,
-    images: ["/assets/images/nursery-3.jpg"],
+    images: ["https://images.unsplash.com/photo-1595113316349-9fa4ee24f884?q=80&w=2072&auto=format&fit=crop"],
     attributes: [
       { name: "جنس", value: "پنبه و الاستان" },
       { name: "نوع بسته‌شدن", value: "زیپ سراسری" },
@@ -298,7 +298,7 @@ export const PRODUCTS: Array<SeedProduct> = [
     stock: 0,
     weightGrams: 320,
     soldCount: 64,
-    images: ["/assets/images/nursery-3.jpg"],
+    images: ["https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?q=80&w=2075&auto=format&fit=crop"],
     attributes: [{ name: "جنس", value: "نخ پنبه" }],
     variants: clothingVariants(
       [
@@ -320,7 +320,7 @@ export const PRODUCTS: Array<SeedProduct> = [
     stock: 18,
     weightGrams: 700,
     soldCount: 97,
-    images: ["/assets/images/nursery-6.jpg"],
+    images: ["https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?q=80&w=2075&auto=format&fit=crop"],
     attributes: [
       { name: "جنس", value: "چوب طبیعی" },
       { name: "ردهٔ سنی", value: "از ۶ ماه" },
@@ -339,7 +339,7 @@ export const PRODUCTS: Array<SeedProduct> = [
     stock: 14,
     weightGrams: 1_800,
     soldCount: 71,
-    images: ["/assets/images/nursery-6.jpg"],
+    images: ["https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?q=80&w=2075&auto=format&fit=crop"],
     attributes: [{ name: "ابعاد", value: "۱۰۰ × ۱۰۰ سانتی‌متر" }],
   },
   {
@@ -354,7 +354,7 @@ export const PRODUCTS: Array<SeedProduct> = [
     stock: 22,
     weightGrams: 600,
     soldCount: 88,
-    images: ["/assets/images/nursery-5.jpg"],
+    images: ["https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?q=80&w=2071&auto=format&fit=crop"],
     attributes: [{ name: "جنس", value: "پلی‌پروپیلن و سیلیکون" }],
   },
   {
@@ -369,7 +369,7 @@ export const PRODUCTS: Array<SeedProduct> = [
     stock: 9,
     weightGrams: 900,
     soldCount: 52,
-    images: ["/assets/images/nursery-5.jpg"],
+    images: ["https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?q=80&w=2071&auto=format&fit=crop"],
     attributes: [
       { name: "منبع تغذیه", value: "برق و باتری شارژی" },
       { name: "حالت مکش", value: "۲ حالت" },
@@ -387,7 +387,7 @@ export const PRODUCTS: Array<SeedProduct> = [
     stock: 25,
     weightGrams: 500,
     soldCount: 63,
-    images: ["/assets/images/nursery-7.jpg"],
+    images: ["https://images.unsplash.com/photo-1519340241574-2dec39624d21?q=80&w=1974&auto=format&fit=crop"],
     attributes: [{ name: "نوع لامپ", value: "ال‌ای‌دی نور گرم" }],
   },
   {
@@ -402,7 +402,7 @@ export const PRODUCTS: Array<SeedProduct> = [
     stock: 16,
     weightGrams: 1_400,
     soldCount: 49,
-    images: ["/assets/images/nursery-7.jpg", "/assets/images/nursery-1.jpg"],
+    images: ["https://images.unsplash.com/photo-1519340241574-2dec39624d21?q=80&w=1974&auto=format&fit=crop"],
     attributes: [
       { name: "تعداد تکه", value: "۳ تکه" },
       { name: "جنس", value: "پنبه" },
@@ -426,7 +426,7 @@ export const POSTS: Array<SeedPost> = [
     title: "چک‌لیست کامل خرید سیسمونی نوزاد",
     excerpt: "فهرست اقلام ضروری، اقلامی که می‌توانید بعداً بخرید و چیزهایی که لازم نیستند.",
     body: "خرید سیسمونی وقتی بدون فهرست شروع شود، هم پرهزینه می‌شود و هم بخشی از وسایل بی‌استفاده می‌ماند.\n\nاقلام ضروری ماه اول: تخت یا گهواره، تشک با روکش قابل شست‌وشو، شش عدد بادی پنبه‌ای، پنج سرهمی، حوله کلاه‌دار، پوشک و دستمال، وسایل شیردهی.\n\nاقلامی که می‌توانید بعد از ماه دوم بخرید: تشک بازی، اسباب‌بازی حسی، صندلی غذا و واکر ثابت.\n\nپیشنهاد ما این است که ابتدا اقلام ضروری را با کیفیت بخرید و برای بقیه صبر کنید؛ سلیقهٔ شما بعد از یک ماه زندگی با نوزاد دقیق‌تر می‌شود.",
-    cover: "/assets/images/nursery-3.jpg",
+    cover: "https://images.unsplash.com/photo-1595113316349-9fa4ee24f884?q=80&w=2072&auto=format&fit=crop",
     tag: "راهنمای خرید",
     daysAgo: 3,
   },
