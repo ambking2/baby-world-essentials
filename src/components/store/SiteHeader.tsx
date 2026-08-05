@@ -75,9 +75,9 @@ export function SiteHeader({
           {/* Search Bar - Desktop */}
           <form 
             onSubmit={submitSearch}
-            className="hidden max-w-xl flex-1 items-center gap-4 rounded-xl border border-border bg-[#F9F9F9] px-5 py-3 focus-within:border-primary/30 focus-within:bg-white lg:flex transition-all duration-300 shadow-subtle focus-within:shadow-premium"
+            className="hidden max-w-xl flex-1 items-center gap-4 rounded-xl border border-border bg-secondary/30 px-5 py-3 focus-within:border-primary/30 focus-within:bg-white lg:flex transition-all duration-300 shadow-subtle focus-within:shadow-premium"
           >
-            <Search className="size-4 text-muted-foreground" />
+            <Search className="size-4 text-foreground/70" />
             <input
               value={term}
               onChange={(e) => setTerm(e.target.value)}

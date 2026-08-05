@@ -64,7 +64,7 @@ export function SiteFooter({ onSubscribe, subscribing = false }: SiteFooterProps
             </div>
           </div>
 
-          <div className="rounded-xl border border-border bg-gray-50 p-8 lg:p-10">
+          <div className="rounded-xl border border-border bg-secondary/40 p-8 lg:p-10">
             <h3 className="mb-2 text-base font-bold text-gray-900">به خبرنامه ما بپیوندید</h3>
             <p className="mb-6 text-[13px] text-gray-500">از جدیدترین محصولات و تخفیف‌های ویژه ما زودتر از بقیه باخبر شوید.</p>
             <form

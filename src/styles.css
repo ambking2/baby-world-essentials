@@ -42,25 +42,25 @@
 
 :root {
   --background: #FFFFFF;
-  --foreground: #222222;
+  --foreground: #1A1A1A;
   --card: #FFFFFF;
-  --card-foreground: #222222;
+  --card-foreground: #1A1A1A;
   --popover: #FFFFFF;
-  --popover-foreground: #222222;
-  --primary: #4F6F52; /* Sage Green */
+  --popover-foreground: #1A1A1A;
+  --primary: #3D5A40; /* Darker Sage Green for better contrast */
   --primary-foreground: #FFFFFF;
-  --secondary: #F8F6F2; /* Warm Beige */
-  --secondary-foreground: #222222;
-  --muted: #F8F8F8; /* Very Light Gray */
-  --muted-foreground: #6B7280; /* Gray 500 */
-  --accent: #ECEAE7; /* Neutral Beige/Gray for borders */
-  --accent-foreground: #222222;
-  --destructive: #9A3434;
+  --secondary: #F4F1EA; /* Slightly more saturated beige */
+  --secondary-foreground: #1A1A1A;
+  --muted: #F3F4F6; /* Standard Gray 100 */
+  --muted-foreground: #4B5563; /* Gray 600 for better readability */
+  --accent: #E5E7EB; /* Gray 200 for borders */
+  --accent-foreground: #1A1A1A;
+  --destructive: #B91C1C; /* Stronger Red */
   --destructive-foreground: #FFFFFF;
-  --border: #ECEAE7; /* The specific requested border color */
-  --input: #ECEAE7;
-  --ring: #4F6F52;
-  --radius: 0.875rem; /* 14px as requested */
+  --border: #E5E7EB; /* Gray 200 */
+  --input: #E5E7EB;
+  --ring: #3D5A40;
+  --radius: 0.875rem;
 }
 
 @layer base {
