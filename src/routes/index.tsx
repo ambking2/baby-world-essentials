@@ -86,7 +86,7 @@ function HomePage() {
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-32">
           <div className="relative aspect-square overflow-hidden bg-secondary lg:aspect-[4/5] rounded-[14px]">
             <img 
-              src="https://images.unsplash.com/photo-1595113316349-9fa4ee24f884?q=80&w=2072&auto=format&fit=crop" 
+              src="/assets/images/nursery-1.jpg" 
               alt="نوزاد و سیسمونی" 
 
               className="h-full w-full object-cover"
