@@ -6,7 +6,7 @@ import { formatToman, toFaDigits } from "@/lib/format";
 import { discountPercent, type Product } from "@/types/catalog";
 import { cn } from "@/lib/utils";
 
-export function ProductCard({ product }: { product: Product }) {
+export function ProductCard({ product }: { product: any }) {
   const off = discountPercent(product);
   const outOfStock = product.stock <= 0;
 
