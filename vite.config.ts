@@ -11,5 +11,15 @@ export default defineConfig({
     // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
     // nitro/vite builds from this
     server: { entry: "server" },
+
+    // This project intentionally keeps createServerFn modules under src/server/functions.
+    // TanStack Start can safely consume these from client routes, but the broader **/server/**
+    // deny rule used by the preset blocks them during build. Reset the client file rules to
+    // TanStack's default so only explicit *.server.* files remain client-denied.
+    importProtection: {
+      client: {
+        files: ["**/*.server.*"],
+      },
+    },
   },
 });
