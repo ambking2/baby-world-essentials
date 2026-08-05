@@ -11,12 +11,12 @@ export function ProductCard({ product }: { product: any }) {
   const outOfStock = product.stock <= 0;
 
   return (
-    <div className="group flex h-full flex-col bg-white">
+    <div className="group flex h-full flex-col bg-white border border-transparent hover:border-border transition-premium">
       {/* Image Container */}
       <div className="relative aspect-[3/4] overflow-hidden bg-secondary">
         <Link to="/product/$slug" params={{ slug: product.slug }} className="block h-full w-full">
           <img
-            src={product.image}
+            src={product.image || product.cover || "/images/cat-toys.jpg"}
             alt={product.title}
             className={cn(
               "h-full w-full object-cover transition-transform duration-700 group-hover:scale-105",
@@ -29,7 +29,7 @@ export function ProductCard({ product }: { product: any }) {
         <div className="absolute right-4 top-4 flex flex-col gap-2">
           {off > 0 && !outOfStock && (
             <span className="bg-destructive px-2 py-1 text-[10px] font-bold text-white uppercase tracking-tight">
-              ٪{toFaDigits(off)} تخفیف
+              ٪{toFaDigits(off || 0)} تخفیف
             </span>
           )}
           {product.tags.includes("new") && (
@@ -78,7 +78,7 @@ export function ProductCard({ product }: { product: any }) {
 
         <div className="mt-auto flex items-baseline gap-2">
           <span className="text-base font-bold text-foreground">
-            {formatToman(product.price)}
+            {formatToman(product.price || product.effectivePrice)}
           </span>
           {product.oldPrice && (
             <span className="text-xs text-muted-foreground line-through">
@@ -86,6 +86,7 @@ export function ProductCard({ product }: { product: any }) {
             </span>
           )}
         </div>
+
         
         {outOfStock && (
           <p className="mt-2 text-[11px] font-bold text-destructive">ناموجود در انبار</p>
