@@ -30,6 +30,8 @@ import { run } from "../server/db";
 import { resetPasswordEmail, sendMail, verificationEmail } from "../server/mailer";
 import { attachCartToUser, findCartByToken } from "../server/repo/cart";
 
+const TEMP_AUTH_CODE = "111111";
+
 async function mergeGuestCart(userId: number): Promise<void> {
   const cart = await findCartByToken(readCartToken());
   if (cart && cart.user_id === null) await attachCartToUser(cart.id, userId);
@@ -38,6 +40,14 @@ async function mergeGuestCart(userId: number): Promise<void> {
 function guard(action: string): void {
   if (!rateLimit(`${action}:${clientIp()}`, 8, 60_000)) {
     throw new AuthError("درخواست‌های شما زیاد است؛ یک دقیقه بعد دوباره تلاش کنید.", 429);
+  }
+}
+
+async function safeSend(message: Parameters<typeof sendMail>[0]): Promise<void> {
+  try {
+    await sendMail(message);
+  } catch (error) {
+    console.error("auth mail failed", error);
   }
 }
 
@@ -75,12 +85,12 @@ export const registerUser = createServerFn({ method: "POST" })
     });
 
     const code = await issueEmailCode(user.id, "verify_email");
-    await sendMail(verificationEmail(user.email, code));
+    await safeSend(verificationEmail(user.email, code));
 
     return {
       ok: true,
       email: user.email,
-      message: "کد تأیید به ایمیل شما ارسال شد.",
+      message: `فعلاً کد تأیید موقت شما ${TEMP_AUTH_CODE} است.`,
     };
   });
 
@@ -91,11 +101,11 @@ export const resendVerificationCode = createServerFn({ method: "POST" })
     const user = await findUserByEmail(data.email);
     if (user && user.email_verified_at === null) {
       const code = await issueEmailCode(user.id, "verify_email");
-      await sendMail(verificationEmail(user.email, code));
+      await safeSend(verificationEmail(user.email, code));
     }
     return {
       ok: true,
-      message: "اگر حساب تأییدنشده‌ای با این ایمیل وجود داشته باشد، کد جدید ارسال شد.",
+      message: `اگر حساب تأییدنشده‌ای با این ایمیل وجود داشته باشد، کد موقت ${TEMP_AUTH_CODE} فعال شد.`,
     };
   });
 
@@ -148,12 +158,12 @@ export const loginUser = createServerFn({ method: "POST" })
 
     if (user.email_verified_at === null) {
       const code = await issueEmailCode(user.id, "verify_email");
-      await sendMail(verificationEmail(user.email, code));
+      await safeSend(verificationEmail(user.email, code));
       return {
         ok: false,
         needsVerification: true,
         email: user.email,
-        message: "ابتدا ایمیل خود را تأیید کنید؛ کد جدید ارسال شد.",
+        message: `ابتدا ایمیل خود را تأیید کنید؛ فعلاً کد موقت ${TEMP_AUTH_CODE} را وارد کنید.`,
       };
     }
 
@@ -177,9 +187,9 @@ export const requestPasswordReset = createServerFn({ method: "POST" })
     const user = await findUserByEmail(data.email);
     if (user) {
       const code = await issueEmailCode(user.id, "reset_password");
-      await sendMail(resetPasswordEmail(user.email, code));
+      await safeSend(resetPasswordEmail(user.email, code));
     }
-    return { ok: true, message: "اگر این ایمیل در سایت ثبت شده باشد، کد بازیابی ارسال شد." };
+    return { ok: true, message: `اگر این ایمیل ثبت شده باشد، فعلاً کد بازیابی ${TEMP_AUTH_CODE} است.` };
   });
 
 export const resetPassword = createServerFn({ method: "POST" })

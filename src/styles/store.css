@@ -56,7 +56,6 @@
   }
 }
 
-/* نمایش تدریجی هنگام اسکرول — همراه useReveal(). */
 @utility reveal {
   opacity: 0;
   transform: translate3d(0, 22px, 0);
@@ -100,32 +99,67 @@
   }
 }
 
-/* کارت محصول: بالا آمدن نرم و نمایش دکمهٔ سریع. */
 @utility card-hover {
   transition:
     transform 0.28s cubic-bezier(0.22, 0.61, 0.36, 1),
     box-shadow 0.28s ease;
 
   &:hover {
-    transform: translate3d(0, -6px, 0);
+    transform: translate3d(0, -8px, 0);
     box-shadow: var(--shadow-lift);
   }
 }
 
 @utility glass-panel {
-  background-color: color-mix(in oklab, var(--color-background) 78%, transparent);
-  backdrop-filter: blur(10px);
-  border: 1px solid color-mix(in oklab, var(--color-border) 70%, transparent);
+  background-color: color-mix(in oklab, var(--color-background) 80%, transparent);
+  backdrop-filter: blur(12px);
+  border: 1px solid color-mix(in oklab, var(--color-border) 72%, transparent);
 }
 
-/* نوار تخفیف گوشهٔ کارت محصول. */
 @utility ribbon-sale {
   background-image: linear-gradient(
     135deg,
     var(--color-sale) 0%,
-    color-mix(in oklab, var(--color-sale) 70%, var(--color-sun)) 100%
+    color-mix(in oklab, var(--color-sale) 74%, var(--color-sun)) 100%
   );
   color: var(--color-sale-foreground);
+}
+
+@utility storybook-panel {
+  position: relative;
+  overflow: hidden;
+  border-radius: calc(var(--radius) + 22px);
+  border: 1px solid color-mix(in oklab, var(--color-border) 65%, white);
+  background:
+    radial-gradient(circle at top left, color-mix(in oklab, var(--color-brand) 8%, transparent) 0, transparent 30%),
+    linear-gradient(180deg, color-mix(in oklab, var(--color-card) 94%, var(--color-brand-soft)) 0%, var(--color-card) 100%);
+  box-shadow: var(--shadow-soft);
+}
+
+@utility candy-surface {
+  background:
+    radial-gradient(circle at 18% 18%, color-mix(in oklab, var(--color-brand) 12%, transparent) 0, transparent 18%),
+    radial-gradient(circle at 82% 22%, color-mix(in oklab, var(--color-sale) 8%, transparent) 0, transparent 16%),
+    radial-gradient(circle at 70% 88%, color-mix(in oklab, var(--color-sky) 12%, transparent) 0, transparent 18%),
+    linear-gradient(180deg, color-mix(in oklab, white 92%, var(--color-brand-soft)) 0%, white 100%);
+}
+
+@utility dotted-surface {
+  background-image: radial-gradient(color-mix(in oklab, var(--color-brand) 16%, white) 1.2px, transparent 1.2px);
+  background-size: 18px 18px;
+}
+
+@utility section-shell {
+  position: relative;
+  overflow: hidden;
+  border-radius: calc(var(--radius) + 26px);
+  border: 1px solid color-mix(in oklab, var(--color-border) 70%, white);
+  background: color-mix(in oklab, white 92%, var(--color-brand-soft));
+  box-shadow: var(--shadow-soft);
+}
+
+@utility toy-button {
+  box-shadow: 0 10px 24px color-mix(in oklab, var(--color-brand) 22%, transparent);
 }
 
 @media (prefers-reduced-motion: reduce) {
