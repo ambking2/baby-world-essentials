@@ -53,7 +53,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
-        <h1 className="text-xl font-bold tracking-tight text-foreground">/skill:redesign ری دیزاین کن طبق عکس هایی که فرستادم</h1>
+        <h1 className="text-xl font-bold tracking-tight text-foreground">سلام</h1>
         <p className="mt-2 text-sm text-muted-foreground whitespace-pre-line">
           Something went wrong on our end. You can try refreshing or head back home.
         </p>
