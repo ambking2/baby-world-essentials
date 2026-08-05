@@ -89,7 +89,7 @@ export function SiteHeader({
           {/* Search Bar - Desktop */}
           <form 
             onSubmit={submitSearch}
-            className="hidden max-w-xl flex-1 items-center gap-2 rounded-full border border-border bg-secondary/50 px-5 py-2.5 lg:flex"
+            className="hidden max-w-xl flex-1 items-center gap-2 rounded-full border border-border bg-white px-5 py-2.5 shadow-sm focus-within:border-primary lg:flex transition-premium"
           >
             <Search className="size-4 text-muted-foreground" />
             <input
@@ -113,7 +113,7 @@ export function SiteHeader({
               <div className="relative">
                 <ShoppingCart className="size-5" />
                 {cartCount > 0 && (
-                  <span className="absolute -right-2 -top-2 flex size-4 items-center justify-center rounded-full bg-primary text-[10px] text-white">
+                  <span className="absolute -right-2 -top-2 flex size-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white shadow-sm">
                     {toFaDigits(cartCount)}
                   </span>
                 )}
@@ -139,7 +139,7 @@ export function SiteHeader({
                 <ChevronDown className="size-4 transition-transform group-hover:rotate-180" />
               </button>
               {/* Mega Menu */}
-              <div className="pointer-events-none absolute right-0 top-full z-[100] w-[800px] bg-white p-8 opacity-0 shadow-premium transition-all group-hover:pointer-events-auto group-hover:opacity-100">
+              <div className="pointer-events-none absolute right-0 top-full z-[100] w-[800px] bg-white p-8 opacity-0 shadow-premium transition-all group-hover:pointer-events-auto group-hover:opacity-100 rounded-b-2xl border-x border-b border-border">
                 <div className="grid grid-cols-4 gap-8">
                   {categories.map((cat) => (
                     <div key={cat.slug}>
