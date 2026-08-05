@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { Instagram, Mail, MapPin, Phone, Send, Facebook, Twitter, ShieldCheck } from "lucide-react";
 import { useState } from "react";
 
+import brandLogo from "@/assets/logo/brand-logo.png.asset.json";
 import { business } from "@/data/business";
 import { toFaDigits } from "@/lib/format";
 import type { Category } from "@/server/repo/catalog";
@@ -52,9 +53,7 @@ export function SiteFooter({ onSubscribe, subscribing = false }: SiteFooterProps
         <div className="mb-16 grid gap-16 lg:grid-cols-[1fr_450px]">
           <div className="max-w-xl">
             <Link to="/" className="flex items-center gap-3 group">
-              <div className="size-10 rounded-xl bg-primary flex items-center justify-center overflow-hidden transition-transform group-hover:scale-105 shadow-sm">
-                <img src="/assets/logo/logo-icon.svg" alt="جهان کودک" className="size-8" />
-              </div>
+              <img src={brandLogo.url} alt={business.name} className="h-12 w-auto transition-transform group-hover:scale-105" />
               <h2 className="text-xl font-bold tracking-tight text-gray-900 lg:text-2xl">{business.name}</h2>
             </Link>
             <p className="mt-4 text-sm leading-relaxed text-gray-500">
