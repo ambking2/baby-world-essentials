@@ -35,7 +35,7 @@ const ADMIN_NAV = [
 function AdminLayout() {
   const sessionQuery = useQuery({ queryKey: storeKeys.session, queryFn: () => getSession() });
   const user = sessionQuery.data?.user ?? null;
-  const isAdmin = user?.role === "admin";
+  const isAuthorized = user?.role === "admin" || user?.role === "sales";
 
   if (sessionQuery.isLoading) {
     return (
@@ -45,22 +45,29 @@ function AdminLayout() {
     );
   }
 
-  if (!isAdmin) {
+  if (!isAuthorized) {
     return (
       <div className="container-page py-20 text-center">
-        <h1 className="text-lg font-extrabold text-foreground">دسترسی محدود به مدیر فروشگاه است</h1>
-        <p className="mt-2 text-xs text-muted-foreground">با حساب مدیر وارد شوید تا پنل نمایش داده شود.</p>
+        <h1 className="text-lg font-extrabold text-foreground">دسترسی محدود به مدیر یا کارشناس فروشگاه است</h1>
+        <p className="mt-2 text-xs text-muted-foreground">با حساب مناسب وارد شوید تا پنل نمایش داده شود.</p>
         <div className="mt-4 flex justify-center gap-2">
-          <Link to="/auth/login" className="rounded-full bg-primary px-5 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-primary/95">
-            ورود مدیر
+          <Link to="/auth/login" className="rounded-full bg-primary px-5 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-primary/95 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none transition-all">
+            ورود مدیر / کارشناس
           </Link>
-          <Link to="/" className="rounded-full border border-border px-5 py-2.5 text-xs font-bold hover:border-primary hover:text-primary transition-colors">
+          <Link to="/" className="rounded-full border border-border px-5 py-2.5 text-xs font-bold hover:border-primary hover:text-primary focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none transition-all">
             بازگشت به فروشگاه
           </Link>
         </div>
       </div>
     );
   }
+
+  const roleNav = ADMIN_NAV.filter(item => {
+    if (user?.role === "admin") return true;
+    // Sales role restrictions
+    const salesAllowed = ["داشبورد", "محصولات", "سفارش‌ها", "دیدگاه‌ها و نقدها", "مشتریان و پیام‌ها"];
+    return salesAllowed.includes(item.label);
+  });
 
   return (
     <div className="min-h-screen bg-secondary/40">
@@ -72,14 +79,14 @@ function AdminLayout() {
           </div>
 
           <nav className="space-y-1">
-            {ADMIN_NAV.map((item) => (
+            {roleNav.map((item) => (
               <Link
                 key={item.to}
                 to={item.to}
                 activeOptions={{ exact: item.exact }}
                 activeProps={{ className: "bg-primary text-white shadow-sm" }}
                 inactiveProps={{ className: "text-muted-foreground hover:bg-secondary/60 hover:text-foreground" }}
-                className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-[11px] font-bold transition-colors"
+                className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-[11px] font-bold transition-all focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none"
               >
                 <item.icon className="size-4" aria-hidden />
                 {item.label}
@@ -87,21 +94,21 @@ function AdminLayout() {
             ))}
           </nav>
 
-          <Link to="/" className="block rounded-xl border border-border px-3 py-2.5 text-center text-[11px] font-bold text-muted-foreground hover:border-primary hover:text-primary transition-colors">
+          <Link to="/" className="block rounded-xl border border-border px-3 py-2.5 text-center text-[11px] font-bold text-muted-foreground hover:border-primary hover:text-primary transition-all focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none">
             مشاهدهٔ سایت
           </Link>
         </aside>
 
         <main className="min-w-0 flex-1 space-y-4">
           <div className="flex flex-wrap gap-2 rounded-3xl border border-border bg-card p-3 lg:hidden">
-            {ADMIN_NAV.map((item) => (
+            {roleNav.map((item) => (
               <Link
                 key={item.to}
                 to={item.to}
                 activeOptions={{ exact: item.exact }}
                 activeProps={{ className: "bg-primary text-white shadow-sm" }}
                 inactiveProps={{ className: "text-muted-foreground" }}
-                className="rounded-full border border-border px-3 py-1.5 text-[10px] font-bold"
+                className="rounded-full border border-border px-3 py-1.5 text-[10px] font-bold transition-all focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none"
               >
                 {item.label}
               </Link>

@@ -112,7 +112,7 @@ function AdminProducts() {
         <Link
           to="/admin/products/$id"
           params={{ id: "new" }}
-          className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-[11px] font-bold text-white shadow-sm hover:bg-primary/95"
+          className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-[11px] font-bold text-white shadow-sm hover:bg-primary/95 transition-all focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none"
         >
           <Plus className="size-4" aria-hidden />
           محصول جدید
@@ -219,7 +219,7 @@ function AdminProducts() {
                           endsAt: endValue.length > 0 ? new Date(`${endValue}T23:59:00`).toISOString() : null,
                         });
                       }}
-                      className="rounded-lg bg-primary px-3 py-1 text-[10px] font-bold text-white hover:bg-primary/95"
+                      className="rounded-lg bg-primary px-3 py-1 text-[10px] font-bold text-white hover:bg-primary/95 transition-all focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none"
                     >
                       ثبت
                     </button>

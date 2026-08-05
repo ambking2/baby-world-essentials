@@ -177,18 +177,22 @@ export type PublicUser = {
   email: string;
   name: string | null;
   phone: string | null;
-  role: "customer" | "admin";
+  role: "customer" | "admin" | "sales";
   emailVerified: boolean;
   createdAt: string;
 };
 
 export function toPublicUser(row: UserRow): PublicUser {
+  let role: PublicUser["role"] = "customer";
+  if (row.role === "admin") role = "admin";
+  else if (row.role === "sales") role = "sales";
+
   return {
     id: row.id,
     email: row.email,
     name: row.name,
     phone: row.phone,
-    role: row.role === "admin" ? "admin" : "customer",
+    role,
     emailVerified: row.email_verified_at !== null,
     createdAt: row.created_at,
   };
@@ -207,7 +211,7 @@ export async function createUser(input: {
   password: string;
   name?: string | null;
   phone?: string | null;
-  role?: "customer" | "admin";
+  role?: "customer" | "admin" | "sales";
 }): Promise<UserRow> {
   const result = await run(
     `INSERT INTO users (email, password_hash, name, phone, role, created_at)
