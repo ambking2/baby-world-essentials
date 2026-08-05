@@ -218,7 +218,7 @@ function ProductPage() {
                 <Truck className="size-5 text-primary" />
                 <div>
                   <h4 className="text-xs font-bold">ارسال سریع</h4>
-                  <p className="text-[10px] text-muted-foreground">تمام نقاط ایران</p>
+                  <p className="text-[10px] text-muted-foreground">ارسال رایگان بالای {formatToman(business.freeShippingThreshold || 0)}</p>
                 </div>
               </div>
               <div className="flex items-center gap-3">
