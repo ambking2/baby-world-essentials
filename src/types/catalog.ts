@@ -70,6 +70,7 @@ export type BlogPost = {
   title: string;
   excerpt: string;
   date: string;
+  cover?: string;
   author: string;
   readMinutes: number;
   body: string[];

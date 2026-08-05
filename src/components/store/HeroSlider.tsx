@@ -73,7 +73,7 @@ export function HeroSlider() {
 
   return (
     <section className="container-page pt-3" aria-label="اسلایدر پیشنهادها">
-      <div className="storybook-panel relative shadow-lift">
+      <div className="storybook-panel relative overflow-hidden shadow-deep ring-1 ring-white/50">
         <div ref={emblaRef} className="overflow-hidden">
           <div className="flex">
             {SLIDES.map((slide) => (
@@ -98,13 +98,13 @@ export function HeroSlider() {
                     <div className="flex flex-wrap gap-3">
                       <Link
                         to={slide.href}
-                        className="toy-button inline-flex items-center rounded-full bg-gradient-to-r from-brand to-sale px-6 py-3 text-sm font-extrabold text-primary-foreground transition-transform hover:scale-[1.03]"
+                        className="toy-button inline-flex items-center rounded-full bg-gradient-to-r from-brand to-sale px-8 py-4 text-base font-extrabold text-primary-foreground shadow-lift transition-transform hover:scale-[1.04] active:scale-95"
                       >
                         {slide.cta}
                       </Link>
                       <a
                         href={business.phoneHref}
-                        className="inline-flex items-center gap-2 rounded-full border border-white/80 bg-white/75 px-5 py-3 text-sm font-bold text-foreground transition-colors hover:border-brand hover:text-brand"
+                        className="inline-flex items-center gap-2 rounded-full border border-white/90 bg-white/80 px-6 py-4 text-sm font-bold text-foreground shadow-soft transition-all hover:border-brand hover:bg-white hover:text-brand hover:shadow-lift"
                       >
                         <PhoneCall className="size-4" aria-hidden />
                         مشاورهٔ تلفنی
@@ -112,15 +112,15 @@ export function HeroSlider() {
                     </div>
 
                     <div className="grid max-w-2xl gap-3 sm:grid-cols-3">
-                      <div className="rounded-[1.6rem] border border-white/70 bg-white/70 p-4 shadow-soft">
+                      <div className="rounded-[1.8rem] border border-white/90 bg-white/80 p-5 shadow-soft transition-transform hover:-translate-y-1">
                         <p className="text-[11px] font-bold text-muted-foreground">ارسال رایگان</p>
                         <p className="mt-1 text-sm font-extrabold text-foreground">بالای {formatToman(business.freeShippingThreshold)}</p>
                       </div>
-                      <div className="rounded-[1.6rem] border border-white/70 bg-white/70 p-4 shadow-soft">
+                      <div className="rounded-[1.8rem] border border-white/90 bg-white/80 p-5 shadow-soft transition-transform hover:-translate-y-1">
                         <p className="text-[11px] font-bold text-muted-foreground">ضمانت سازه</p>
                         <p className="mt-1 text-sm font-extrabold text-foreground">{toFaDigits(business.structureWarrantyMonths)} ماه واقعی</p>
                       </div>
-                      <div className="rounded-[1.6rem] border border-white/70 bg-white/70 p-4 shadow-soft">
+                      <div className="rounded-[1.8rem] border border-white/90 bg-white/80 p-5 shadow-soft transition-transform hover:-translate-y-1">
                         <p className="text-[11px] font-bold text-muted-foreground">پشتیبانی خرید</p>
                         <p className="mt-1 text-sm font-extrabold text-foreground">{business.city} و سراسر ایران</p>
                       </div>
@@ -129,16 +129,16 @@ export function HeroSlider() {
 
                   <div className="relative z-10 flex justify-center md:justify-end">
                     <div className="relative w-full max-w-[520px]">
-                      <div className="absolute inset-0 rounded-[2.3rem] bg-white/35 blur-3xl" />
-                      <div className="relative overflow-hidden rounded-[2.8rem] border border-white/90 bg-white/70 p-4 shadow-lift backdrop-blur-sm">
+                      <div className="absolute inset-0 scale-95 rounded-[3rem] bg-brand/10 blur-[80px]" />
+                      <div className="relative overflow-hidden rounded-[3rem] border-4 border-white/90 bg-white/70 p-4 shadow-deep backdrop-blur-md">
                         <img
                           src={slide.image}
                           alt={slide.title}
-                          className="aspect-[4/4.1] w-full rounded-[1.8rem] object-cover"
+                          className="aspect-[4/4.1] w-full rounded-[2.4rem] object-cover shadow-inner"
                           loading="eager"
                         />
                       </div>
-                      <div className="absolute -bottom-4 -left-2 rounded-[1.6rem] border border-white/70 bg-white/90 px-4 py-3 shadow-soft">
+                      <div className="absolute -bottom-6 -left-4 rounded-[1.8rem] border-2 border-white/90 bg-white/95 px-5 py-4 shadow-deep ring-4 ring-brand/5">
                         <p className="text-[11px] font-bold text-muted-foreground">تجربهٔ محبوب مشتریان</p>
                         <p className="mt-1 flex items-center gap-1 text-sm font-extrabold text-foreground">
                           <Star className="size-4 fill-brand text-brand" aria-hidden />

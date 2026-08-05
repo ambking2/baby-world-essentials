@@ -29,8 +29,8 @@ export function StoreProductCard({
   const isClothing = product.categoryKind === "clothing";
 
   return (
-    <article className={cn("group flex h-full flex-col overflow-hidden rounded-[2.8rem] border border-white/80 bg-white/40 p-2.5 backdrop-blur-sm transition-all duration-500 hover:bg-white/90 hover:shadow-lift hover:-translate-y-1", className)}>
-      <div className="relative aspect-[1/1.08] overflow-hidden rounded-[2.4rem] bg-[linear-gradient(180deg,#fff9f4_0%,#ffffff_100%)] shadow-inner">
+    <article className={cn("group flex h-full flex-col overflow-hidden rounded-[3rem] border-2 border-white/90 bg-white/50 p-3 shadow-lift backdrop-blur-md transition-all duration-700 hover:bg-white/95 hover:shadow-deep hover:-translate-y-2", className)}>
+      <div className="relative aspect-[1/1.1] overflow-hidden rounded-[2.6rem] bg-[linear-gradient(180deg,#fffaf6_0%,#ffffff_100%)] shadow-inner">
         <div className="absolute start-3 top-3 z-10 flex flex-col gap-1.5">
           {product.badge ? (
             <span className="rounded-full bg-gradient-to-r from-brand to-sale px-3 py-1 text-[11px] font-extrabold text-primary-foreground shadow-soft">
@@ -51,9 +51,9 @@ export function StoreProductCard({
           type="button"
           onClick={() => onToggleWishlist?.(product)}
           aria-label={inWishlist ? "حذف از علاقه‌مندی‌ها" : "افزودن به علاقه‌مندی‌ها"}
-          className="absolute end-3 top-3 z-10 inline-flex size-10 items-center justify-center rounded-full border border-white/80 bg-white/88 text-muted-foreground shadow-soft transition-all hover:text-sale"
+          className="absolute end-4 top-4 z-10 inline-flex size-11 items-center justify-center rounded-full border-2 border-white/80 bg-white/88 text-muted-foreground shadow-lift backdrop-blur-sm transition-all hover:scale-110 hover:text-sale active:scale-95"
         >
-          <Heart className={cn("size-4", inWishlist && "fill-sale text-sale")} aria-hidden />
+          <Heart className={cn("size-5", inWishlist && "fill-sale text-sale")} aria-hidden />
         </button>
 
         <Link to="/product/$slug" params={{ slug: product.slug }} className="block h-full">
@@ -91,7 +91,7 @@ export function StoreProductCard({
 
         {product.saleActive && product.saleEndsAt ? <Countdown endsAt={product.saleEndsAt} /> : null}
 
-        <div className="mt-auto rounded-[1.8rem] border border-white/80 bg-white/80 p-4 shadow-soft">
+        <div className="mt-auto rounded-[2rem] border border-white/90 bg-white/90 p-5 shadow-soft transition-colors group-hover:bg-white">
           <Price price={product.price} effectivePrice={product.effectivePrice} discountPercent={product.discountPercent} />
 
           <div className="mt-3 flex items-center gap-2">
@@ -99,7 +99,7 @@ export function StoreProductCard({
               <Link
                 to="/product/$slug"
                 params={{ slug: product.slug }}
-                className="toy-button inline-flex flex-1 items-center justify-center gap-1.5 rounded-full bg-gradient-to-r from-brand to-sale px-3 py-3 text-xs font-extrabold text-primary-foreground transition-transform hover:scale-[1.02]"
+                className="toy-button inline-flex flex-1 items-center justify-center gap-1.5 rounded-full bg-gradient-to-r from-brand to-sale px-3 py-4 text-sm font-extrabold text-primary-foreground shadow-lift transition-transform hover:scale-[1.03] active:scale-95"
               >
                 <Eye className="size-4" aria-hidden />
                 {isClothing ? "انتخاب سایز و خرید" : "مشاهدهٔ محصول"}
@@ -109,7 +109,7 @@ export function StoreProductCard({
                 type="button"
                 disabled={soldOut || busy}
                 onClick={() => onAddToCart(product)}
-                className="toy-button inline-flex flex-1 items-center justify-center gap-1.5 rounded-full bg-gradient-to-r from-brand to-sale px-3 py-3 text-xs font-extrabold text-primary-foreground transition-transform hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100"
+                className="toy-button inline-flex flex-1 items-center justify-center gap-1.5 rounded-full bg-gradient-to-r from-brand to-sale px-3 py-4 text-sm font-extrabold text-primary-foreground shadow-lift transition-transform hover:scale-[1.03] active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100"
               >
                 <ShoppingCart className="size-4" aria-hidden />
                 {soldOut ? "ناموجود" : busy ? "در حال افزودن…" : "افزودن به سبد"}

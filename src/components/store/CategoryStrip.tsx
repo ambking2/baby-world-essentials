@@ -1,4 +1,6 @@
 import { Link } from "@tanstack/react-router";
+import { Sparkles } from "lucide-react";
+
 
 import { SectionHeading } from "@/components/store/SectionHeading";
 import { useReveal } from "@/hooks/use-reveal";
@@ -22,7 +24,7 @@ export function CategoryStrip({ categories }: { categories: Array<Category> }) {
             key={category.id}
             to="/category/$slug"
             params={{ slug: category.slug }}
-            className={`reveal group relative overflow-hidden rounded-[2.8rem] border border-white/80 shadow-soft transition-all duration-700 hover:shadow-lift hover:-translate-y-1 ${index === 0 ? "xl:col-span-2" : ""}`}
+            className={`reveal group relative overflow-hidden rounded-[3rem] border-2 border-white/90 shadow-lift transition-all duration-700 hover:shadow-deep hover:-translate-y-2 ${index === 0 ? "xl:col-span-2" : ""}`}
           >
             <img
               src={category.image ?? "/images/cat-toys.jpg"}
@@ -36,7 +38,8 @@ export function CategoryStrip({ categories }: { categories: Array<Category> }) {
                 <h3 className="text-lg font-black text-white">{category.title}</h3>
                 {category.blurb ? <p className="mt-1 max-w-sm text-xs leading-6 text-white/80">{category.blurb}</p> : null}
               </div>
-              <span className="rounded-full bg-white/90 px-3 py-1 text-[11px] font-extrabold text-foreground shadow-soft">
+              <span className="toy-button inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-2 text-xs font-extrabold text-foreground shadow-lift ring-2 ring-black/5 transition-transform group-hover:scale-105 active:scale-95">
+                <Sparkles className="size-3.5 text-brand" aria-hidden />
                 {toFaDigits(category.productCount)} کالا
               </span>
             </div>

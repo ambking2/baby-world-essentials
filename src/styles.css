@@ -59,9 +59,11 @@
   --color-installment: var(--installment);
   --color-installment-foreground: var(--installment-foreground);
   --font-sans: "Vazirmatn", ui-sans-serif, system-ui, sans-serif;
-  --shadow-soft: 0 10px 30px oklch(0.32 0.03 45 / 0.05);
-  --shadow-lift: 0 20px 50px oklch(0.32 0.03 45 / 0.12);
-  --shadow-inner: inset 0 2px 4px oklch(0 0 0 / 0.05);
+  --shadow-soft: 0 10px 40px oklch(0.32 0.03 45 / 0.04);
+  --shadow-lift: 0 25px 60px oklch(0.32 0.03 45 / 0.12);
+  --shadow-deep: 0 35px 80px oklch(0.32 0.03 45 / 0.18);
+  --shadow-inner: inset 0 2px 5px oklch(0 0 0 / 0.06);
+  --shadow-white: 0 4px 12px oklch(1 0 0 / 0.6);
 }
 
 :root {
