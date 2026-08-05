@@ -1,22 +1,20 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { BadgeCheck, Minus, Plus, ShoppingCart, Sparkles, Truck, Undo2 } from "lucide-react";
+import { BadgeCheck, Minus, Plus, ShoppingCart, Truck, Undo2, Star, Heart } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 
 import { Breadcrumb } from "@/components/store/Breadcrumb";
-import { Countdown } from "@/components/store/Countdown";
 import { Price } from "@/components/store/Price";
 import { ProductGrid } from "@/components/store/ProductGrid";
-import { Rating } from "@/components/store/Rating";
 import { SectionHeading } from "@/components/store/SectionHeading";
 import { StoreShell, storeKeys } from "@/components/store/StoreShell";
 import { business } from "@/data/business";
-import { formatJalali, formatToman, toFaDigits } from "@/lib/format";
+import { formatToman, toFaDigits } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { addCartItem } from "@/server/functions/cart";
 import { getProductPage, submitReview } from "@/server/functions/products";
-import type { ProductCard, ProductVariant } from "@/server/repo/products";
+import type { ProductVariant } from "@/server/repo/products";
 
 export const Route = createFileRoute("/product/$slug")({
   component: ProductPage,
@@ -86,361 +84,220 @@ function ProductPage() {
     onError: () => toast.error("افزودن به سبد انجام نشد؛ موجودی را بررسی کنید."),
   });
 
-  const sendReview = useMutation({
-    mutationFn: () => {
-      if (!product) throw new Error("no product");
-      return submitReview({
-        data: { productId: product.id, name: reviewName, rating: reviewRating, body: reviewBody },
-      });
-    },
-    onSuccess: (result) => {
-      toast.success(result.message);
-      setReviewName("");
-      setReviewBody("");
-      setReviewRating(5);
-    },
-    onError: () => toast.error("ثبت دیدگاه انجام نشد؛ فیلدها را کامل کنید."),
-  });
-
-  if (pageQuery.isLoading) {
-    return (
-      <StoreShell>
-        <div className="container-page grid gap-6 py-10 md:grid-cols-2">
-          <div className="skeleton aspect-square rounded-3xl" />
-          <div className="space-y-3">
-            <div className="skeleton h-7 w-2/3 rounded-xl" />
-            <div className="skeleton h-5 w-1/3 rounded-xl" />
-            <div className="skeleton h-24 rounded-2xl" />
-          </div>
-        </div>
-      </StoreShell>
-    );
-  }
-
-  if (!product) {
-    return (
-      <StoreShell>
-        <div className="container-page py-20 text-center">
-          <h1 className="text-lg font-extrabold">این محصول پیدا نشد</h1>
-          <p className="mt-2 text-sm text-muted-foreground">ممکن است از فروشگاه حذف شده یا نشانی اشتباه باشد.</p>
-        </div>
-      </StoreShell>
-    );
-  }
+  if (pageQuery.isLoading) return <StoreShell><div className="container-page py-20">در حال بارگذاری...</div></StoreShell>;
+  if (!product) return <StoreShell><div className="container-page py-20 text-center">محصول پیدا نشد.</div></StoreShell>;
 
   const images = product.images.length > 0 ? product.images : [{ url: product.cover ?? "/images/cat-toys.jpg", alt: product.title }];
-  const isClothing = product.categoryKind === "clothing";
   const stock = selectedVariant ? selectedVariant.stock : product.stock;
   const unitPrice = product.effectivePrice + (selectedVariant?.priceDelta ?? 0);
   const needsSelection = hasVariants && !selectedVariant;
 
   return (
     <StoreShell>
-      <div className="container-page py-6">
-        <div className="storybook-panel overflow-hidden p-6 md:p-8">
-          <Breadcrumb
-            items={[
-              ...(product.categoryTitle && product.categorySlug
-                ? [{ title: product.categoryTitle, href: `/category/${product.categorySlug}` }]
-                : []),
-              { title: product.title },
-            ]}
-            className="mb-5"
-          />
+      <div className="container-page py-10 lg:py-20">
+        <Breadcrumb
+          items={[
+            ...(product.categoryTitle && product.categorySlug
+              ? [{ title: product.categoryTitle, href: `/category/${product.categorySlug}` }]
+              : []),
+            { title: product.title },
+          ]}
+          className="mb-10"
+        />
 
-          <div className="grid gap-7 lg:grid-cols-[1fr_1.02fr]">
-            <div className="space-y-3">
-              <div className="overflow-hidden rounded-[2rem] border border-white/70 bg-white p-3 shadow-soft">
-                <img
-                  src={images[activeImage]?.url ?? images[0]?.url}
-                  alt={images[activeImage]?.alt ?? product.title}
-                  className="aspect-[1/1.02] w-full rounded-[1.6rem] object-cover"
-                />
+        <div className="grid gap-16 lg:grid-cols-2">
+          {/* Gallery */}
+          <div className="space-y-6">
+            <div className="aspect-square overflow-hidden bg-secondary">
+              <img
+                src={images[activeImage]?.url ?? images[0]?.url}
+                alt={images[activeImage]?.alt ?? product.title}
+                className="h-full w-full object-cover transition-premium"
+              />
+            </div>
+            {images.length > 1 && (
+              <div className="flex gap-4 overflow-x-auto pb-2">
+                {images.map((image, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setActiveImage(idx)}
+                    className={cn(
+                      "size-20 shrink-0 border-b-2 bg-secondary p-1 transition-premium",
+                      idx === activeImage ? "border-primary opacity-100" : "border-transparent opacity-60 hover:opacity-100"
+                    )}
+                  >
+                    <img src={image.url} alt="" className="h-full w-full object-cover" />
+                  </button>
+                ))}
               </div>
-              {images.length > 1 ? (
-                <div className="hide-scrollbar flex gap-2 overflow-x-auto pb-1">
-                  {images.map((image, index) => (
-                    <button
-                      key={`${image.url}-${index}`}
-                      type="button"
-                      onClick={() => setActiveImage(index)}
-                      className={cn(
-                        "size-20 shrink-0 overflow-hidden rounded-[1.2rem] border-2 bg-white p-1 shadow-soft transition-colors",
-                        index === activeImage ? "border-brand" : "border-white/70",
-                      )}
-                    >
-                      <img src={image.url} alt={image.alt ?? ""} className="size-full rounded-[0.9rem] object-cover" />
-                    </button>
-                  ))}
-                </div>
-              ) : null}
+            )}
+          </div>
+
+          {/* Info & Purchase */}
+          <div className="flex flex-col">
+            <div className="mb-4 flex items-center justify-between text-xs font-bold uppercase tracking-widest text-muted-foreground">
+              <span>{product.brand}</span>
+              <div className="flex items-center gap-1">
+                <Star className="size-3 fill-primary text-primary" />
+                <span className="text-foreground">{toFaDigits(product.ratingAverage)}</span>
+                <span className="font-medium">({toFaDigits(product.ratingCount)})</span>
+              </div>
             </div>
 
-            <div className="space-y-4">
-              <div className="flex flex-wrap items-center gap-2">
-                {product.badge ? (
-                  <span className="rounded-full bg-gradient-to-r from-brand to-sale px-3 py-1 text-[11px] font-extrabold text-primary-foreground shadow-soft">{product.badge}</span>
-                ) : null}
-                {product.madeInWorkshop ? (
-                  <span className="rounded-full bg-white px-3 py-1 text-[11px] font-extrabold text-brand shadow-soft">تولید کارگاه خودمان</span>
-                ) : null}
-                <span className="text-[11px] text-muted-foreground">کد کالا: {toFaDigits(product.code)}</span>
-              </div>
+            <h1 className="mb-6 text-3xl font-bold lg:text-5xl">{product.title}</h1>
+            <p className="mb-8 text-lg leading-relaxed text-muted-foreground">{product.subtitle}</p>
 
-              <div>
-                <h1 className="text-2xl font-black leading-[1.45] text-foreground md:text-[2rem]">{product.title}</h1>
-                {product.subtitle ? <p className="mt-2 text-sm leading-7 text-muted-foreground">{product.subtitle}</p> : null}
-              </div>
+            <div className="mb-10 flex items-baseline gap-4">
+              <span className="text-3xl font-bold">{formatToman(unitPrice)}</span>
+              {product.price > unitPrice && (
+                <span className="text-lg text-muted-foreground line-through">{formatToman(product.price)}</span>
+              )}
+            </div>
 
-              <Rating value={product.ratingAverage} count={product.ratingCount} showValue />
-
-              <div className="rounded-[2rem] border border-white/70 bg-white/85 p-5 shadow-soft">
-                <Price price={product.price + (selectedVariant?.priceDelta ?? 0)} effectivePrice={unitPrice} size="lg" />
-                {product.saleActive && product.saleEndsAt ? (
-                  <div className="mt-4 rounded-[1.5rem] bg-brand-soft/40 p-3">
-                    <p className="mb-2 text-xs font-extrabold text-sale">زمان باقی‌مانده تا پایان تخفیف:</p>
-                    <Countdown endsAt={product.saleEndsAt} />
+            <div className="mb-10 space-y-8 border-y border-border py-10">
+              {sizes.length > 0 && (
+                <div>
+                  <span className="mb-4 block text-xs font-bold uppercase tracking-widest">انتخاب سایز</span>
+                  <div className="flex flex-wrap gap-3">
+                    {sizes.map(s => (
+                      <button
+                        key={s}
+                        onClick={() => setSize(s)}
+                        className={cn(
+                          "min-w-12 border px-4 py-2 text-sm font-medium transition-premium",
+                          size === s ? "border-foreground bg-foreground text-white" : "border-border hover:border-foreground"
+                        )}
+                      >
+                        {s}
+                      </button>
+                    ))}
                   </div>
-                ) : null}
-
-                {sizes.length > 0 ? (
-                  <div className="mt-5">
-                    <p className="mb-2 text-xs font-extrabold">{isClothing ? "انتخاب سایز (ماه)" : "انتخاب اندازه"}</p>
-                    <div className="flex flex-wrap gap-2">
-                      {sizes.map((item) => (
-                        <button
-                          key={item}
-                          type="button"
-                          onClick={() => setSize(item)}
-                          className={cn(
-                            "rounded-full border px-4 py-2 text-xs font-extrabold transition-colors",
-                            size === item ? "border-brand bg-gradient-to-r from-brand to-sale text-primary-foreground" : "border-white/80 bg-white hover:border-brand",
-                          )}
-                        >
-                          {item}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                ) : null}
-
-                {colors.length > 0 ? (
-                  <div className="mt-5">
-                    <p className="mb-2 text-xs font-extrabold">انتخاب رنگ</p>
-                    <div className="flex flex-wrap gap-2">
-                      {colors.map((item) => (
-                        <button
-                          key={item.name}
-                          type="button"
-                          onClick={() => setColor(item.name)}
-                          className={cn(
-                            "flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-extrabold transition-colors",
-                            color === item.name ? "border-brand text-brand bg-white" : "border-white/80 bg-white hover:border-brand",
-                          )}
-                        >
-                          <span className="size-4 rounded-full border border-border" style={{ backgroundColor: item.hex ?? "#ddd" }} aria-hidden />
-                          {item.name}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                ) : null}
-
-                <div className="mt-6 flex flex-wrap items-center gap-3">
-                  <div className="flex items-center gap-2 rounded-full border border-white/80 bg-white px-2 py-1 shadow-soft">
-                    <button
-                      type="button"
-                      onClick={() => setQty((value) => Math.min(value + 1, 20))}
-                      className="grid size-9 place-items-center rounded-full hover:bg-secondary"
-                      aria-label="افزایش تعداد"
-                    >
-                      <Plus className="size-4" aria-hidden />
-                    </button>
-                    <span className="min-w-8 text-center text-sm font-extrabold">{toFaDigits(qty)}</span>
-                    <button
-                      type="button"
-                      onClick={() => setQty((value) => Math.max(value - 1, 1))}
-                      className="grid size-9 place-items-center rounded-full hover:bg-secondary"
-                      aria-label="کاهش تعداد"
-                    >
-                      <Minus className="size-4" aria-hidden />
-                    </button>
-                  </div>
-
-                  <button
-                    type="button"
-                    disabled={stock <= 0 || addToCart.isPending || needsSelection}
-                    onClick={() => addToCart.mutate()}
-                    className="toy-button inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-gradient-to-r from-brand to-sale px-6 py-3 text-sm font-extrabold text-primary-foreground transition-transform hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100"
-                  >
-                    <ShoppingCart className="size-4" aria-hidden />
-                    {stock <= 0 ? "فعلاً ناموجود" : needsSelection ? "ابتدا سایز/رنگ را انتخاب کنید" : "افزودن به سبد خرید"}
-                  </button>
                 </div>
+              )}
 
-                <p className="mt-3 text-[11px] text-muted-foreground">
-                  {stock > 0 ? `موجودی فعلی: ${toFaDigits(stock)} عدد` : "برای اطلاع از موجودی تماس بگیرید."}
-                </p>
+              {colors.length > 0 && (
+                <div>
+                  <span className="mb-4 block text-xs font-bold uppercase tracking-widest">انتخاب رنگ</span>
+                  <div className="flex flex-wrap gap-4">
+                    {colors.map(c => (
+                      <button
+                        key={c.name}
+                        onClick={() => setColor(c.name)}
+                        className={cn(
+                          "group flex items-center gap-2 text-sm font-medium transition-premium",
+                          color === c.name ? "text-foreground" : "text-muted-foreground hover:text-foreground"
+                        )}
+                      >
+                        <span 
+                          className={cn("size-6 rounded-full border border-border transition-premium", color === c.name && "ring-2 ring-foreground ring-offset-2")}
+                          style={{ backgroundColor: c.hex ?? "#ccc" }}
+                        />
+                        {c.name}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div className="flex flex-wrap gap-4">
+                <div className="flex items-center border border-border px-4 py-2">
+                  <button onClick={() => setQty(q => Math.max(1, q - 1))} className="p-2"><Minus className="size-4" /></button>
+                  <span className="w-12 text-center text-sm font-bold">{toFaDigits(qty)}</span>
+                  <button onClick={() => setQty(q => Math.min(20, q + 1))} className="p-2"><Plus className="size-4" /></button>
+                </div>
+                <button
+                  disabled={stock <= 0 || addToCart.isPending || needsSelection}
+                  onClick={() => addToCart.mutate()}
+                  className="btn-primary flex-1 py-4 text-sm font-bold uppercase tracking-widest"
+                >
+                  {stock <= 0 ? "ناموجود" : needsSelection ? "انتخاب مشخصات" : "افزودن به سبد خرید"}
+                </button>
+                <button className="flex size-14 items-center justify-center border border-border transition-premium hover:bg-secondary">
+                  <Heart className="size-5" />
+                </button>
               </div>
+            </div>
 
-              <ul className="grid gap-3 sm:grid-cols-3">
-                <li className="rounded-[1.5rem] border border-white/80 bg-white/80 p-4 text-[11px] shadow-soft">
-                  <div className="mb-2 flex items-center gap-2 font-extrabold text-foreground">
-                    <Truck className="size-4 text-brand" aria-hidden />
-                    ارسال سریع
-                  </div>
-                  <p className="leading-6 text-muted-foreground">ارسال رایگان بالای {formatToman(business.freeShippingThreshold)}</p>
-                </li>
-                <li className="rounded-[1.5rem] border border-white/80 bg-white/80 p-4 text-[11px] shadow-soft">
-                  <div className="mb-2 flex items-center gap-2 font-extrabold text-foreground">
-                    <Undo2 className="size-4 text-brand" aria-hidden />
-                    بازگشت آسان
-                  </div>
-                  <p className="leading-6 text-muted-foreground">مردودی تا {toFaDigits(business.returnWindowDays)} روز</p>
-                </li>
-                <li className="rounded-[1.5rem] border border-white/80 bg-white/80 p-4 text-[11px] shadow-soft">
-                  <div className="mb-2 flex items-center gap-2 font-extrabold text-foreground">
-                    <BadgeCheck className="size-4 text-brand" aria-hidden />
-                    ضمانت سازه
-                  </div>
-                  <p className="leading-6 text-muted-foreground">{toFaDigits(business.structureWarrantyMonths)} ماه برای تولیدات کارگاه</p>
-                </li>
-              </ul>
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+              <div className="flex items-center gap-3">
+                <Truck className="size-5 text-primary" />
+                <div>
+                  <h4 className="text-xs font-bold">ارسال سریع</h4>
+                  <p className="text-[10px] text-muted-foreground">تمام نقاط ایران</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <Undo2 className="size-5 text-primary" />
+                <div>
+                  <h4 className="text-xs font-bold">بازگشت کالا</h4>
+                  <p className="text-[10px] text-muted-foreground">تا {toFaDigits(business.returnWindowDays)} روز کاری</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <BadgeCheck className="size-5 text-primary" />
+                <div>
+                  <h4 className="text-xs font-bold">ضمانت اصالت</h4>
+                  <p className="text-[10px] text-muted-foreground">تضمین ۱۰۰٪ کالا</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="mt-10 section-shell p-4 md:p-6">
-          <div className="flex flex-wrap gap-2 border-b border-border/70 pb-4">
-            {([
-              ["description", "توضیحات محصول"],
-              ["attributes", "مشخصات فنی"],
-              ["reviews", "دیدگاه مشتریان"],
-            ] as Array<[TabKey, string]>).map(([key, label]) => (
+        {/* Tabs Section */}
+        <div className="mt-32 border-t border-border pt-20">
+          <div className="mb-12 flex gap-10 border-b border-border pb-6">
+            {(["description", "attributes", "reviews"] as TabKey[]).map(t => (
               <button
-                key={key}
-                type="button"
-                onClick={() => setTab(key)}
+                key={t}
+                onClick={() => setTab(t)}
                 className={cn(
-                  "rounded-full px-4 py-2 text-xs font-extrabold transition-colors",
-                  tab === key ? "bg-gradient-to-r from-brand to-sale text-primary-foreground" : "border border-white/70 bg-white text-muted-foreground hover:border-brand hover:text-brand",
+                  "relative text-sm font-bold uppercase tracking-widest transition-premium",
+                  tab === t ? "text-foreground" : "text-muted-foreground hover:text-foreground"
                 )}
               >
-                {label}
+                {t === "description" ? "توضیحات" : t === "attributes" ? "مشخصات" : "دیدگاه‌ها"}
+                {tab === t && <span className="absolute -bottom-[25px] left-0 h-0.5 w-full bg-foreground" />}
               </button>
             ))}
           </div>
 
-          <div className="pt-5">
-            {tab === "description" ? (
-              <p className="whitespace-pre-line text-sm leading-8 text-muted-foreground">
-                {product.description ?? "توضیحات این محصول به‌زودی تکمیل می‌شود."}
-              </p>
-            ) : null}
-
-            {tab === "attributes" ? (
-              <div className="overflow-hidden rounded-[1.6rem] border border-white/80 bg-white shadow-soft">
-                <table className="w-full text-sm">
-                  <tbody>
-                    {product.attributes.map((attribute) => (
-                      <tr key={attribute.name} className="border-b border-border/60 last:border-0">
-                        <th className="w-40 bg-secondary/40 px-4 py-3 text-start text-xs font-extrabold text-muted-foreground">{attribute.name}</th>
-                        <td className="px-4 py-3 text-xs text-foreground">{attribute.value}</td>
-                      </tr>
-                    ))}
-                    {product.weightGrams > 0 ? (
-                      <tr>
-                        <th className="w-40 bg-secondary/40 px-4 py-3 text-start text-xs font-extrabold text-muted-foreground">وزن</th>
-                        <td className="px-4 py-3 text-xs text-foreground">{toFaDigits(product.weightGrams)} گرم</td>
-                      </tr>
-                    ) : null}
-                  </tbody>
-                </table>
+          <div className="max-w-4xl animate-fade-in">
+            {tab === "description" && (
+              <div className="whitespace-pre-line text-base leading-relaxed text-muted-foreground lg:text-lg">
+                {product.description || "توضیحات به‌زودی..."}
               </div>
-            ) : null}
-
-            {tab === "reviews" ? (
-              <div className="grid gap-6 lg:grid-cols-2">
-                <div className="space-y-3">
-                  {product.reviews.length === 0 ? (
-                    <p className="rounded-[1.6rem] border border-white/80 bg-white p-6 text-sm text-muted-foreground shadow-soft">
-                      هنوز دیدگاهی برای این محصول ثبت نشده است.
-                    </p>
-                  ) : (
-                    product.reviews.map((review) => (
-                      <div key={review.id} className="rounded-[1.6rem] border border-white/80 bg-white p-4 shadow-soft">
-                        <div className="mb-2 flex items-center justify-between">
-                          <span className="text-xs font-extrabold">{review.name}</span>
-                          <span className="text-[11px] text-muted-foreground">{formatJalali(review.createdAt)}</span>
+            )}
+            {tab === "attributes" && (
+              <div className="grid grid-cols-1 gap-x-12 gap-y-4 md:grid-cols-2">
+                {product.attributes.map(attr => (
+                  <div key={attr.name} className="flex justify-between border-b border-border/50 py-3">
+                    <span className="text-sm font-bold uppercase tracking-wide">{attr.name}</span>
+                    <span className="text-sm text-muted-foreground">{attr.value}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+            {tab === "reviews" && (
+              <div className="space-y-12">
+                {product.reviews.map(r => (
+                  <div key={r.id} className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="text-sm font-bold">{r.name}</h4>
+                        <div className="mt-1 flex gap-0.5">
+                          {[1,2,3,4,5].map(i => <Star key={i} className={cn("size-3", i <= r.rating ? "fill-primary text-primary" : "text-border")} />)}
                         </div>
-                        <Rating value={review.rating} />
-                        <p className="mt-2 text-xs leading-7 text-muted-foreground">{review.body}</p>
                       </div>
-                    ))
-                  )}
-                </div>
-
-                <form
-                  onSubmit={(event) => {
-                    event.preventDefault();
-                    sendReview.mutate();
-                  }}
-                  className="rounded-[1.8rem] border border-white/80 bg-white p-5 shadow-soft"
-                >
-                  <div className="mb-4 flex items-center gap-2 text-brand">
-                    <Sparkles className="size-4" aria-hidden />
-                    <h3 className="text-sm font-black text-foreground">ثبت دیدگاه دربارهٔ این کالا</h3>
-                  </div>
-                  <div className="space-y-3">
-                    <input
-                      value={reviewName}
-                      onChange={(event) => setReviewName(event.target.value)}
-                      placeholder="نام شما"
-                      className="w-full rounded-full border border-white/80 bg-background px-4 py-3 text-xs outline-none focus:border-brand"
-                    />
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs text-muted-foreground">امتیاز:</span>
-                      {[1, 2, 3, 4, 5].map((value) => (
-                        <button
-                          key={value}
-                          type="button"
-                          onClick={() => setReviewRating(value)}
-                          className={cn(
-                            "size-9 rounded-full border text-xs font-extrabold",
-                            reviewRating === value ? "border-brand bg-gradient-to-r from-brand to-sale text-primary-foreground" : "border-white/80 bg-background",
-                          )}
-                        >
-                          {toFaDigits(value)}
-                        </button>
-                      ))}
+                      <span className="text-xs text-muted-foreground">{toFaDigits(r.createdAt.split('T')[0])}</span>
                     </div>
-                    <textarea
-                      value={reviewBody}
-                      onChange={(event) => setReviewBody(event.target.value)}
-                      rows={4}
-                      placeholder="تجربهٔ خود را بنویسید…"
-                      className="w-full rounded-[1.4rem] border border-white/80 bg-background px-4 py-3 text-xs outline-none focus:border-brand"
-                    />
-                    <button
-                      type="submit"
-                      disabled={sendReview.isPending}
-                      className="toy-button rounded-full bg-gradient-to-r from-brand to-sale px-5 py-3 text-xs font-extrabold text-primary-foreground disabled:opacity-60"
-                    >
-                      {sendReview.isPending ? "در حال ارسال…" : "ارسال دیدگاه"}
-                    </button>
+                    <p className="text-sm leading-relaxed text-muted-foreground">{r.body}</p>
                   </div>
-                </form>
+                ))}
               </div>
-            ) : null}
+            )}
           </div>
         </div>
-
-        {(pageQuery.data?.related ?? []).length > 0 ? (
-          <section className="mt-12">
-            <SectionHeading title="محصولات مرتبط" subtitle="کالاهایی که احتمالاً دوست خواهید داشت" />
-            <ProductGrid products={(pageQuery.data?.related ?? []) as Array<ProductCard>} columns={4} />
-          </section>
-        ) : null}
       </div>
     </StoreShell>
   );
