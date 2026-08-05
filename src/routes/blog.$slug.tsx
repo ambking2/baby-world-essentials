@@ -23,7 +23,7 @@ type CommentNode = {
 };
 
 const inputClass =
-  "w-full rounded-full border border-white/80 bg-white px-4 py-3 text-xs outline-none transition-colors focus:border-brand";
+  "w-full rounded-full border border-border bg-white px-4 py-3 text-xs outline-none transition-colors focus:border-primary shadow-sm";
 
 function CommentBranch({
   comments,
@@ -38,7 +38,7 @@ function CommentBranch({
     <div className={depth === 0 ? "space-y-3" : "mt-3 space-y-3 border-s border-border ps-4"}>
       {comments.map((comment) => (
         <div key={comment.id}>
-          <div className="storybook-panel p-4">
+          <div className="rounded-2xl border border-border bg-white p-4 shadow-sm">
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-2">
                 <span className="grid size-9 place-items-center rounded-full bg-brand-soft text-brand">
@@ -52,7 +52,7 @@ function CommentBranch({
               <button
                 type="button"
                 onClick={() => onReply(comment)}
-                className="text-[10px] font-extrabold text-brand hover:underline"
+                className="text-[10px] font-extrabold text-primary hover:underline"
               >
                 پاسخ
               </button>
@@ -110,7 +110,7 @@ function BlogPostPage() {
     return (
       <StoreShell>
         <div className="container-page py-8">
-          <div className="skeleton h-96 rounded-3xl" />
+          <div className="skeleton h-96 rounded-2xl" />
         </div>
       </StoreShell>
     );
@@ -121,7 +121,7 @@ function BlogPostPage() {
       <StoreShell>
         <div className="container-page py-20 text-center">
           <h1 className="text-lg font-extrabold">این مقاله پیدا نشد</h1>
-          <Link to="/blog" className="mt-4 inline-flex rounded-full bg-brand px-5 py-2.5 text-xs font-bold text-primary-foreground">
+          <Link to="/blog" className="mt-4 inline-flex rounded-full bg-primary px-5 py-2.5 text-xs font-bold text-primary-foreground">
             بازگشت به مجله
           </Link>
         </div>
@@ -136,13 +136,13 @@ function BlogPostPage() {
       <div className="container-page py-6">
         <div className="grid gap-5 lg:grid-cols-[1fr_320px]">
           <article className="space-y-5">
-            <div className="storybook-panel overflow-hidden p-2">
-              <div className="relative overflow-hidden rounded-[1.9rem]">
+            <div className="rounded-2xl border border-border bg-white overflow-hidden p-2 shadow-sm">
+              <div className="relative overflow-hidden rounded-[1.4rem]">
                 <img src={post.cover ?? "/images/hero-nursery.jpg"} alt={post.title} className="h-80 w-full object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-charcoal/75 via-charcoal/10 to-transparent" />
                 <div className="absolute inset-x-6 bottom-6">
                   <Breadcrumb items={[{ title: "مجلهٔ جهان کودک", href: "/blog" }, { title: post.title }]} className="mb-3 [&_a]:text-white/80 [&_span]:text-white/70" />
-                  {post.tag ? <span className="inline-flex rounded-full bg-white/90 px-3 py-1 text-[10px] font-extrabold text-brand shadow-soft">{post.tag}</span> : null}
+                  {post.tag ? <span className="inline-flex rounded-full bg-white/90 px-3 py-1 text-[10px] font-extrabold text-primary shadow-soft">{post.tag}</span> : null}
                   <h1 className="mt-3 max-w-3xl text-2xl font-black leading-[1.4] text-white md:text-[2.3rem]">{post.title}</h1>
                 </div>
               </div>
@@ -161,7 +161,7 @@ function BlogPostPage() {
                     <Eye className="size-3.5" aria-hidden />
                     {toFaDigits(post.viewCount)} بازدید
                   </span>
-                  <button type="button" onClick={share} className="ms-auto inline-flex items-center gap-1 font-extrabold text-brand hover:underline">
+                  <button type="button" onClick={share} className="ms-auto inline-flex items-center gap-1 font-extrabold text-primary hover:underline">
                     <Share2 className="size-3.5" aria-hidden />
                     اشتراک‌گذاری
                   </button>
@@ -185,12 +185,12 @@ function BlogPostPage() {
 
             <div className="grid gap-3 sm:grid-cols-2 text-[11px]">
               {postQuery.data?.previous ? (
-                <Link to="/blog/$slug" params={{ slug: postQuery.data.previous.slug }} className="storybook-panel p-4 font-bold transition-colors hover:text-brand">
+                <Link to="/blog/$slug" params={{ slug: postQuery.data.previous.slug }} className="rounded-2xl border border-border bg-white p-4 font-bold transition-colors hover:text-primary shadow-sm">
                   مقالهٔ قبلی: {postQuery.data.previous.title}
                 </Link>
               ) : null}
               {postQuery.data?.next ? (
-                <Link to="/blog/$slug" params={{ slug: postQuery.data.next.slug }} className="storybook-panel p-4 text-end font-bold transition-colors hover:text-brand">
+                <Link to="/blog/$slug" params={{ slug: postQuery.data.next.slug }} className="rounded-2xl border border-border bg-white p-4 text-end font-bold transition-colors hover:text-primary shadow-sm">
                   مقالهٔ بعدی: {postQuery.data.next.title}
                 </Link>
               ) : null}
@@ -217,7 +217,7 @@ function BlogPostPage() {
                 event.preventDefault();
                 sendComment.mutate();
               }}
-              className="storybook-panel space-y-3 p-5"
+              className="rounded-2xl border border-border bg-white shadow-sm space-y-3 p-5"
             >
               <h2 className="text-lg font-black text-foreground">{replyTo ? `پاسخ به ${replyTo.name}` : "دیدگاه شما"}</h2>
               {replyTo ? (
@@ -243,12 +243,12 @@ function BlogPostPage() {
                 onChange={(event) => setBody(event.target.value)}
                 rows={5}
                 placeholder="متن دیدگاه…"
-                className="w-full rounded-[1.4rem] border border-white/80 bg-white px-4 py-3 text-xs outline-none transition-colors focus:border-brand"
+                className="w-full rounded-[1.4rem] border border-border bg-white px-4 py-3 text-xs outline-none transition-colors focus:border-primary shadow-sm"
               />
               <button
                 type="submit"
                 disabled={sendComment.isPending}
-                className="toy-button inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-brand to-sale px-5 py-3 text-xs font-extrabold text-primary-foreground disabled:opacity-60"
+                className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-3 text-xs font-extrabold text-primary-foreground disabled:opacity-60 shadow-md hover:bg-primary/90 transition-colors"
               >
                 <Send className="size-4" aria-hidden />
                 {sendComment.isPending ? "در حال ارسال…" : "ثبت دیدگاه"}
