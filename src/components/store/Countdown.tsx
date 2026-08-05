@@ -9,7 +9,7 @@ export function Countdown({ endsAt, className }: { endsAt: string | null; classN
   const now = useNow(1000);
   if (!endsAt) return null;
 
-  const parts = countdownParts(endsAt, new Date(now));
+  const parts = countdownParts(endsAt);
   if (!parts || parts.finished) return null;
 
   const cell = "min-w-9 rounded-lg bg-charcoal/90 px-1.5 py-1 text-center text-sm font-bold text-white tabular-nums";

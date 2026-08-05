@@ -219,7 +219,7 @@ export const saveAdminCategory = createServerFn({ method: "POST" })
   )
   .handler(async ({ data }) => {
     await requireAdmin();
-    const id = await adminSaveCategory(data);
+    const id = await adminSaveCategory(data as any);
     return { ok: true, id, message: "دسته‌بندی ذخیره شد." };
   });
 
@@ -313,7 +313,7 @@ export const saveAdminPost = createServerFn({ method: "POST" })
   )
   .handler(async ({ data }) => {
     await requireAdmin();
-    const id = await adminSavePost(data);
+    const id = await adminSavePost(data as any);
     return { ok: true, id, message: "مقاله ذخیره شد." };
   });
 
@@ -416,7 +416,7 @@ export const saveAdminCoupon = createServerFn({ method: "POST" })
   )
   .handler(async ({ data }) => {
     await requireAdmin();
-    const id = await adminSaveCoupon(data);
+    const id = await adminSaveCoupon(data as any);
     return { ok: true, id, message: "کد تخفیف ذخیره شد." };
   });
 
