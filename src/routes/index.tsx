@@ -37,16 +37,12 @@ function HomePage() {
 
       {/* Categories Grid - High End Editorial Style */}
       <section className="container-page py-20 lg:py-32">
-        <div className="mb-12 flex items-end justify-between lg:mb-20">
-          <div className="max-w-xl">
-            <span className="mb-4 block text-xs font-bold uppercase tracking-widest text-primary">کالکشن‌های منتخب</span>
-            <h2 className="text-3xl font-bold lg:text-5xl">جستجو بر اساس دسته‌بندی</h2>
-          </div>
-          <Link to="/search" className="group flex items-center gap-2 text-sm font-bold transition-premium hover:text-primary">
-            مشاهده همه
-            <ArrowLeft className="size-4 transition-transform group-hover:-translate-x-1" />
-          </Link>
-        </div>
+        <SectionHeading 
+          eyebrow="کالکشن‌های منتخب"
+          title="جستجو بر اساس دسته‌بندی"
+          moreHref="/search"
+        />
+
         
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4 lg:gap-8">
           {categories.slice(0, 4).map((cat, idx) => (

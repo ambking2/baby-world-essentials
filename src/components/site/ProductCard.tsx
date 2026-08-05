@@ -87,7 +87,13 @@ export function ProductCard({ product }: { product: any }) {
           )}
         </div>
 
-        
+        {product.ratingAverage > 0 && (
+          <div className="mt-2 flex items-center gap-0.5">
+            <Star className="size-3 fill-primary text-primary" />
+            <span className="text-[10px] text-muted-foreground">{toFaDigits(product.ratingAverage.toFixed(1))}</span>
+          </div>
+        )}
+
         {outOfStock && (
           <p className="mt-2 text-[11px] font-bold text-destructive">ناموجود در انبار</p>
         )}
