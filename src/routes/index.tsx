@@ -53,7 +53,7 @@ function HomePage() {
               to="/category/$slug" 
               params={{ slug: cat.slug }}
               className={cn(
-                "group relative overflow-hidden aspect-[4/5] bg-secondary"
+                "group relative overflow-hidden aspect-[4/5] bg-secondary rounded-[14px]"
               )}
             >
               <img 
@@ -84,7 +84,7 @@ function HomePage() {
       {/* Editorial Split Section */}
       <section className="container-page section-spacing">
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-32">
-          <div className="relative aspect-square overflow-hidden bg-secondary lg:aspect-[4/5]">
+          <div className="relative aspect-square overflow-hidden bg-secondary lg:aspect-[4/5] rounded-[14px]">
             <img 
               src="https://images.unsplash.com/photo-1595113316349-9fa4ee24f884?q=80&w=2072&auto=format&fit=crop" 
               alt="نوزاد و سیسمونی" 

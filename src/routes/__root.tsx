@@ -19,7 +19,7 @@ function NotFoundComponent() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
-        <p className="text-7xl font-extrabold text-brand">۴۰۴</p>
+        <p className="text-7xl font-extrabold text-primary">۴۰۴</p>
         <h1 className="mt-4 text-xl font-bold text-foreground">این صفحه پیدا نشد</h1>
         <p className="mt-2 text-sm text-muted-foreground">
           شاید نشانی را اشتباه وارد کرده‌اید یا این محصول جمع‌آوری شده است.

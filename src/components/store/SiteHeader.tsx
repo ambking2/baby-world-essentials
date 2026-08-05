@@ -116,7 +116,7 @@ export function SiteHeader({
       </div>
 
       {/* Navigation - Desktop */}
-      <nav className="hidden border-b border-border bg-white lg:block">
+      <nav className="hidden border-b border-border bg-white lg:block sticky top-[73px] z-40">
         <div className="container-page flex justify-center">
           <ul className="flex gap-12">
             <li>

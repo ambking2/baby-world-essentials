@@ -56,7 +56,7 @@ export function SectionHeading({
       {moreHref && (
         <Link
           to={moreHref as any}
-          className="group flex items-center gap-1 text-[11px] font-bold uppercase tracking-widest transition-all duration-300 text-gray-900 hover:text-primary border-b border-gray-900 hover:border-primary pb-0.5"
+          className="group flex items-center gap-1 text-[11px] font-bold uppercase tracking-widest transition-all duration-250 text-gray-900 hover:text-primary border-b border-gray-900/10 hover:border-primary pb-0.5"
         >
           {moreLabel}
           <ChevronLeft className="size-4 shrink-0 transition-transform group-hover:-translate-x-1" aria-hidden />
