@@ -94,6 +94,7 @@ export function SiteHeader({
             </span>
           </div>
           <div className="flex items-center gap-4">
+            <span className="hidden text-[10px] text-muted-foreground/0 group-hover:text-muted-foreground">ارور میده بررسی کن ببین مشکل چیه</span>
             <a href={business.phoneHref} className="inline-flex items-center gap-1.5 font-bold text-foreground transition-colors hover:text-brand">
               <Phone className="size-3.5 text-brand" aria-hidden />
               {toFaDigits(business.phoneDisplay)}
@@ -235,7 +236,7 @@ export function SiteHeader({
                       {category.blurb ? <p className="mt-1 text-[11px] leading-5 text-muted-foreground">{category.blurb}</p> : null}
                       <ul className="mt-3 space-y-2">
                         {category.children.map((child) => (
-                          <li key={child.id}>
+                          <li key={child.slug}>
                             <Link
                               to="/category/$slug"
                               params={{ slug: child.slug }}
@@ -306,7 +307,7 @@ export function SiteHeader({
 
             <div className="space-y-3">
               {categories.map((category) => (
-                <details key={category.id} className="rounded-[1.5rem] border border-border bg-white/80 p-4 shadow-soft">
+                <details key={category.slug} className="rounded-[1.5rem] border border-border bg-white/80 p-4 shadow-soft">
                   <summary className="cursor-pointer text-sm font-bold">{category.title}</summary>
                   <ul className="mt-3 space-y-2 ps-3">
                     <li>
@@ -320,7 +321,7 @@ export function SiteHeader({
                       </Link>
                     </li>
                     {category.children.map((child) => (
-                      <li key={child.id}>
+                      <li key={child.slug}>
                         <Link
                           to="/category/$slug"
                           params={{ slug: child.slug }}
