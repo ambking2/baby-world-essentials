@@ -93,11 +93,6 @@ export function SiteHeader({
               {announcement ?? `ارسال رایگان برای خرید بالای ${formatToman(business.freeShippingThreshold)}`}
             </span>
           </div>
-          <div className="flex items-center gap-4">
-            <span className="inline-flex items-center gap-1.5">
-              <Clock className="size-3.5 text-brand" aria-hidden />
-              ریدم دهنت
-            </span>
             <a href={business.phoneHref} className="inline-flex items-center gap-1.5 font-bold text-foreground transition-colors hover:text-brand">
               <Phone className="size-3.5 text-brand" aria-hidden />
               {toFaDigits(business.phoneDisplay)}
