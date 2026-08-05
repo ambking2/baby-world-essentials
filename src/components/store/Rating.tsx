@@ -30,7 +30,7 @@ export function Rating({ value, count, size = 14, showValue = false, className }
           />
         ))}
       </div>
-      {showValue ? <span className="text-xs font-semibold text-foreground">{formatRating(value)}</span> : null}
+      {showValue ? <span className="text-xs font-semibold text-foreground">{toFaDigits(value)}</span> : null}
       {typeof count === "number" && count > 0 ? (
         <span className="text-xs text-muted-foreground">({formatCount(count)} نظر)</span>
       ) : null}

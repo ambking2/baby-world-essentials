@@ -71,7 +71,7 @@ function StoresPage() {
                 {serviceAreas.map((area) => (
                   <div key={area.title} className="rounded-2xl bg-secondary p-3 text-[11px] leading-6">
                     <p className="font-extrabold text-foreground">{area.title}</p>
-                    <p className="text-muted-foreground">{area.description}</p>
+                    <p className="text-muted-foreground">{area.detail}</p>
                   </div>
                 ))}
               </div>

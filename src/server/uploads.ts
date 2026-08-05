@@ -164,7 +164,7 @@ export async function uploadResponse(key: string): Promise<Response | null> {
       .first<{ mime_type?: unknown; content?: unknown }>();
     const body = fromDbBlob(row?.content);
     if (!row || !body) return null;
-    return new Response(body, {
+    return new Response(body as any, {
       headers: {
         "content-type": typeof row.mime_type === "string" ? row.mime_type : "application/octet-stream",
         "cache-control": "public, max-age=31536000, immutable",

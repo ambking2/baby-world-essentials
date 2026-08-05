@@ -46,14 +46,14 @@ function normalize(values: Array<SqlInput>): Array<SqlValue> {
 
 function d1Driver(database: D1Database): Driver {
   return {
-    async all<T>(query, params) {
+    async all<T>(query: string, params: Array<SqlValue>) {
       const result = await database
         .prepare(query)
         .bind(...params)
         .all<T>();
       return result.results ?? [];
     },
-    async one<T>(query, params) {
+    async one<T>(query: string, params: Array<SqlValue>) {
       const row = await database
         .prepare(query)
         .bind(...params)
@@ -123,10 +123,10 @@ async function openLocalDatabase(): Promise<LocalDatabase> {
 
 function localDriver(instance: LocalDatabase): Driver {
   return {
-    async all<T>(query, params) {
+    async all<T>(query: string, params: Array<SqlValue>) {
       return instance.prepare(query).all(...params) as Array<T>;
     },
-    async one<T>(query, params) {
+    async one<T>(query: string, params: Array<SqlValue>) {
       return (instance.prepare(query).get(...params) as T | undefined) ?? undefined;
     },
     async run(query, params) {

@@ -96,7 +96,7 @@ export function SiteHeader({
           <div className="flex items-center gap-4">
             <span className="inline-flex items-center gap-1.5">
               <Clock className="size-3.5 text-brand" aria-hidden />
-              بدون اینکه کامیت جدیدی اد کنی ، من کد رو داخل پیتهاب اپدیت کردم ، چیزی میبینی؟
+              {business.hoursShort}
             </span>
             <a href={business.phoneHref} className="inline-flex items-center gap-1.5 font-bold text-foreground transition-colors hover:text-brand">
               <Phone className="size-3.5 text-brand" aria-hidden />
