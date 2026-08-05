@@ -66,8 +66,8 @@ export function SiteHeader({
           </button>
 
           {/* Logo */}
-          <Link to="/" className="shrink-0">
-            <h1 className="text-2xl font-bold tracking-tight text-gray-900 md:text-3xl">
+          <Link to="/" className="shrink-0 relative z-10">
+            <h1 className="text-xl font-bold tracking-tight text-gray-900 sm:text-2xl md:text-3xl">
               {business.name}
             </h1>
           </Link>
