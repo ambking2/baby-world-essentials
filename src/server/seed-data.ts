@@ -154,7 +154,7 @@ export const PRODUCTS: Array<SeedProduct> = [
     madeInWorkshop: true,
     badge: "ساخت کارگاه خودمان",
     soldCount: 41,
-    images: ["/assets/images/nursery-1.jpg", "/assets/images/nursery-7.jpg"],
+    images: ["https://images.unsplash.com/photo-1544124499-58912cbddaad?q=80&w=1974&auto=format&fit=crop", "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?q=80&w=2071&auto=format&fit=crop"],
     attributes: [
       { name: "جنس بدنه", value: "چوب راش خشک‌شده" },
       { name: "اندازه تشک", value: "۷۰ × ۱۳۰ سانتی‌متر" },
