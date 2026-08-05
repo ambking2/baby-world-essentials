@@ -51,8 +51,8 @@ function toCategory(row: CategoryRow): Category {
 }
 
 /** درخت دوسطحی دسته‌بندی‌ها برای منوی مگا و سایدبار فیلتر. */
-export function categoryTree(): Array<Category> {
-  const rows = all<CategoryRow>(
+export async function categoryTree(): Promise<Array<Category>> {
+  const rows = await all<CategoryRow>(
     `SELECT c.*, ${COUNT_SELECT} FROM categories c
      WHERE c.is_active = 1
      ORDER BY c.sort ASC, c.id ASC`,
@@ -77,14 +77,15 @@ export function categoryTree(): Array<Category> {
   return roots;
 }
 
-export function flatCategories(): Array<Category> {
-  return all<CategoryRow>(
+export async function flatCategories(): Promise<Array<Category>> {
+  const rows = await all<CategoryRow>(
     `SELECT c.*, ${COUNT_SELECT} FROM categories c ORDER BY c.sort ASC, c.id ASC`,
-  ).map(toCategory);
+  );
+  return rows.map(toCategory);
 }
 
-export function categoryBySlug(slug: string): Category | null {
-  const row = one<CategoryRow>(
+export async function categoryBySlug(slug: string): Promise<Category | null> {
+  const row = await one<CategoryRow>(
     `SELECT c.*, ${COUNT_SELECT} FROM categories c WHERE c.slug = ?`,
     slug,
   );
@@ -92,8 +93,8 @@ export function categoryBySlug(slug: string): Category | null {
 }
 
 /** شناسه‌ی دسته همراه همه‌ی زیردسته‌ها — برای فیلتر محصولات. */
-export function categoryIdsWithChildren(categoryId: number): Array<number> {
-  const children = all<{ id: number }>(
+export async function categoryIdsWithChildren(categoryId: number): Promise<Array<number>> {
+  const children = await all<{ id: number }>(
     "SELECT id FROM categories WHERE parent_id = ?",
     categoryId,
   );
@@ -101,39 +102,39 @@ export function categoryIdsWithChildren(categoryId: number): Array<number> {
 }
 
 /** مسیر راهنما (breadcrumb) از ریشه تا دسته‌ی جاری. */
-export function breadcrumbFor(slug: string): Array<{ title: string; slug: string }> {
+export async function breadcrumbFor(slug: string): Promise<Array<{ title: string; slug: string }>> {
   const trail: Array<{ title: string; slug: string }> = [];
-  let current = one<CategoryRow>("SELECT * FROM categories WHERE slug = ?", slug);
+  let current = await one<CategoryRow>("SELECT * FROM categories WHERE slug = ?", slug);
   let guard = 0;
   while (current && guard < 6) {
     trail.unshift({ title: current.title, slug: current.slug });
     current =
       current.parent_id === null
         ? undefined
-        : one<CategoryRow>("SELECT * FROM categories WHERE id = ?", current.parent_id);
+        : await one<CategoryRow>("SELECT * FROM categories WHERE id = ?", current.parent_id);
     guard += 1;
   }
   return trail;
 }
 
 /* ------------------------------------------------------------------ */
-/* تنظیمات فروشگاه                                                 */
+/* تنطیمات فروشگاه                                                 */
 /* ------------------------------------------------------------------ */
 
-export function getSetting(key: string): string | null {
-  const row = one<{ value: string | null }>("SELECT value FROM settings WHERE key = ?", key);
+export async function getSetting(key: string): Promise<string | null> {
+  const row = await one<{ value: string | null }>("SELECT value FROM settings WHERE key = ?", key);
   return row?.value ?? null;
 }
 
-export function getSettingNumber(key: string, fallback: number): number {
-  const raw = getSetting(key);
+export async function getSettingNumber(key: string, fallback: number): Promise<number> {
+  const raw = await getSetting(key);
   if (raw === null) return fallback;
   const parsed = Number(raw);
   return Number.isFinite(parsed) ? parsed : fallback;
 }
 
-export function setSetting(key: string, value: string | number): void {
-  run(
+export async function setSetting(key: string, value: string | number): Promise<void> {
+  await run(
     `INSERT INTO settings (key, value) VALUES (?, ?)
      ON CONFLICT(key) DO UPDATE SET value = excluded.value`,
     key,
@@ -141,8 +142,10 @@ export function setSetting(key: string, value: string | number): void {
   );
 }
 
-export function allSettings(): Record<string, string> {
-  const rows = all<{ key: string; value: string | null }>("SELECT key, value FROM settings");
+export async function allSettings(): Promise<Record<string, string>> {
+  const rows = await all<{ key: string; value: string | null }>(
+    "SELECT key, value FROM settings",
+  );
   const result: Record<string, string> = {};
   for (const row of rows) result[row.key] = row.value ?? "";
   return result;
@@ -152,22 +155,22 @@ export function allSettings(): Record<string, string> {
 /* خبرنامه و پیام تماس                                            */
 /* ------------------------------------------------------------------ */
 
-export function subscribeNewsletter(email: string): void {
-  run(
+export async function subscribeNewsletter(email: string): Promise<void> {
+  await run(
     "INSERT OR IGNORE INTO newsletter (email, created_at) VALUES (?, ?)",
     email.trim().toLowerCase(),
     new Date().toISOString(),
   );
 }
 
-export function saveContactMessage(input: {
+export async function saveContactMessage(input: {
   name: string;
   phone?: string | null;
   email?: string | null;
   subject?: string | null;
   body: string;
-}): void {
-  run(
+}): Promise<void> {
+  await run(
     `INSERT INTO contact_messages (name, phone, email, subject, body, created_at)
      VALUES (?, ?, ?, ?, ?, ?)`,
     input.name,

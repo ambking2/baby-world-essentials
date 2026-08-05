@@ -40,22 +40,23 @@ function mapAddress(row: AddressRow): Address {
   };
 }
 
-export function listAddresses(userId: number): Array<Address> {
-  return all<AddressRow>(
+export async function listAddresses(userId: number): Promise<Array<Address>> {
+  const rows = await all<AddressRow>(
     "SELECT * FROM addresses WHERE user_id = ? ORDER BY is_default DESC, id DESC",
     userId,
-  ).map(mapAddress);
+  );
+  return rows.map(mapAddress);
 }
 
-export function defaultAddress(userId: number): Address | null {
-  const row = one<AddressRow>(
+export async function defaultAddress(userId: number): Promise<Address | null> {
+  const row = await one<AddressRow>(
     "SELECT * FROM addresses WHERE user_id = ? ORDER BY is_default DESC, id DESC LIMIT 1",
     userId,
   );
   return row ? mapAddress(row) : null;
 }
 
-export function saveAddress(
+export async function saveAddress(
   userId: number,
   input: {
     id?: number | null;
@@ -67,12 +68,12 @@ export function saveAddress(
     line: string;
     isDefault?: boolean;
   },
-): number {
+): Promise<number> {
   const makeDefault = input.isDefault === true;
-  if (makeDefault) run("UPDATE addresses SET is_default = 0 WHERE user_id = ?", userId);
+  if (makeDefault) await run("UPDATE addresses SET is_default = 0 WHERE user_id = ?", userId);
 
   if (input.id) {
-    run(
+    await run(
       `UPDATE addresses SET receiver = ?, phone = ?, province = ?, city = ?, postal_code = ?, line = ?, is_default = ?
        WHERE id = ? AND user_id = ?`,
       input.receiver,
@@ -88,8 +89,12 @@ export function saveAddress(
     return input.id;
   }
 
-  const isFirst = count("SELECT COUNT(*) AS c FROM addresses WHERE user_id = ?", userId) === 0;
-  const result = run(
+  const existing = await count(
+    "SELECT COUNT(*) AS c FROM addresses WHERE user_id = ?",
+    userId,
+  );
+  const isFirst = existing === 0;
+  const result = await run(
     `INSERT INTO addresses (user_id, receiver, phone, province, city, postal_code, line, is_default, created_at)
      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     userId,
@@ -105,8 +110,8 @@ export function saveAddress(
   return result.lastInsertRowid;
 }
 
-export function deleteAddress(userId: number, addressId: number): void {
-  run("DELETE FROM addresses WHERE id = ? AND user_id = ?", addressId, userId);
+export async function deleteAddress(userId: number, addressId: number): Promise<void> {
+  await run("DELETE FROM addresses WHERE id = ? AND user_id = ?", addressId, userId);
 }
 
 /* ------------------------------------------------------------------ */
@@ -123,8 +128,8 @@ export type WishlistItem = {
   stock: number;
 };
 
-export function listWishlist(userId: number): Array<WishlistItem> {
-  return all<{
+export async function listWishlist(userId: number): Promise<Array<WishlistItem>> {
+  const rows = await all<{
     product_id: number;
     slug: string;
     title: string;
@@ -139,7 +144,8 @@ export function listWishlist(userId: number): Array<WishlistItem> {
      FROM wishlist w JOIN products p ON p.id = w.product_id
      WHERE w.user_id = ? ORDER BY w.id DESC`,
     userId,
-  ).map((row) => ({
+  );
+  return rows.map((row) => ({
     productId: row.product_id,
     slug: row.slug,
     title: row.title,
@@ -150,24 +156,31 @@ export function listWishlist(userId: number): Array<WishlistItem> {
   }));
 }
 
-export function wishlistIds(userId: number): Array<number> {
-  return all<{ product_id: number }>("SELECT product_id FROM wishlist WHERE user_id = ?", userId).map(
-    (row) => row.product_id,
+export async function wishlistIds(userId: number): Promise<Array<number>> {
+  const rows = await all<{ product_id: number }>(
+    "SELECT product_id FROM wishlist WHERE user_id = ?",
+    userId,
   );
+  return rows.map((row) => row.product_id);
 }
 
 /** افزودن/حذف از علاقه‌مندی‌ها؛ وضعیت جدید را برمی‌گرداند. */
-export function toggleWishlist(userId: number, productId: number): boolean {
-  const existing = one<{ id: number }>(
+export async function toggleWishlist(userId: number, productId: number): Promise<boolean> {
+  const existing = await one<{ id: number }>(
     "SELECT id FROM wishlist WHERE user_id = ? AND product_id = ?",
     userId,
     productId,
   );
   if (existing) {
-    run("DELETE FROM wishlist WHERE id = ?", existing.id);
+    await run("DELETE FROM wishlist WHERE id = ?", existing.id);
     return false;
   }
-  run("INSERT INTO wishlist (user_id, product_id, created_at) VALUES (?, ?, ?)", userId, productId, nowIso());
+  await run(
+    "INSERT INTO wishlist (user_id, product_id, created_at) VALUES (?, ?, ?)",
+    userId,
+    productId,
+    nowIso(),
+  );
   return true;
 }
 
@@ -175,8 +188,11 @@ export function toggleWishlist(userId: number, productId: number): boolean {
 /* پروفایل                                                           */
 /* ------------------------------------------------------------------ */
 
-export function updateProfile(userId: number, input: { name?: string | null; phone?: string | null }): void {
-  run(
+export async function updateProfile(
+  userId: number,
+  input: { name?: string | null; phone?: string | null },
+): Promise<void> {
+  await run(
     "UPDATE users SET name = COALESCE(?, name), phone = COALESCE(?, phone) WHERE id = ?",
     input.name ?? null,
     input.phone ?? null,
@@ -184,8 +200,8 @@ export function updateProfile(userId: number, input: { name?: string | null; pho
   );
 }
 
-export function updatePasswordHash(userId: number, passwordHash: string): void {
-  run("UPDATE users SET password_hash = ? WHERE id = ?", passwordHash, userId);
+export async function updatePasswordHash(userId: number, passwordHash: string): Promise<void> {
+  await run("UPDATE users SET password_hash = ? WHERE id = ?", passwordHash, userId);
 }
 
 /* ------------------------------------------------------------------ */
@@ -203,44 +219,35 @@ export type AdminCustomer = {
   createdAt: string;
 };
 
-export function adminListCustomers(q?: string): Array<AdminCustomer> {
+type AdminCustomerRow = {
+  id: number;
+  email: string;
+  name: string | null;
+  phone: string | null;
+  email_verified_at: string | null;
+  order_count: number;
+  total_spent: number;
+  created_at: string;
+};
+
+const CUSTOMER_SELECT = `SELECT u.id, u.email, u.name, u.phone, u.email_verified_at, u.created_at,
+    (SELECT COUNT(*) FROM orders o WHERE o.user_id = u.id) AS order_count,
+    (SELECT COALESCE(SUM(o.grand_total), 0) FROM orders o
+      WHERE o.user_id = u.id AND o.status IN ('paid','processing','shipped','delivered')) AS total_spent
+  FROM users u`;
+
+export async function adminListCustomers(q?: string): Promise<Array<AdminCustomer>> {
   const like = q && q.trim().length > 0 ? `%${q.trim()}%` : null;
   const rows = like
-    ? all<{
-        id: number;
-        email: string;
-        name: string | null;
-        phone: string | null;
-        email_verified_at: string | null;
-        order_count: number;
-        total_spent: number;
-        created_at: string;
-      }>(
-        `SELECT u.id, u.email, u.name, u.phone, u.email_verified_at, u.created_at,
-           (SELECT COUNT(*) FROM orders o WHERE o.user_id = u.id) AS order_count,
-           (SELECT COALESCE(SUM(o.grand_total), 0) FROM orders o WHERE o.user_id = u.id AND o.status IN ('paid','processing','shipped','delivered')) AS total_spent
-         FROM users u
+    ? await all<AdminCustomerRow>(
+        `${CUSTOMER_SELECT}
          WHERE u.email LIKE ? OR u.name LIKE ? OR u.phone LIKE ?
          ORDER BY u.id DESC`,
         like,
         like,
         like,
       )
-    : all<{
-        id: number;
-        email: string;
-        name: string | null;
-        phone: string | null;
-        email_verified_at: string | null;
-        order_count: number;
-        total_spent: number;
-        created_at: string;
-      }>(
-        `SELECT u.id, u.email, u.name, u.phone, u.email_verified_at, u.created_at,
-           (SELECT COUNT(*) FROM orders o WHERE o.user_id = u.id) AS order_count,
-           (SELECT COALESCE(SUM(o.grand_total), 0) FROM orders o WHERE o.user_id = u.id AND o.status IN ('paid','processing','shipped','delivered')) AS total_spent
-         FROM users u ORDER BY u.id DESC`,
-      );
+    : await all<AdminCustomerRow>(`${CUSTOMER_SELECT} ORDER BY u.id DESC`);
 
   return rows.map((row) => ({
     id: row.id,
@@ -254,10 +261,11 @@ export function adminListCustomers(q?: string): Array<AdminCustomer> {
   }));
 }
 
-export function adminListNewsletter(): Array<{ email: string; createdAt: string }> {
-  return all<{ email: string; created_at: string }>(
+export async function adminListNewsletter(): Promise<Array<{ email: string; createdAt: string }>> {
+  const rows = await all<{ email: string; created_at: string }>(
     "SELECT email, created_at FROM newsletter ORDER BY id DESC",
-  ).map((row) => ({ email: row.email, createdAt: row.created_at }));
+  );
+  return rows.map((row) => ({ email: row.email, createdAt: row.created_at }));
 }
 
 export type AdminMessage = {
@@ -271,8 +279,8 @@ export type AdminMessage = {
   createdAt: string;
 };
 
-export function adminListMessages(): Array<AdminMessage> {
-  return all<{
+export async function adminListMessages(): Promise<Array<AdminMessage>> {
+  const rows = await all<{
     id: number;
     name: string;
     phone: string | null;
@@ -281,7 +289,8 @@ export function adminListMessages(): Array<AdminMessage> {
     body: string;
     is_read: number;
     created_at: string;
-  }>("SELECT * FROM contact_messages ORDER BY id DESC").map((row) => ({
+  }>("SELECT * FROM contact_messages ORDER BY id DESC");
+  return rows.map((row) => ({
     id: row.id,
     name: row.name,
     phone: row.phone,
@@ -293,6 +302,6 @@ export function adminListMessages(): Array<AdminMessage> {
   }));
 }
 
-export function adminMarkMessageRead(id: number, isRead = true): void {
-  run("UPDATE contact_messages SET is_read = ? WHERE id = ?", isRead ? 1 : 0, id);
+export async function adminMarkMessageRead(id: number, isRead = true): Promise<void> {
+  await run("UPDATE contact_messages SET is_read = ? WHERE id = ?", isRead ? 1 : 0, id);
 }
