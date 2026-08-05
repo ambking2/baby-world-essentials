@@ -12,7 +12,7 @@ export function BlogPreview() {
   if (list.length === 0) return null;
 
   return (
-    <div className="grid gap-12 md:grid-cols-3">
+    <div className="grid gap-16 md:grid-cols-3">
       {list.map((post) => (
         <article key={post.slug} className="group flex flex-col">
           <Link
