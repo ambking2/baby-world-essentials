@@ -53,9 +53,9 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
-        <h1 className="text-xl font-bold tracking-tight text-foreground">سلام</h1>
+        <h1 className="text-xl font-bold tracking-tight text-foreground">خطایی رخ داد</h1>
         <p className="mt-2 text-sm text-muted-foreground whitespace-pre-line">
-          Something went wrong on our end. You can try refreshing or head back home.
+          متأسفانه مشکلی در بارگذاری پیش آمد. لطفاً دوباره تلاش کنید.
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
@@ -65,13 +65,13 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
             }}
             className="inline-flex items-center justify-center rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
           >
-            Try again
+            تلاش مجدد
           </button>
           <a
             href="/"
             className="inline-flex items-center justify-center rounded-full border border-input bg-background px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-accent/10"
           >
-            Go home
+            بازگشت به خانه
           </a>
         </div>
       </div>
