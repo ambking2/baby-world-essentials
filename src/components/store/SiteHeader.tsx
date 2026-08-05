@@ -1,6 +1,5 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import {
-  ChevronDown,
   Clock,
   Heart,
   LayoutGrid,
@@ -101,7 +100,7 @@ export function SiteHeader({
           </div>
         </div>
 
-        <div className={cn("glass-panel group/header rounded-[2.8rem] border-white/90 px-3 py-3 shadow-lift backdrop-blur-xl transition-all duration-500", scrolled && "mx-auto max-w-[96%] translate-y-2 border-brand/10 shadow-deep")}>
+        <div className={cn("glass-panel group/header relative rounded-[2.8rem] border-white/90 px-3 py-3 shadow-lift backdrop-blur-xl transition-all duration-500", scrolled && "mx-auto max-w-[96%] translate-y-2 border-brand/10 shadow-deep")}>
           <div className="flex items-center gap-3 md:gap-4">
             <button
               type="button"
@@ -193,7 +192,7 @@ export function SiteHeader({
 
               <Link
                 to="/cart"
-                className="toy-button relative inline-flex h-11 items-center gap-2 rounded-full bg-gradient-to-r from-brand to-sale px-4 text-xs font-extrabold text-primary-foreground"
+                className="toy-button relative inline-flex h-11 items-center gap-2 rounded-full bg-gradient-to-r from-brand to-sun px-4 text-xs font-extrabold text-primary-foreground"
               >
                 <ShoppingCart className="size-4" aria-hidden />
                 <span className="hidden md:inline">{cartCount > 0 ? formatToman(cartTotal) : "سبد خرید"}</span>
@@ -244,16 +243,17 @@ export function SiteHeader({
               </div>
             </div>
           </div>
-
-            {isAdmin ? (
+          
+          {isAdmin ? (
+            <div className="mt-2 flex justify-center lg:hidden">
               <Link
                 to="/admin"
                 className="rounded-full bg-charcoal px-4 py-2 text-xs font-extrabold text-white transition-opacity hover:opacity-90"
               >
                 پنل مدیریت
               </Link>
-            ) : null}
-          </div>
+            </div>
+          ) : null}
         </div>
       </div>
 
@@ -263,7 +263,7 @@ export function SiteHeader({
           <nav className="absolute inset-y-0 end-0 flex w-[88%] max-w-sm flex-col gap-4 overflow-y-auto bg-[linear-gradient(180deg,#fff9f4_0%,#ffffff_100%)] p-5 shadow-lift">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <span className="relative grid size-12 place-items-center rounded-[1.35rem] bg-gradient-to-br from-brand to-sale text-xl font-black text-white">
+                <span className="relative grid size-12 place-items-center rounded-[1.35rem] bg-gradient-to-br from-brand to-sun text-xl font-black text-white">
                   ج
                   <span className="absolute -bottom-2 rounded-full bg-white px-2 py-0.5 text-[8px] font-black text-brand">kids</span>
                 </span>
