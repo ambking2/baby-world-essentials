@@ -43,21 +43,23 @@ export function FilterSidebar({
 
   return (
     <aside className={cn("space-y-4", className)}>
-      <div className="flex items-center gap-2 rounded-2xl border border-border bg-card px-4 py-3">
-        <SlidersHorizontal className="size-4 text-brand" aria-hidden />
-        <span className="text-sm font-extrabold">فیلتر محصولات</span>
+      <div className="flex items-center gap-2 border-b border-border pb-4 mb-4">
+        <SlidersHorizontal className="size-4 text-primary" aria-hidden />
+        <span className="text-sm font-bold uppercase tracking-widest">فیلتر</span>
+
         <button
           type="button"
           onClick={() => onChange({ sizes: [], colors: [], onlyAvailable: false, onlyDiscounted: false })}
-          className="ms-auto text-[11px] text-muted-foreground hover:text-sale"
+          className="ms-auto text-[10px] font-bold text-muted-foreground uppercase tracking-widest hover:text-primary transition-colors"
         >
           حذف همه
         </button>
       </div>
 
       {categories.length > 0 ? (
-        <div className="rounded-2xl border border-border bg-card p-4">
-          <h3 className="mb-3 text-xs font-extrabold text-foreground">دسته‌بندی‌ها</h3>
+        <div className="mb-10">
+          <h3 className="mb-6 text-[11px] font-bold uppercase tracking-widest text-foreground">دسته‌بندی‌ها</h3>
+
           <ul className="space-y-2">
             {categories.map((category) => (
               <li key={category.id}>
@@ -97,8 +99,9 @@ export function FilterSidebar({
         </div>
       ) : null}
 
-      <div className="rounded-2xl border border-border bg-card p-4">
-        <h3 className="mb-3 text-xs font-extrabold text-foreground">محدودهٔ قیمت</h3>
+      <div className="mb-10">
+        <h3 className="mb-6 text-[11px] font-bold uppercase tracking-widest text-foreground">محدودهٔ قیمت</h3>
+
         <input
           type="range"
           min={priceBounds.min}
@@ -116,8 +119,9 @@ export function FilterSidebar({
       </div>
 
       {availableSizes.length > 0 ? (
-        <div className="rounded-2xl border border-border bg-card p-4">
-          <h3 className="mb-3 text-xs font-extrabold text-foreground">سایز</h3>
+        <div className="mb-10">
+          <h3 className="mb-6 text-[11px] font-bold uppercase tracking-widest text-foreground">سایز</h3>
+
           <div className="flex flex-wrap gap-2">
             {availableSizes.map((size) => {
               const active = state.sizes.includes(size);
