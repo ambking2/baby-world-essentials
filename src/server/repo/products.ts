@@ -102,7 +102,8 @@ function mapCard(row: CardRow): ProductCard {
     subtitle: row.subtitle,
     price,
     effectivePrice: effective,
-    discountPercent: price > 0 && effective < price ? Math.round(((price - effective) / price) * 100) : 0,
+    discountPercent:
+      price > 0 && effective < price ? Math.round(((price - effective) / price) * 100) : 0,
     saleActive: Number(row.sale_active) === 1,
     saleEndsAt: Number(row.sale_active) === 1 ? row.sale_ends_at : null,
     badge: row.badge,
@@ -119,8 +120,18 @@ function mapCard(row: CardRow): ProductCard {
   };
 }
 
-function cardQuery(where: string, order: string, limit: number, params: Array<SqlInput> = []): Array<ProductCard> {
-  return all<CardRow>(`${CARD_SELECT} WHERE ${where} ORDER BY ${order} LIMIT ?`, ...params, limit).map(mapCard);
+async function cardQuery(
+  where: string,
+  order: string,
+  limit: number,
+  params: Array<SqlInput> = [],
+): Promise<Array<ProductCard>> {
+  const rows = await all<CardRow>(
+    `${CARD_SELECT} WHERE ${where} ORDER BY ${order} LIMIT ?`,
+    ...params,
+    limit,
+  );
+  return rows.map(mapCard);
 }
 
 /* ------------------------------------------------------------------ */
@@ -206,23 +217,11 @@ function buildWhere(filters: ProductFilters): { sql: string; params: Array<SqlIn
   return { sql: clauses.join(" AND "), params };
 }
 
-export function listProducts(filters: ProductFilters = {}): ProductListResult {
+export async function listProducts(filters: ProductFilters = {}): Promise<ProductListResult> {
   const perPage = Math.min(Math.max(filters.perPage ?? 12, 1), 48);
   const page = Math.max(filters.page ?? 1, 1);
   const sort = filters.sort ?? "newest";
   const { sql, params } = buildWhere(filters);
-
-  const total = count(
-    `SELECT COUNT(*) AS c FROM products p LEFT JOIN categories c2 ON c2.id = p.category_id WHERE ${sql}`,
-    ...params,
-  );
-
-  const items = all<CardRow>(
-    `${CARD_SELECT} WHERE ${sql} ORDER BY ${SORT_SQL[sort]} LIMIT ? OFFSET ?`,
-    ...params,
-    perPage,
-    (page - 1) * perPage,
-  ).map(mapCard);
 
   // محدوده‌ی قیمت و مقادیر فیلتر برای همان دسته (بدون محدودیت قیمت)
   const facetFilters: ProductFilters = {};
@@ -230,37 +229,48 @@ export function listProducts(filters: ProductFilters = {}): ProductListResult {
   if (filters.q) facetFilters.q = filters.q;
   const facet = buildWhere(facetFilters);
 
-  const bounds = one<{ min_price: number | null; max_price: number | null }>(
-    `SELECT MIN(${EFFECTIVE_PRICE_SQL}) AS min_price, MAX(${EFFECTIVE_PRICE_SQL}) AS max_price
-     FROM products p WHERE ${facet.sql}`,
-    ...facet.params,
-  );
-
-  const sizes = all<{ size: string }>(
-    `SELECT DISTINCT v.size AS size FROM product_variants v
-     JOIN products p ON p.id = v.product_id
-     WHERE v.size IS NOT NULL AND ${facet.sql}
-     ORDER BY v.sort ASC`,
-    ...facet.params,
-  ).map((row) => row.size);
-
-  const colors = all<{ color: string; color_hex: string | null }>(
-    `SELECT DISTINCT v.color AS color, v.color_hex FROM product_variants v
-     JOIN products p ON p.id = v.product_id
-     WHERE v.color IS NOT NULL AND ${facet.sql}
-     ORDER BY v.color ASC`,
-    ...facet.params,
-  ).map((row) => ({ color: row.color, hex: row.color_hex }));
+  // روی D1 هر پرس‌وجو یک رفت‌وبرگت شبکه است؛ پس همه را موازی اجرا می‌کنیم.
+  const [total, rows, bounds, sizeRows, colorRows] = await Promise.all([
+    count(
+      `SELECT COUNT(*) AS c FROM products p LEFT JOIN categories c2 ON c2.id = p.category_id WHERE ${sql}`,
+      ...params,
+    ),
+    all<CardRow>(
+      `${CARD_SELECT} WHERE ${sql} ORDER BY ${SORT_SQL[sort]} LIMIT ? OFFSET ?`,
+      ...params,
+      perPage,
+      (page - 1) * perPage,
+    ),
+    one<{ min_price: number | null; max_price: number | null }>(
+      `SELECT MIN(${EFFECTIVE_PRICE_SQL}) AS min_price, MAX(${EFFECTIVE_PRICE_SQL}) AS max_price
+       FROM products p WHERE ${facet.sql}`,
+      ...facet.params,
+    ),
+    all<{ size: string }>(
+      `SELECT DISTINCT v.size AS size FROM product_variants v
+       JOIN products p ON p.id = v.product_id
+       WHERE v.size IS NOT NULL AND ${facet.sql}
+       ORDER BY v.sort ASC`,
+      ...facet.params,
+    ),
+    all<{ color: string; color_hex: string | null }>(
+      `SELECT DISTINCT v.color AS color, v.color_hex FROM product_variants v
+       JOIN products p ON p.id = v.product_id
+       WHERE v.color IS NOT NULL AND ${facet.sql}
+       ORDER BY v.color ASC`,
+      ...facet.params,
+    ),
+  ]);
 
   return {
-    items,
+    items: rows.map(mapCard),
     total,
     page,
     perPage,
     pageCount: Math.max(Math.ceil(total / perPage), 1),
     priceBounds: { min: Number(bounds?.min_price ?? 0), max: Number(bounds?.max_price ?? 0) },
-    availableSizes: sizes,
-    availableColors: colors,
+    availableSizes: sizeRows.map((row) => row.size),
+    availableColors: colorRows.map((row) => ({ color: row.color, hex: row.color_hex })),
   };
 }
 
@@ -268,24 +278,28 @@ export function listProducts(filters: ProductFilters = {}): ProductListResult {
 /* فهرست‌های صفحه‌ی اول                                            */
 /* ------------------------------------------------------------------ */
 
-export function featuredProducts(limit = 8): Array<ProductCard> {
+export async function featuredProducts(limit = 8): Promise<Array<ProductCard>> {
   return cardQuery("p.is_active = 1 AND p.is_featured = 1", "p.sold_count DESC, p.id DESC", limit);
 }
 
-export function newestProducts(limit = 8): Array<ProductCard> {
+export async function newestProducts(limit = 8): Promise<Array<ProductCard>> {
   return cardQuery("p.is_active = 1", "p.created_at DESC, p.id DESC", limit);
 }
 
-export function bestSellers(limit = 8): Array<ProductCard> {
+export async function bestSellers(limit = 8): Promise<Array<ProductCard>> {
   return cardQuery("p.is_active = 1", "p.sold_count DESC, p.view_count DESC", limit);
 }
 
-export function onSaleProducts(limit = 8): Array<ProductCard> {
-  return cardQuery(`p.is_active = 1 AND ${EFFECTIVE_PRICE_SQL} < p.price`, "(p.price - effective_price) DESC", limit);
+export async function onSaleProducts(limit = 8): Promise<Array<ProductCard>> {
+  return cardQuery(
+    `p.is_active = 1 AND ${EFFECTIVE_PRICE_SQL} < p.price`,
+    "(p.price - effective_price) DESC",
+    limit,
+  );
 }
 
 /** تخفیف‌های زمان‌دار فعال — برای نوار شمارش معکوس. */
-export function flashSaleProducts(limit = 8): Array<ProductCard> {
+export async function flashSaleProducts(limit = 8): Promise<Array<ProductCard>> {
   return cardQuery(
     `p.is_active = 1 AND ${ACTIVE_SALE_SQL} AND p.sale_ends_at IS NOT NULL`,
     "datetime(p.sale_ends_at) ASC",
@@ -293,7 +307,7 @@ export function flashSaleProducts(limit = 8): Array<ProductCard> {
   );
 }
 
-export function topRated(limit = 5): Array<ProductCard> {
+export async function topRated(limit = 5): Promise<Array<ProductCard>> {
   return cardQuery(
     "p.is_active = 1 AND p.rating_count > 0",
     "(p.rating_sum * 1.0 / p.rating_count) DESC, p.rating_count DESC",
@@ -302,9 +316,12 @@ export function topRated(limit = 5): Array<ProductCard> {
 }
 
 /** پیشنهاد زنده‌ی جستجو در هدر. */
-export function searchSuggest(term: string, limit = 6): Array<ProductCard> {
+export async function searchSuggest(term: string, limit = 6): Promise<Array<ProductCard>> {
   const like = `%${term.trim()}%`;
-  return cardQuery("p.is_active = 1 AND (p.title LIKE ? OR p.code LIKE ?)", "p.sold_count DESC", limit, [like, like]);
+  return cardQuery("p.is_active = 1 AND (p.title LIKE ? OR p.code LIKE ?)", "p.sold_count DESC", limit, [
+    like,
+    like,
+  ]);
 }
 
 /* ------------------------------------------------------------------ */
@@ -338,8 +355,10 @@ export type ProductDetail = ProductCard & {
   viewCount: number;
 };
 
-export function productBySlug(slug: string): ProductDetail | null {
-  const row = one<CardRow & { description: string | null; weight_grams: number; view_count: number }>(
+export async function productBySlug(slug: string): Promise<ProductDetail | null> {
+  const row = await one<
+    CardRow & { description: string | null; weight_grams: number; view_count: number }
+  >(
     `${CARD_SELECT.replace(
       "p.id, p.code",
       "p.id, p.description, p.weight_grams, p.view_count, p.code",
@@ -348,42 +367,31 @@ export function productBySlug(slug: string): ProductDetail | null {
   );
   if (!row) return null;
 
-  const images = all<{ url: string; alt: string | null }>(
-    "SELECT url, alt FROM product_images WHERE product_id = ? ORDER BY sort ASC, id ASC",
-    row.id,
-  );
-  const attributes = all<{ name: string; value: string }>(
-    "SELECT name, value FROM product_attributes WHERE product_id = ? ORDER BY sort ASC, id ASC",
-    row.id,
-  );
-  const variants = all<{
-    id: number;
-    size: string | null;
-    color: string | null;
-    color_hex: string | null;
-    price_delta: number;
-    stock: number;
-  }>(
-    "SELECT id, size, color, color_hex, price_delta, stock FROM product_variants WHERE product_id = ? ORDER BY sort ASC, id ASC",
-    row.id,
-  ).map((variant) => ({
-    id: variant.id,
-    size: variant.size,
-    color: variant.color,
-    colorHex: variant.color_hex,
-    priceDelta: Number(variant.price_delta),
-    stock: Number(variant.stock),
-  }));
-  const reviews = all<{ id: number; name: string; rating: number; body: string; created_at: string }>(
-    "SELECT id, name, rating, body, created_at FROM reviews WHERE product_id = ? AND status = 'approved' ORDER BY id DESC",
-    row.id,
-  ).map((review) => ({
-    id: review.id,
-    name: review.name,
-    rating: Number(review.rating),
-    body: review.body,
-    createdAt: review.created_at,
-  }));
+  const [images, attributes, variantRows, reviewRows] = await Promise.all([
+    all<{ url: string; alt: string | null }>(
+      "SELECT url, alt FROM product_images WHERE product_id = ? ORDER BY sort ASC, id ASC",
+      row.id,
+    ),
+    all<{ name: string; value: string }>(
+      "SELECT name, value FROM product_attributes WHERE product_id = ? ORDER BY sort ASC, id ASC",
+      row.id,
+    ),
+    all<{
+      id: number;
+      size: string | null;
+      color: string | null;
+      color_hex: string | null;
+      price_delta: number;
+      stock: number;
+    }>(
+      "SELECT id, size, color, color_hex, price_delta, stock FROM product_variants WHERE product_id = ? ORDER BY sort ASC, id ASC",
+      row.id,
+    ),
+    all<{ id: number; name: string; rating: number; body: string; created_at: string }>(
+      "SELECT id, name, rating, body, created_at FROM reviews WHERE product_id = ? AND status = 'approved' ORDER BY id DESC",
+      row.id,
+    ),
+  ]);
 
   return {
     ...mapCard(row),
@@ -392,32 +400,54 @@ export function productBySlug(slug: string): ProductDetail | null {
     viewCount: Number(row.view_count),
     images,
     attributes,
-    variants,
-    reviews,
+    variants: variantRows.map((variant) => ({
+      id: variant.id,
+      size: variant.size,
+      color: variant.color,
+      colorHex: variant.color_hex,
+      priceDelta: Number(variant.price_delta),
+      stock: Number(variant.stock),
+    })),
+    reviews: reviewRows.map((review) => ({
+      id: review.id,
+      name: review.name,
+      rating: Number(review.rating),
+      body: review.body,
+      createdAt: review.created_at,
+    })),
   };
 }
 
-export function relatedProducts(productId: number, categoryId: number | null, limit = 4): Array<ProductCard> {
+export async function relatedProducts(
+  productId: number,
+  categoryId: number | null,
+  limit = 4,
+): Promise<Array<ProductCard>> {
   if (categoryId === null) return newestProducts(limit);
-  return cardQuery("p.is_active = 1 AND p.category_id = ? AND p.id <> ?", "p.sold_count DESC, p.id DESC", limit, [
-    categoryId,
-    productId,
-  ]);
+  return cardQuery(
+    "p.is_active = 1 AND p.category_id = ? AND p.id <> ?",
+    "p.sold_count DESC, p.id DESC",
+    limit,
+    [categoryId, productId],
+  );
 }
 
-export function incrementProductView(productId: number): void {
-  run("UPDATE products SET view_count = view_count + 1 WHERE id = ?", productId);
+export async function incrementProductView(productId: number): Promise<void> {
+  await run("UPDATE products SET view_count = view_count + 1 WHERE id = ?", productId);
 }
 
 /** قیمت موثر یک محصول (با احتساب اختلاف قیمت تنوع). */
-export function effectivePriceOf(productId: number, variantId?: number | null): number {
-  const row = one<{ effective_price: number }>(
+export async function effectivePriceOf(
+  productId: number,
+  variantId?: number | null,
+): Promise<number> {
+  const row = await one<{ effective_price: number }>(
     `SELECT ${EFFECTIVE_PRICE_SQL} AS effective_price FROM products p WHERE p.id = ?`,
     productId,
   );
   const base = Number(row?.effective_price ?? 0);
   if (variantId === undefined || variantId === null) return base;
-  const variant = one<{ price_delta: number }>(
+  const variant = await one<{ price_delta: number }>(
     "SELECT price_delta FROM product_variants WHERE id = ? AND product_id = ?",
     variantId,
     productId,
@@ -425,16 +455,22 @@ export function effectivePriceOf(productId: number, variantId?: number | null): 
   return base + Number(variant?.price_delta ?? 0);
 }
 
-export function availableStock(productId: number, variantId?: number | null): number {
+export async function availableStock(
+  productId: number,
+  variantId?: number | null,
+): Promise<number> {
   if (variantId !== undefined && variantId !== null) {
-    const variant = one<{ stock: number }>(
+    const variant = await one<{ stock: number }>(
       "SELECT stock FROM product_variants WHERE id = ? AND product_id = ?",
       variantId,
       productId,
     );
     return Number(variant?.stock ?? 0);
   }
-  const row = one<{ stock: number }>(`SELECT ${STOCK_EXPR} AS stock FROM products p WHERE p.id = ?`, productId);
+  const row = await one<{ stock: number }>(
+    `SELECT ${STOCK_EXPR} AS stock FROM products p WHERE p.id = ?`,
+    productId,
+  );
   return Number(row?.stock ?? 0);
 }
 
@@ -442,15 +478,15 @@ export function availableStock(productId: number, variantId?: number | null): nu
 /* دیدگاه‌ها                                                         */
 /* ------------------------------------------------------------------ */
 
-export function addReview(input: {
+export async function addReview(input: {
   productId: number;
   userId?: number | null;
   name: string;
   rating: number;
   body: string;
-}): void {
+}): Promise<void> {
   const rating = Math.min(Math.max(Math.round(input.rating), 1), 5);
-  run(
+  await run(
     `INSERT INTO reviews (product_id, user_id, name, rating, body, status, created_at)
      VALUES (?, ?, ?, ?, ?, 'pending', ?)`,
     input.productId,
@@ -463,12 +499,12 @@ export function addReview(input: {
 }
 
 /** پس از تأیید/رد دیدگاه توسط مدیر، امتیاز محصول بازمحاسبه می‌شود. */
-export function recalcRating(productId: number): void {
-  const row = one<{ total: number | null; c: number }>(
+export async function recalcRating(productId: number): Promise<void> {
+  const row = await one<{ total: number | null; c: number }>(
     "SELECT SUM(rating) AS total, COUNT(*) AS c FROM reviews WHERE product_id = ? AND status = 'approved'",
     productId,
   );
-  run(
+  await run(
     "UPDATE products SET rating_sum = ?, rating_count = ?, updated_at = ? WHERE id = ?",
     Number(row?.total ?? 0),
     Number(row?.c ?? 0),
