@@ -57,7 +57,7 @@ export function SiteHeader({
       {/* Main Header Container */}
       <div className={cn(
         "z-50 w-full border-b border-border bg-white transition-all duration-300",
-        isScrolled ? "sticky top-0 shadow-premium py-3" : "py-5 lg:py-7"
+        isScrolled ? "fixed top-0 shadow-premium py-2 lg:py-3" : "relative py-4 lg:py-7"
       )}>
         <div className="container-page flex items-center justify-between gap-6 lg:gap-12">
           {/* Mobile Menu Toggle */}
