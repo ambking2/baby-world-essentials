@@ -57,7 +57,7 @@ export function SiteHeader({
       {/* Main Header Container */}
       <div className={cn(
         "z-50 w-full border-b border-border bg-white transition-all duration-300",
-        isScrolled ? "sticky top-0 shadow-premium py-3" : "py-5 lg:py-7"
+        isScrolled ? "fixed top-0 shadow-premium py-2 lg:py-3" : "relative py-4 lg:py-7"
       )}>
         <div className="container-page flex items-center justify-between gap-6 lg:gap-12">
           {/* Mobile Menu Toggle */}
@@ -66,8 +66,8 @@ export function SiteHeader({
           </button>
 
           {/* Logo */}
-          <Link to="/" className="shrink-0">
-            <h1 className="text-2xl font-bold tracking-tight text-gray-900 md:text-3xl">
+          <Link to="/" className="shrink-0 relative z-10">
+            <h1 className="text-xl font-bold tracking-tight text-gray-900 sm:text-2xl md:text-3xl">
               {business.name}
             </h1>
           </Link>
@@ -87,7 +87,7 @@ export function SiteHeader({
           </form>
 
           {/* Actions */}
-          <div className="flex items-center gap-4 sm:gap-8">
+          <div className="flex items-center gap-3 sm:gap-8">
             <Link to={userName ? "/account" : "/auth/login"} className="hidden items-center gap-2.5 text-[13px] font-bold text-gray-900 hover:text-primary transition-colors lg:flex uppercase tracking-wide">
               <User className="size-5" />
               <span>{userName ?? "حساب کاربری"}</span>
@@ -116,7 +116,10 @@ export function SiteHeader({
       </div>
 
       {/* Navigation - Desktop */}
-      <nav className="hidden border-b border-border bg-white lg:block sticky top-[73px] z-40">
+      <nav className={cn(
+        "hidden border-b border-border bg-white lg:block z-40 transition-all duration-300",
+        isScrolled ? "fixed top-[57px] w-full" : "relative"
+      )}>
         <div className="container-page flex items-center justify-between">
           <div className="flex-1 flex justify-center">
             <ul className="flex gap-12">
@@ -163,7 +166,7 @@ export function SiteHeader({
           </div>
           
           <div className="hidden xl:block text-[9px] text-muted-foreground max-w-[150px] leading-tight text-left">
-            داخل موبایل این از اسکیل اصلی موبایل خارج میشه و به هم میزنه سایت رو
+            پیاده‌سازی استایل‌های ریسپانسیو برای هدر سایت من در حالت موبایل را انجام بده تا به هم نریزد.
           </div>
         </div>
       </nav>
