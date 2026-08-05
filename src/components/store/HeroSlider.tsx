@@ -16,20 +16,20 @@ type Slide = {
 
 const SLIDES: Array<Slide> = [
   {
-    subtitle: "کالکشن جدید ۲۰۲۶",
-    title: "آرامش و لطافت در دنیای نوزاد شما",
-    body: "مجموعه‌ای از بهترین برندهای جهانی و تولیدات اختصاصی کارگاه با بالاترین استاندارد کیفی برای دلبند شما.",
-    cta: "مشاهده جدیدترین‌ها",
-    href: "/search",
-    image: "https://images.unsplash.com/photo-1595113316349-9fa4ee24f884?q=80&w=2072&auto=format&fit=crop",
-  },
-  {
     subtitle: "سرویس خواب نوردیک",
     title: "خوابی شیرین در بستری از طبیعت",
     body: "طراحی مینیمال و ارگونومیک با استفاده از چوب طبیعی و رنگ‌های گیاهی برای سلامت نوزاد شما.",
     cta: "خرید سرویس خواب",
     href: "/category/servis-khab",
     image: "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?q=80&w=2071&auto=format&fit=crop",
+  },
+  {
+    subtitle: "کالکشن جدید ۲۰۲۶",
+    title: "لطافت و زیبایی در لباس نوزاد",
+    body: "مجموعه‌ای از بهترین پارچه‌های پنبه‌ای و ارگانیک برای پوست حساس دلبند شما، با طراحی‌های مدرن و مینیمال.",
+    cta: "مشاهده لباس‌ها",
+    href: "/category/lebas",
+    image: "https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?q=80&w=2075&auto=format&fit=crop",
   },
 ];
 

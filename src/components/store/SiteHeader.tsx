@@ -76,7 +76,7 @@ export function SiteHeader({
               <img 
                 src={brandLogo.url} 
                 alt={business.name} 
-                className="h-12 w-auto sm:h-14 md:h-16 transition-transform group-hover:scale-105" 
+                className="h-10 w-auto sm:h-12 md:h-14 transition-transform group-hover:scale-105" 
               />
               <div className="flex flex-col leading-tight">
                 <span className="text-xl font-black tracking-tight text-gray-900 sm:text-2xl">

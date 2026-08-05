@@ -34,7 +34,7 @@ export const CATEGORIES: Array<SeedCategory> = [
     slug: "lebas",
     title: "لباس نوزاد و کودک",
     blurb: "پنبهٔ نرم، دوخت تمیز، سایزبندی دقیق",
-    image: "https://images.unsplash.com/photo-1595113316349-9fa4ee24f884?q=80&w=2072&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?q=80&w=2075&auto=format&fit=crop",
     kind: "clothing",
     children: [
       {
@@ -55,7 +55,7 @@ export const CATEGORIES: Array<SeedCategory> = [
         slug: "sarhami-khab",
         title: "سرهمی و لباس خواب",
         blurb: "سرهمی راحت برای خواب شب",
-        image: "https://images.unsplash.com/photo-1595113316349-9fa4ee24f884?q=80&w=2072&auto=format&fit=crop",
+        image: "https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?q=80&w=2075&auto=format&fit=crop",
         kind: "clothing",
       },
     ],
@@ -279,7 +279,7 @@ export const PRODUCTS: Array<SeedProduct> = [
     isFeatured: true,
     badge: "پرفروش",
     soldCount: 189,
-    images: ["https://images.unsplash.com/photo-1595113316349-9fa4ee24f884?q=80&w=2072&auto=format&fit=crop"],
+    images: ["https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?q=80&w=2075&auto=format&fit=crop"],
     attributes: [
       { name: "جنس", value: "پنبه و الاستان" },
       { name: "نوع بسته‌شدن", value: "زیپ سراسری" },
