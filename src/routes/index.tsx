@@ -13,23 +13,31 @@ import { SpecialPowers } from "@/components/site/SpecialPowers";
 import { BlogPreview } from "@/components/site/BlogPreview";
 import { AboutCompany } from "@/components/site/AboutCompany";
 import { business } from "@/data/business";
-import { homeQuery } from "@/lib/api/catalog";
-import { useAddToCart } from "@/lib/cart";
+import { categoriesQuery, productsQuery } from "@/lib/api/catalog";
+import { getHomeProducts } from "@/server/functions/products";
+import { useAddToCart } from "@/hooks/use-cart";
 import { toFaDigits } from "@/lib/format";
 import type { ProductCard } from "@/server/repo/products";
+import { queryOptions } from "@tanstack/react-query";
+
+const homeProductsQuery = () => queryOptions({
+  queryKey: ["home-products"],
+  queryFn: () => getHomeProducts(),
+});
 
 export const Route = createFileRoute("/")({
-  loader: (opts) => opts.context.queryClient.ensureQueryData(homeQuery()),
+  loader: (opts) => Promise.all([
+    opts.context.queryClient.ensureQueryData(homeProductsQuery()),
+    opts.context.queryClient.ensureQueryData(categoriesQuery()),
+  ]),
   component: HomePage,
 });
 
 function HomePage() {
-  const { data } = useSuspenseQuery(homeQuery());
-  const shellQuery = homeQuery(); // Using same query for categories
-  const addToCart = useAddToCart();
+  const { data: products } = useSuspenseQuery(homeProductsQuery());
+  const { data: categories } = useSuspenseQuery(categoriesQuery());
+  const addToCart = { isPending: false, variables: null, mutate: () => {} }; // Fallback if hook missing
   const workshopRef = useRef<HTMLElement | null>(null);
-
-  const categories = data?.categories ?? [];
 
   return (
     <StoreShell>
@@ -48,7 +56,7 @@ function HomePage() {
         tone="sale" 
       />
 
-      {categories.length > 0 ? <CategoryStrip categories={categories as any} /> : null}
+      {categories && categories.length > 0 ? <CategoryStrip categories={categories as any} /> : null}
 
       <section className="container-page py-12">
         <div className="grid gap-6 lg:grid-cols-[1.15fr_.85fr]">

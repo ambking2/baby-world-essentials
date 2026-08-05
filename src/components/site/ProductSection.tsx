@@ -11,7 +11,6 @@ type Props = {
   query?: ProductQuery;
   moreTo?: "/shop" | "/offers" | "/categories";
   linkLabel?: string;
-  /** Horizontal scroll rail on mobile instead of a 2-column grid. */
   rail?: boolean;
   tone?: "default" | "sale" | "best";
 };
@@ -34,7 +33,7 @@ export function ProductSection({
     <section id={id} className="container-page scroll-mt-28 py-12 md:py-16">
       <SectionHeading 
         title={title} 
-        subtitle={subtitle ?? undefined} 
+        subtitle={subtitle || undefined} 
         moreHref={moreTo} 
         moreLabel={linkLabel}
         align="center"
