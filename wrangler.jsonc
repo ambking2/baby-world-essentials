@@ -9,7 +9,7 @@
   //
   // آپلودها نیز روی همین D1 نگه‌داری می‌شوند تا نیازی به R2 و Billing نباشد.
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "baby-world-essentials2",
+  "name": "baby-world-essentials",
   "main": ".output/server/index.mjs",
   "compatibility_date": "2025-06-01",
   "compatibility_flags": ["nodejs_compat"],
@@ -35,7 +35,7 @@
   ],
 
   "vars": {
-    "SITE_URL": "https://jahankoodak.ir",
+    "SITE_URL": "https://baby-world-essentials.ambking.workers.dev/",
     // اگر خواستید تصاویر از دامنه‌ای جدا سرو شوند، آدرس پایه را اینجا بگذارید.
     // در حالت عادی از مسیر /uploads/* همین ورکر سرو می‌شوند.
     "UPLOADS_PUBLIC_URL": ""
