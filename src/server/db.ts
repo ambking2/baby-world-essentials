@@ -168,7 +168,7 @@ export async function cloudflareEnv(): Promise<CloudflareEnv | null> {
   if (cachedEnv !== undefined) return cachedEnv;
   try {
     // فقط داخل رانتایم Cloudflare قابل resolve است.
-    const workers = await import(/* @vite-ignore */ "cloudflare:workers");
+    const workers = await import(/* @vite-ignore */ "cloudflare" + ":workers");
     cachedEnv = (workers as { env?: CloudflareEnv }).env ?? null;
   } catch {
     cachedEnv = null;
