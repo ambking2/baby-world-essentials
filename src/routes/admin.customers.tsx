@@ -8,7 +8,7 @@ import { formatJalali, formatJalaliTime, formatToman, toFaDigits } from "@/lib/f
 import { 
   getAdminCustomers, 
   markAdminMessageRead, 
-  updateUserRole 
+  updateUserRoleMutation 
 } from "@/server/functions/admin";
 
 export const Route = createFileRoute("/admin/customers")({

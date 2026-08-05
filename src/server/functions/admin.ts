@@ -391,7 +391,7 @@ export const markAdminMessageRead = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
-export const updateUserRole = createServerFn({ method: "POST" })
+export const updateUserRoleMutation = createServerFn({ method: "POST" })
   .validator((data: unknown) =>
     z
       .object({
