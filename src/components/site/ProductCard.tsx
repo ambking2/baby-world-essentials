@@ -47,7 +47,7 @@ export function ProductCard({
               ٪{toFaDigits(off || 0)} تخفیف
             </span>
           )}
-          {product.tags.includes("new") && (
+          {product.tags?.includes("new") && (
             <span className="bg-primary px-2 py-1 text-[10px] font-bold text-white uppercase tracking-tight">
               جدید
             </span>
