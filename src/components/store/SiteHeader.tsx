@@ -96,8 +96,7 @@ export function SiteHeader({
           <div className="flex items-center gap-4">
             <span className="inline-flex items-center gap-1.5">
               <Clock className="size-3.5 text-brand" aria-hidden />
-              نه اخمخ چیکار کردی برگردون 
-من منظورم این بود کد گیتهاب رو اپدیت کردم تو فقط نپاه کن اصلا به کد ها دست نزن ، نظرتو بهم بگو ، بک اند خیلی مهمه خرابش نکنی
+              ریدم دهنت
             </span>
             <a href={business.phoneHref} className="inline-flex items-center gap-1.5 font-bold text-foreground transition-colors hover:text-brand">
               <Phone className="size-3.5 text-brand" aria-hidden />
