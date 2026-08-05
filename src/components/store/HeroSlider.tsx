@@ -130,7 +130,7 @@ export function HeroSlider() {
                   <div className="relative z-10 flex justify-center md:justify-end">
                     <div className="relative w-full max-w-[520px]">
                       <div className="absolute inset-0 rounded-[2.3rem] bg-white/35 blur-3xl" />
-                      <div className="relative overflow-hidden rounded-[2.3rem] border border-white/80 bg-white/65 p-3 shadow-lift">
+                      <div className="relative overflow-hidden rounded-[2.8rem] border border-white/90 bg-white/70 p-4 shadow-lift backdrop-blur-sm">
                         <img
                           src={slide.image}
                           alt={slide.title}

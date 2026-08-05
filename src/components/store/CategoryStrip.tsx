@@ -22,7 +22,7 @@ export function CategoryStrip({ categories }: { categories: Array<Category> }) {
             key={category.id}
             to="/category/$slug"
             params={{ slug: category.slug }}
-            className={`reveal card-hover group relative overflow-hidden rounded-[2.5rem] border border-white/70 shadow-soft transition-all duration-500 ${index === 0 ? "xl:col-span-2" : ""}`}
+            className={`reveal group relative overflow-hidden rounded-[2.8rem] border border-white/80 shadow-soft transition-all duration-700 hover:shadow-lift hover:-translate-y-1 ${index === 0 ? "xl:col-span-2" : ""}`}
           >
             <img
               src={category.image ?? "/images/cat-toys.jpg"}

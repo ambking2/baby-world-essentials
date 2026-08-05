@@ -29,8 +29,8 @@ export function StoreProductCard({
   const isClothing = product.categoryKind === "clothing";
 
   return (
-    <article className={cn("card-hover group flex h-full flex-col overflow-hidden rounded-[2.5rem] border border-white/60 bg-white/40 p-2 backdrop-blur-sm transition-all duration-500 hover:bg-white/70 hover:shadow-lift", className)}>
-      <div className="relative aspect-[1/1.05] overflow-hidden rounded-[2.2rem] bg-[linear-gradient(180deg,#fff8f2_0%,#ffffff_100%)] shadow-inner">
+    <article className={cn("group flex h-full flex-col overflow-hidden rounded-[2.8rem] border border-white/80 bg-white/40 p-2.5 backdrop-blur-sm transition-all duration-500 hover:bg-white/90 hover:shadow-lift hover:-translate-y-1", className)}>
+      <div className="relative aspect-[1/1.08] overflow-hidden rounded-[2.4rem] bg-[linear-gradient(180deg,#fff9f4_0%,#ffffff_100%)] shadow-inner">
         <div className="absolute start-3 top-3 z-10 flex flex-col gap-1.5">
           {product.badge ? (
             <span className="rounded-full bg-gradient-to-r from-brand to-sale px-3 py-1 text-[11px] font-extrabold text-primary-foreground shadow-soft">
@@ -91,7 +91,7 @@ export function StoreProductCard({
 
         {product.saleActive && product.saleEndsAt ? <Countdown endsAt={product.saleEndsAt} /> : null}
 
-        <div className="mt-auto rounded-[1.5rem] border border-white/70 bg-white/80 p-3 shadow-soft">
+        <div className="mt-auto rounded-[1.8rem] border border-white/80 bg-white/80 p-4 shadow-soft">
           <Price price={product.price} effectivePrice={product.effectivePrice} discountPercent={product.discountPercent} />
 
           <div className="mt-3 flex items-center gap-2">

@@ -113,7 +113,7 @@ export function SiteHeader({
             </button>
 
             <Link to="/" className="flex shrink-0 items-center gap-3">
-              <span className="toy-button relative grid size-14 place-items-center rounded-[1.7rem] bg-gradient-to-br from-brand to-sale text-2xl font-black text-white shadow-soft">
+              <span className="toy-button relative grid size-16 place-items-center rounded-[2rem] bg-gradient-to-br from-brand to-sale text-3xl font-black text-white shadow-lift">
                 ج
                 <span className="absolute -bottom-2 start-1/2 -translate-x-1/2 rounded-full bg-white px-2 py-0.5 text-[9px] font-black text-brand shadow-soft">
                   kids
