@@ -67,8 +67,8 @@ export function FilterSidebar({
                   to="/category/$slug"
                   params={{ slug: category.slug }}
                   className={cn(
-                    "flex items-center justify-between text-xs transition-colors hover:text-brand",
-                    category.slug === activeSlug ? "font-extrabold text-brand" : "text-muted-foreground",
+                    "flex items-center justify-between text-xs transition-colors hover:text-primary",
+                    category.slug === activeSlug ? "font-extrabold text-primary" : "text-muted-foreground",
                   )}
                 >
                   <span>{category.title}</span>
@@ -82,8 +82,8 @@ export function FilterSidebar({
                           to="/category/$slug"
                           params={{ slug: child.slug }}
                           className={cn(
-                            "flex items-center justify-between text-[11px] transition-colors hover:text-brand",
-                            child.slug === activeSlug ? "font-bold text-brand" : "text-muted-foreground",
+                            "flex items-center justify-between text-[11px] transition-colors hover:text-primary",
+                            child.slug === activeSlug ? "font-bold text-primary" : "text-muted-foreground",
                           )}
                         >
                           <span>{child.title}</span>
@@ -109,7 +109,7 @@ export function FilterSidebar({
           step={50000}
           value={maxValue}
           onChange={(event) => onChange({ ...state, maxPrice: Number(event.target.value) })}
-          className="w-full accent-[var(--color-brand)]"
+          className="w-full accent-primary"
           aria-label="حداکثر قیمت"
         />
         <div className="mt-2 flex items-center justify-between text-[11px] text-muted-foreground">
@@ -132,7 +132,7 @@ export function FilterSidebar({
                   onClick={() => onChange({ ...state, sizes: toggleValue(state.sizes, size) })}
                   className={cn(
                     "rounded-xl border px-2.5 py-1.5 text-[11px] font-semibold transition-colors",
-                    active ? "border-brand bg-brand text-primary-foreground" : "border-border text-muted-foreground hover:border-brand",
+                    active ? "border-primary bg-primary text-primary-foreground" : "border-border text-muted-foreground hover:border-primary",
                   )}
                 >
                   {size}
@@ -144,7 +144,7 @@ export function FilterSidebar({
       ) : null}
 
       {availableColors.length > 0 ? (
-        <div className="rounded-2xl border border-border bg-card p-4">
+        <div className="rounded-2xl border border-border bg-secondary/20 p-4 shadow-sm">
           <h3 className="mb-3 text-xs font-extrabold text-foreground">رنگ</h3>
           <div className="flex flex-wrap gap-2">
             {availableColors.map((item) => {
@@ -157,7 +157,7 @@ export function FilterSidebar({
                   onClick={() => onChange({ ...state, colors: toggleValue(state.colors, item.color) })}
                   className={cn(
                     "flex items-center gap-1.5 rounded-xl border px-2 py-1.5 text-[11px] font-semibold transition-colors",
-                    active ? "border-brand text-brand" : "border-border text-muted-foreground hover:border-brand",
+                    active ? "border-primary text-primary" : "border-border text-muted-foreground hover:border-primary",
                   )}
                 >
                   <span
@@ -174,13 +174,13 @@ export function FilterSidebar({
         </div>
       ) : null}
 
-      <div className="space-y-2 rounded-2xl border border-border bg-card p-4">
+      <div className="space-y-2 rounded-2xl border border-border bg-secondary/20 p-4 shadow-sm">
         <label className="flex cursor-pointer items-center gap-2 text-xs text-foreground">
           <input
             type="checkbox"
             checked={state.onlyAvailable}
             onChange={(event) => onChange({ ...state, onlyAvailable: event.target.checked })}
-            className="size-4 accent-[var(--color-brand)]"
+            className="size-4 accent-primary"
           />
           فقط کالاهای موجود
         </label>
@@ -189,7 +189,7 @@ export function FilterSidebar({
             type="checkbox"
             checked={state.onlyDiscounted}
             onChange={(event) => onChange({ ...state, onlyDiscounted: event.target.checked })}
-            className="size-4 accent-[var(--color-brand)]"
+            className="size-4 accent-primary"
           />
           فقط کالاهای دارای تخفیف
         </label>
