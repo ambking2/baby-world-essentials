@@ -5,17 +5,24 @@
 //     React/TanStack dedupe, error logger plugins, and sandbox detection (port/host/strictPort).
 // You can pass additional config via defineConfig({ vite: { ... }, etc... }) if needed.
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
+import { fileURLToPath, URL } from "node:url";
+
+const rpcDir = fileURLToPath(new URL("./src/rpc", import.meta.url));
 
 export default defineConfig({
+  vite: {
+    resolve: {
+      alias: [{ find: "@/server/functions", replacement: rpcDir }],
+    },
+  },
   tanstackStart: {
     // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
     // nitro/vite builds from this
     server: { entry: "server" },
 
-    // This project intentionally keeps createServerFn modules under src/server/functions.
-    // TanStack Start can safely consume these from client routes, but the broader **/server/**
-    // deny rule used by the preset blocks them during build. Reset the client file rules to
-    // TanStack's default so only explicit *.server.* files remain client-denied.
+    // Client code must not import raw files from src/server directly. We remap all
+    // "@/server/functions/*" imports to client-safe RPC wrappers under src/rpc/*.
+    // Keep TanStack's client deny rules at their default narrow scope.
     importProtection: {
       client: {
         files: ["**/*.server.*"],

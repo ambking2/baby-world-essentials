@@ -24,6 +24,7 @@
     "exactOptionalPropertyTypes": true,
     "noUncheckedSideEffectImports": true,
     "paths": {
+      "@/server/functions/*": ["./src/rpc/*"],
       "@/*": ["./src/*"]
     }
   }
