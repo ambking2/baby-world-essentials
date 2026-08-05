@@ -83,7 +83,7 @@ export function ProductCard({
       </div>
 
       {/* Info Container - Comfortable Padding */}
-      <div className="flex flex-1 flex-col p-5 md:p-6">
+      <div className="flex flex-1 flex-col p-4 md:p-6">
         <div className="mb-1 text-[10px] font-medium text-muted-foreground uppercase tracking-widest">
           {product.brand || "جهان کودک"}
         </div>
