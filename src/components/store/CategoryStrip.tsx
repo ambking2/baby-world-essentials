@@ -7,7 +7,7 @@ import { useReveal } from "@/hooks/use-reveal";
 import { toFaDigits } from "@/lib/format";
 import type { Category } from "@/server/repo/catalog";
 
-export function CategoryStrip({ categories }: { categories: Array<Category> }) {
+export function CategoryStrip({ categories }: { categories: any[] }) {
   const containerRef = useReveal<HTMLDivElement>({ stagger: 60 });
 
   return (
@@ -21,7 +21,7 @@ export function CategoryStrip({ categories }: { categories: Array<Category> }) {
       <div ref={containerRef} className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {categories.slice(0, 6).map((category, index) => (
           <Link
-            key={category.id}
+            key={category.id || category.slug}
             to="/category/$slug"
             params={{ slug: category.slug }}
             className={`reveal group relative overflow-hidden rounded-[3rem] border-2 border-white/90 shadow-lift transition-all duration-700 hover:shadow-deep hover:-translate-y-2 ${index === 0 ? "xl:col-span-2" : ""}`}
