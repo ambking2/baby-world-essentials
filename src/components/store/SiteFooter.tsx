@@ -53,7 +53,7 @@ export function SiteFooter({ onSubscribe, subscribing = false }: SiteFooterProps
         <div className="mb-16 grid gap-16 lg:grid-cols-[1fr_450px]">
           <div className="max-w-xl">
             <Link to="/" className="flex items-center gap-3 group">
-              <img src={brandLogo.url} alt={business.name} className="h-12 w-auto transition-transform group-hover:scale-105" />
+              <img src="https://id-preview--9df3d8d2-5300-4d69-9fc6-fb35043f37c5.lovable.app/__l5e/assets-v1/d8a671ed-754a-42d2-ba25-5c8dc06a9c35/brand-logo.png" alt={business.name} className="h-12 w-auto transition-transform group-hover:scale-105" />
               <h2 className="text-xl font-bold tracking-tight text-gray-900 lg:text-2xl">{business.name}</h2>
             </Link>
             <p className="mt-4 text-sm leading-relaxed text-gray-500">

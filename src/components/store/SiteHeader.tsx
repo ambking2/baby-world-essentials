@@ -74,7 +74,7 @@ export function SiteHeader({
           <Link to="/" className="shrink-0 relative z-10 block group">
             <div className="flex items-center gap-3">
               <img 
-                src={brandLogo.url} 
+                src="https://id-preview--9df3d8d2-5300-4d69-9fc6-fb35043f37c5.lovable.app/__l5e/assets-v1/d8a671ed-754a-42d2-ba25-5c8dc06a9c35/brand-logo.png" 
                 alt={business.name} 
                 className="h-12 w-auto sm:h-14 md:h-16 transition-transform group-hover:scale-105" 
               />
@@ -209,7 +209,7 @@ export function SiteHeader({
           {/* Header */}
           <div className="flex items-center justify-between border-b border-border/50 p-6">
             <Link to="/" onClick={() => setMobileOpen(false)} className="flex items-center gap-3">
-              <img src={brandLogo.url} alt={business.name} className="h-10 w-auto" />
+              <img src="https://id-preview--9df3d8d2-5300-4d69-9fc6-fb35043f37c5.lovable.app/__l5e/assets-v1/d8a671ed-754a-42d2-ba25-5c8dc06a9c35/brand-logo.png" alt={business.name} className="h-10 w-auto" />
               <span className="text-lg font-bold tracking-tight text-gray-900">{business.name}</span>
             </Link>
             <button 
