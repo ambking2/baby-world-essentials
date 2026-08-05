@@ -1,33 +1,160 @@
 import { createServerFn } from "@tanstack/react-start";
+import { z } from "zod";
+
+import { business } from "@/data/business";
+import { formatToman } from "@/lib/format";
+
+import { AuthError, currentUser, readCartToken, requireUser, setCartCookie } from "../server/context";
+import { orderReceivedEmail, sendMail } from "../server/mailer";
+import { cartSummary, createCart, findCartByToken, type CartRow } from "../server/repo/cart";
+import { allSettings, getSettingNumber } from "../server/repo/catalog";
+import {
+  applyCoupon,
+  CheckoutError,
+  orderByCode,
+  ordersForUser,
+  placeOrder,
+  submitPaymentReceipt,
+  type CheckoutInput,
+} from "../server/repo/orders";
+
+async function currentCart(): Promise<CartRow> {
+  const existing = await findCartByToken(readCartToken());
+  if (existing) return existing;
+
+  const user = await currentUser();
+  const cart = await createCart(user?.id ?? null);
+  setCartCookie(cart.token);
+  return cart;
+}
 
 export const getCheckoutData = createServerFn({ method: "GET" }).handler(async () => {
-  return (await import("../server/functions/orders")).getCheckoutData();
+  const [cart, settings, user, freeShippingThreshold, shippingFlatFee] = await Promise.all([
+    currentCart(),
+    allSettings(),
+    currentUser(),
+    getSettingNumber("free_shipping_threshold", business.freeShippingThreshold),
+    getSettingNumber("shipping_flat_fee", business.shippingFlatFee),
+  ]);
+
+  return {
+    cart: await cartSummary(cart),
+    user,
+    freeShippingThreshold,
+    shippingFlatFee,
+    card: {
+      number: settings["card_number"] ?? business.cardNumber,
+      holder: settings["card_holder"] ?? business.cardHolder,
+      bank: settings["card_bank"] ?? business.cardBank,
+    },
+  };
 });
 
 export const checkCoupon = createServerFn({ method: "POST" })
-  .validator((data: unknown) => data as any)
+  .validator((data: unknown) => z.object({ code: z.string().min(2).max(40) }).parse(data))
   .handler(async ({ data }) => {
-    return (await import("../server/functions/orders")).checkCoupon({ data });
+    const summary = await cartSummary(await currentCart());
+    try {
+      const result = await applyCoupon(data.code, summary.itemsTotal);
+      return {
+        ok: true,
+        code: result.code,
+        discount: result.discount,
+        message: "کد تخفیف اعمال شد.",
+      };
+    } catch (error) {
+      const message = error instanceof CheckoutError ? error.message : "کد تخفیف معتبر نیست.";
+      return { ok: false, code: null, discount: 0, message };
+    }
   });
 
+const checkoutSchema = z.object({
+  receiver: z.string().min(3, "نام تحویل‌گیرنده را وارد کنید.").max(80),
+  phone: z.string().min(10, "شمارهٔ تماس را درست وارد کنید.").max(20),
+  province: z.string().min(2, "استان را انتخاب کنید.").max(40),
+  city: z.string().min(2, "شهر را وارد کنید.").max(40),
+  postalCode: z.string().max(12).optional(),
+  addressLine: z.string().min(10, "نشانی دقیق را وارد کنید.").max(400),
+  note: z.string().max(500).optional(),
+  paymentMethod: z.enum(["card_transfer", "cash_on_delivery"]),
+  couponCode: z.string().max(40).optional(),
+});
+
 export const submitCheckout = createServerFn({ method: "POST" })
-  .validator((data: unknown) => data as any)
+  .validator((data: unknown) => checkoutSchema.parse(data))
   .handler(async ({ data }) => {
-    return (await import("../server/functions/orders")).submitCheckout({ data });
+    const [cart, user] = await Promise.all([currentCart(), currentUser()]);
+
+    const input: CheckoutInput = {
+      userId: user?.id ?? null,
+      receiver: data.receiver.trim(),
+      phone: data.phone.trim(),
+      province: data.province.trim(),
+      city: data.city.trim(),
+      postalCode: data.postalCode ?? null,
+      addressLine: data.addressLine.trim(),
+      note: data.note ?? null,
+      paymentMethod: data.paymentMethod,
+      couponCode: data.couponCode ?? null,
+    };
+
+    const order = await placeOrder(cart, input);
+
+    if (user?.email) {
+      await sendMail(orderReceivedEmail(user.email, order.code, formatToman(order.grandTotal)));
+    }
+
+    return {
+      ok: true,
+      code: order.code,
+      grandTotal: order.grandTotal,
+      paymentMethod: data.paymentMethod,
+      message: "سفارش شما ثبت شد.",
+    };
   });
 
 export const getOrder = createServerFn({ method: "GET" })
-  .validator((data: unknown) => data as any)
+  .validator((data: unknown) => z.object({ code: z.string().min(4).max(30) }).parse(data))
   .handler(async ({ data }) => {
-    return (await import("../server/functions/orders")).getOrder({ data });
+    const [settings, order] = await Promise.all([allSettings(), orderByCode(data.code)]);
+    return {
+      order,
+      card: {
+        number: settings["card_number"] ?? business.cardNumber,
+        holder: settings["card_holder"] ?? business.cardHolder,
+        bank: settings["card_bank"] ?? business.cardBank,
+      },
+    };
   });
 
 export const getMyOrders = createServerFn({ method: "GET" }).handler(async () => {
-  return (await import("../server/functions/orders")).getMyOrders();
+  const user = await requireUser();
+  return { orders: await ordersForUser(user.id) };
 });
 
 export const submitReceipt = createServerFn({ method: "POST" })
-  .validator((data: unknown) => data as any)
+  .validator((data: unknown) =>
+    z
+      .object({
+        orderCode: z.string().min(4).max(30),
+        payerName: z.string().min(3, "نام پرداخت‌کننده را وارد کنید.").max(80),
+        reference: z.string().min(4, "شمارهٔ پیگیری واریز را وارد کنید.").max(60),
+        paidAtText: z.string().min(4, "تاریخ و ساعت واریز را وارد کنید.").max(60),
+        receiptUrl: z.string().max(300).optional(),
+      })
+      .parse(data),
+  )
   .handler(async ({ data }) => {
-    return (await import("../server/functions/orders")).submitReceipt({ data });
+    const order = await orderByCode(data.orderCode);
+    if (!order) throw new AuthError("سفارشی با این کد پیدا نشد.", 404);
+
+    await submitPaymentReceipt({
+      orderCode: data.orderCode,
+      payerName: data.payerName.trim(),
+      reference: data.reference.trim(),
+      paidAtText: data.paidAtText.trim(),
+      receiptUrl: data.receiptUrl ?? null,
+    });
+
+    return { ok: true, message: "رسید شما ثبت شد و پس از بررسی تأیید می‌شود." };
   });
