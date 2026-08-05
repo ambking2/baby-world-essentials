@@ -115,13 +115,13 @@ export function HeroSlider() {
         <div className="absolute bottom-8 left-1/2 flex -translate-x-1/2 gap-4 lg:left-auto lg:right-24 lg:bottom-12 lg:translate-x-0">
           <button
             onClick={() => emblaApi?.scrollPrev()}
-            className="flex size-10 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white backdrop-blur-md transition-all hover:bg-white hover:text-primary lg:size-12"
+            className="flex size-10 items-center justify-center rounded-full border border-gray-900/10 bg-white/90 text-gray-900 shadow-premium transition-all hover:bg-primary hover:text-white lg:size-12"
           >
             <ChevronRight className="size-5" />
           </button>
           <button
             onClick={() => emblaApi?.scrollNext()}
-            className="flex size-10 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white backdrop-blur-md transition-all hover:bg-white hover:text-primary lg:size-12"
+            className="flex size-10 items-center justify-center rounded-full border border-gray-900/10 bg-white/90 text-gray-900 shadow-premium transition-all hover:bg-primary hover:text-white lg:size-12"
           >
             <ChevronLeft className="size-5" />
           </button>
