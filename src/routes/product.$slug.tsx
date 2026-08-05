@@ -303,7 +303,7 @@ function ProductPage() {
         </div>
 
         {/* Related Products */}
-        {pageQuery.data?.relatedProducts && pageQuery.data.relatedProducts.length > 0 && (
+        {pageQuery.data?.related && pageQuery.data.related.length > 0 && (
           <div className="mt-32">
             <SectionHeading 
               title="محصولات مشابه" 
@@ -312,8 +312,8 @@ function ProductPage() {
               className="mb-12"
             />
             <div className="grid-products">
-              {pageQuery.data.relatedProducts.map(p => (
-                <ProductCard key={p.id} product={p as any} />
+              {pageQuery.data.related.map((p: any) => (
+                <ProductCard key={p.id} product={p} />
               ))}
             </div>
           </div>
