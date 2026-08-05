@@ -279,6 +279,13 @@ CREATE TABLE IF NOT EXISTS contact_messages (
   is_read INTEGER NOT NULL DEFAULT 0,
   created_at TEXT NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS uploads (
+  key TEXT PRIMARY KEY,
+  mime_type TEXT NOT NULL,
+  content BLOB NOT NULL,
+  created_at TEXT NOT NULL
+);
 `;
 
 /** اسکیما را به دستورهای مستقل می‌شکند (D1 فقط یک دستور در هر prepare می‌پذیرد). */
