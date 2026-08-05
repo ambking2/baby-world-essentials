@@ -401,6 +401,7 @@ export const updateUserRole = createServerFn({ method: "POST" })
       .parse(data),
   )
   .handler(async ({ data }) => {
+    console.log("updateUserRole called with:", data);
     await requireAdmin();
     await adminUpdateUserRole(data.userId, data.role);
     return { ok: true, message: "نقش کاربر با موفقیت تغییر کرد." };
