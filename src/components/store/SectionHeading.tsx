@@ -12,7 +12,6 @@ type SectionHeadingProps = {
   className?: string;
 };
 
-/** تیتر بخش‌های فروشگاه با خط تزئینی و لینک مشاهدهٔ همه. */
 export function SectionHeading({
   title,
   subtitle,
@@ -24,22 +23,26 @@ export function SectionHeading({
   return (
     <div
       className={cn(
-        "mb-6 flex flex-wrap items-end gap-3",
+        "mb-7 flex flex-wrap items-end gap-4",
         align === "center" ? "flex-col items-center text-center" : "justify-between",
         className,
       )}
     >
-      <div>
-        <h2 className="flex items-center gap-2 text-lg font-extrabold text-foreground sm:text-xl">
-          <span className="inline-block h-5 w-1.5 rounded-full bg-brand" aria-hidden />
-          {title}
-        </h2>
-        {subtitle ? <p className="mt-1.5 text-sm text-muted-foreground">{subtitle}</p> : null}
+      <div className="space-y-2">
+        <div className={cn("flex items-center gap-3", align === "center" && "justify-center")}>
+          <span className="grid size-11 place-items-center rounded-[1.2rem] bg-gradient-to-br from-brand to-sale text-white shadow-soft">
+            <span className="size-3 rounded-full bg-white" aria-hidden />
+          </span>
+          <div>
+            <h2 className="text-xl font-black text-foreground sm:text-[1.65rem]">{title}</h2>
+            {subtitle ? <p className="mt-1 text-sm leading-7 text-muted-foreground">{subtitle}</p> : null}
+          </div>
+        </div>
       </div>
       {moreHref ? (
         <Link
           to={moreHref}
-          className="group inline-flex items-center gap-1 rounded-full border border-border px-3.5 py-1.5 text-xs font-semibold text-foreground transition-colors hover:border-brand hover:text-brand"
+          className="group inline-flex items-center gap-1.5 rounded-full border border-white/80 bg-white/80 px-4 py-2 text-xs font-extrabold text-foreground shadow-soft transition-colors hover:border-brand hover:text-brand"
         >
           {moreLabel}
           <ChevronLeft className="size-3.5 transition-transform group-hover:-translate-x-0.5" aria-hidden />

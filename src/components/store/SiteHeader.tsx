@@ -9,6 +9,7 @@ import {
   Phone,
   Search,
   ShoppingCart,
+  Sparkles,
   User,
   X,
 } from "lucide-react";
@@ -40,15 +41,14 @@ type SiteHeaderProps = {
 };
 
 const QUICK_LINKS: Array<{ label: string; href: string }> = [
+  { label: "خانه", href: "/" },
   { label: "فروشگاه", href: "/search" },
   { label: "تخفیف‌ها", href: "/offers" },
   { label: "مجلهٔ مادر و کودک", href: "/blog" },
   { label: "دربارهٔ ما", href: "/about" },
-  { label: "تماس و نشانی", href: "/contact" },
-  { label: "سوالات متداول", href: "/faq" },
+  { label: "تماس با ما", href: "/contact" },
 ];
 
-/** هدر اصلی فروشگاه: نوار بالا، جستجوی زنده، مگامنو و سبد خرید. */
 export function SiteHeader({
   categories,
   cartCount,
@@ -84,206 +84,241 @@ export function SiteHeader({
   };
 
   return (
-    <header className="sticky top-0 z-50">
-      {/* نوار اطلاع‌رسانی */}
-      <div className="bg-charcoal text-white">
-        <div className="container-page flex h-9 items-center justify-between gap-4 text-[12px]">
-          <p className="line-clamp-1">{announcement ?? `ارسال رایگان برای خرید بالای ${formatToman(business.freeShippingThreshold)}`}</p>
-          <div className="hidden items-center gap-4 sm:flex">
-            <span className="flex items-center gap-1 opacity-90">
-              <Clock className="size-3.5" aria-hidden />
+    <header className="sticky top-0 z-50 pb-3 pt-3">
+      <div className="container-page space-y-3">
+        <div className="hidden items-center justify-between rounded-full border border-white/70 bg-background/80 px-4 py-2 text-[11px] text-muted-foreground shadow-soft backdrop-blur md:flex">
+          <div className="flex items-center gap-4">
+            <span className="inline-flex items-center gap-1.5 font-semibold text-foreground">
+              <Sparkles className="size-3.5 text-brand" aria-hidden />
+              {announcement ?? `ارسال رایگان برای خرید بالای ${formatToman(business.freeShippingThreshold)}`}
+            </span>
+          </div>
+          <div className="flex items-center gap-4">
+            <span className="inline-flex items-center gap-1.5">
+              <Clock className="size-3.5 text-brand" aria-hidden />
               {business.hoursShort}
             </span>
-            <a href={business.phoneHref} className="flex items-center gap-1 font-semibold transition-opacity hover:opacity-80">
-              <Phone className="size-3.5" aria-hidden />
+            <a href={business.phoneHref} className="inline-flex items-center gap-1.5 font-bold text-foreground transition-colors hover:text-brand">
+              <Phone className="size-3.5 text-brand" aria-hidden />
               {toFaDigits(business.phoneDisplay)}
             </a>
           </div>
         </div>
-      </div>
 
-      {/* نوار اصلی */}
-      <div className={cn("border-b border-border bg-background/95 backdrop-blur transition-shadow", scrolled && "shadow-soft")}>
-        <div className="container-page flex h-16 items-center gap-3 md:h-20 md:gap-6">
-          <button
-            type="button"
-            onClick={() => setMobileOpen(true)}
-            className="inline-flex size-10 items-center justify-center rounded-xl border border-border lg:hidden"
-            aria-label="منو"
-          >
-            <Menu className="size-5" aria-hidden />
-          </button>
-
-          <Link to="/" className="flex shrink-0 items-center gap-2">
-            <span className="grid size-10 place-items-center rounded-2xl bg-brand text-lg font-black text-primary-foreground">ج</span>
-            <span className="hidden leading-tight sm:block">
-              <span className="block text-sm font-extrabold text-foreground">{business.shortName}</span>
-              <span className="block text-[11px] text-muted-foreground">سیسمونی و لوازم نوزاد</span>
-            </span>
-          </Link>
-
-          {/* جستجو */}
-          <div ref={searchRef} className="relative flex-1">
-            <form onSubmit={submitSearch} className="flex items-center gap-2 rounded-2xl border border-border bg-secondary/50 px-3 py-2 focus-within:border-brand">
-              <Search className="size-4 shrink-0 text-muted-foreground" aria-hidden />
-              <input
-                value={term}
-                onChange={(event) => {
-                  setTerm(event.target.value);
-                  setShowSuggest(true);
-                  onSearchTermChange?.(event.target.value);
-                }}
-                onFocus={() => setShowSuggest(true)}
-                placeholder="دنبال چه محصولی هستید؟ مثلاً تخت نوزاد"
-                className="w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground"
-                aria-label="جستجوی محصول"
-              />
-              {term.length > 0 ? (
-                <button type="button" onClick={() => setTerm("")} aria-label="پاک کردن">
-                  <X className="size-4 text-muted-foreground" aria-hidden />
-                </button>
-              ) : null}
-            </form>
-
-            {showSuggest && suggestions.length > 0 ? (
-              <div className="pop-in absolute inset-x-0 top-[calc(100%+8px)] overflow-hidden rounded-2xl border border-border bg-card shadow-lift">
-                {suggestions.map((item) => (
-                  <Link
-                    key={item.id}
-                    to="/product/$slug"
-                    params={{ slug: item.slug }}
-                    onClick={() => setShowSuggest(false)}
-                    className="flex items-center gap-3 border-b border-border/60 p-2.5 last:border-0 hover:bg-secondary/60"
-                  >
-                    <img src={item.cover ?? "/images/cat-toys.jpg"} alt="" className="size-11 rounded-xl object-cover" />
-                    <span className="flex-1 text-xs font-semibold text-foreground">{item.title}</span>
-                    <span className="text-xs text-muted-foreground">{formatToman(item.effectivePrice)}</span>
-                  </Link>
-                ))}
-              </div>
-            ) : null}
-          </div>
-
-          {/* اکشن‌ها */}
-          <div className="flex items-center gap-1.5">
-            <Link
-              to={userName ? "/account" : "/auth/login"}
-              className="inline-flex h-10 items-center gap-1.5 rounded-xl border border-border px-3 text-xs font-semibold transition-colors hover:border-brand hover:text-brand"
-            >
-              {userName ? <User className="size-4" aria-hidden /> : <LogIn className="size-4" aria-hidden />}
-              <span className="hidden sm:inline">{userName ?? "ورود | عضویت"}</span>
-            </Link>
-
-            <Link
-              to="/account/wishlist"
-              className="hidden size-10 items-center justify-center rounded-xl border border-border transition-colors hover:border-brand hover:text-brand sm:inline-flex"
-              aria-label="علاقه‌مندی‌ها"
-            >
-              <Heart className="size-4" aria-hidden />
-            </Link>
-
-            <Link
-              to="/cart"
-              className="relative inline-flex h-10 items-center gap-2 rounded-xl bg-brand px-3 text-xs font-bold text-primary-foreground"
-            >
-              <ShoppingCart className="size-4" aria-hidden />
-              <span className="hidden md:inline">{cartCount > 0 ? formatToman(cartTotal) : "سبد خرید"}</span>
-              {cartCount > 0 ? (
-                <span className="pop-in absolute -end-1 -top-1 grid size-5 place-items-center rounded-full bg-sale text-[10px] font-bold text-white">
-                  {toFaDigits(cartCount)}
-                </span>
-              ) : null}
-            </Link>
-          </div>
-        </div>
-      </div>
-
-      {/* نوار دسته‌بندی‌ها */}
-      <div className="hidden border-b border-border bg-background lg:block">
-        <div className="container-page flex h-12 items-center gap-1">
-          <div className="relative" onMouseEnter={() => setMegaOpen(true)} onMouseLeave={() => setMegaOpen(false)}>
+        <div className={cn("glass-panel rounded-[2rem] px-3 py-3 shadow-lift", scrolled && "shadow-[0_20px_60px_rgba(130,65,28,0.18)]")}>
+          <div className="flex items-center gap-3 md:gap-4">
             <button
               type="button"
-              className="inline-flex h-12 items-center gap-1.5 rounded-t-xl px-3 text-sm font-bold text-brand"
+              onClick={() => setMobileOpen(true)}
+              className="inline-flex size-11 items-center justify-center rounded-2xl border border-white/70 bg-white/80 text-foreground lg:hidden"
+              aria-label="منو"
             >
-              <LayoutGrid className="size-4" aria-hidden />
-              دسته‌بندی محصولات
-              <ChevronDown className={cn("size-4 transition-transform", megaOpen && "rotate-180")} aria-hidden />
+              <Menu className="size-5" aria-hidden />
             </button>
 
-            {megaOpen ? (
-              <div className="pop-in absolute start-0 top-full z-50 grid w-[720px] grid-cols-3 gap-5 rounded-b-3xl border border-border bg-card p-6 shadow-lift">
-                {categories.map((category) => (
-                  <div key={category.id}>
+            <Link to="/" className="flex shrink-0 items-center gap-3">
+              <span className="toy-button relative grid size-14 place-items-center rounded-[1.7rem] bg-gradient-to-br from-brand to-sale text-2xl font-black text-white shadow-soft">
+                ج
+                <span className="absolute -bottom-2 start-1/2 -translate-x-1/2 rounded-full bg-white px-2 py-0.5 text-[9px] font-black text-brand shadow-soft">
+                  kids
+                </span>
+              </span>
+              <span className="hidden leading-tight sm:block">
+                <span className="block text-base font-extrabold text-foreground">{business.shortName}</span>
+                <span className="block text-[11px] text-muted-foreground">سیسمونی، پوشاک و دکور اتاق کودک</span>
+              </span>
+            </Link>
+
+            <div ref={searchRef} className="relative flex-1">
+              <form
+                onSubmit={submitSearch}
+                className="flex items-center gap-2 rounded-full border border-white/70 bg-white/90 px-4 py-2.5 shadow-soft focus-within:border-brand"
+              >
+                <Search className="size-4 shrink-0 text-muted-foreground" aria-hidden />
+                <input
+                  value={term}
+                  onChange={(event) => {
+                    setTerm(event.target.value);
+                    setShowSuggest(true);
+                    onSearchTermChange?.(event.target.value);
+                  }}
+                  onFocus={() => setShowSuggest(true)}
+                  placeholder="مثلاً: تخت نوزاد، سرهمی، کالسکه"
+                  className="w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+                  aria-label="جستجوی محصول"
+                />
+                {term.length > 0 ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setTerm("");
+                      setShowSuggest(false);
+                    }}
+                    aria-label="پاک کردن"
+                  >
+                    <X className="size-4 text-muted-foreground" aria-hidden />
+                  </button>
+                ) : null}
+              </form>
+
+              {showSuggest && suggestions.length > 0 ? (
+                <div className="pop-in absolute inset-x-0 top-[calc(100%+10px)] overflow-hidden rounded-[1.6rem] border border-white/70 bg-white/95 shadow-lift">
+                  {suggestions.map((item) => (
                     <Link
-                      to="/category/$slug"
-                      params={{ slug: category.slug }}
-                      className="text-sm font-extrabold text-foreground transition-colors hover:text-brand"
+                      key={item.id}
+                      to="/product/$slug"
+                      params={{ slug: item.slug }}
+                      onClick={() => setShowSuggest(false)}
+                      className="flex items-center gap-3 border-b border-border/60 p-3 last:border-0 hover:bg-brand-soft/30"
                     >
-                      {category.title}
+                      <img src={item.cover ?? "/images/cat-toys.jpg"} alt="" className="size-12 rounded-2xl object-cover" />
+                      <span className="flex-1 text-xs font-semibold text-foreground">{item.title}</span>
+                      <span className="rounded-full bg-secondary px-2.5 py-1 text-[11px] font-bold text-foreground">
+                        {formatToman(item.effectivePrice)}
+                      </span>
                     </Link>
-                    <ul className="mt-2 space-y-1.5">
-                      {category.children.map((child) => (
-                        <li key={child.id}>
-                          <Link
-                            to="/category/$slug"
-                            params={{ slug: child.slug }}
-                            className="text-xs text-muted-foreground transition-colors hover:text-brand"
-                          >
-                            {child.title}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-              </div>
-            ) : null}
+                  ))}
+                </div>
+              ) : null}
+            </div>
+
+            <div className="flex items-center gap-2">
+              <Link
+                to={userName ? "/account" : "/auth/login"}
+                className="inline-flex h-11 items-center gap-2 rounded-full border border-white/70 bg-white/90 px-4 text-xs font-bold text-foreground transition-colors hover:border-brand hover:text-brand"
+              >
+                {userName ? <User className="size-4" aria-hidden /> : <LogIn className="size-4" aria-hidden />}
+                <span className="hidden lg:inline">{userName ?? "ورود | عضویت"}</span>
+              </Link>
+
+              <Link
+                to="/account/wishlist"
+                className="hidden size-11 items-center justify-center rounded-full border border-white/70 bg-white/90 text-foreground transition-colors hover:border-brand hover:text-brand sm:inline-flex"
+                aria-label="علاقه‌مندی‌ها"
+              >
+                <Heart className="size-4" aria-hidden />
+              </Link>
+
+              <Link
+                to="/cart"
+                className="toy-button relative inline-flex h-11 items-center gap-2 rounded-full bg-gradient-to-r from-brand to-sale px-4 text-xs font-extrabold text-primary-foreground"
+              >
+                <ShoppingCart className="size-4" aria-hidden />
+                <span className="hidden md:inline">{cartCount > 0 ? formatToman(cartTotal) : "سبد خرید"}</span>
+                {cartCount > 0 ? (
+                  <span className="pop-in absolute -end-1 -top-1 grid size-5 place-items-center rounded-full bg-charcoal text-[10px] font-bold text-white">
+                    {toFaDigits(cartCount)}
+                  </span>
+                ) : null}
+              </Link>
+            </div>
           </div>
 
-          <span className="mx-2 h-5 w-px bg-border" aria-hidden />
+          <div className="mt-3 hidden items-center gap-2 lg:flex">
+            <div className="relative" onMouseEnter={() => setMegaOpen(true)} onMouseLeave={() => setMegaOpen(false)}>
+              <button
+                type="button"
+                className="inline-flex h-11 items-center gap-2 rounded-full bg-brand px-5 text-sm font-extrabold text-primary-foreground shadow-soft"
+              >
+                <LayoutGrid className="size-4" aria-hidden />
+                دسته‌بندی‌ها
+                <ChevronDown className={cn("size-4 transition-transform", megaOpen && "rotate-180")} aria-hidden />
+              </button>
 
-          {QUICK_LINKS.map((link) => (
-            <Link
-              key={link.href}
-              to={link.href}
-              className="rounded-xl px-3 py-2 text-sm text-foreground transition-colors hover:bg-secondary hover:text-brand"
-            >
-              {link.label}
-            </Link>
-          ))}
+              {megaOpen ? (
+                <div className="pop-in absolute start-0 top-[calc(100%+12px)] z-50 grid w-[780px] grid-cols-3 gap-5 rounded-[2rem] border border-white/70 bg-white/96 p-6 shadow-lift backdrop-blur">
+                  {categories.map((category) => (
+                    <div key={category.id} className="rounded-[1.5rem] border border-border/70 bg-background/90 p-4">
+                      <Link
+                        to="/category/$slug"
+                        params={{ slug: category.slug }}
+                        className="text-sm font-extrabold text-foreground transition-colors hover:text-brand"
+                      >
+                        {category.title}
+                      </Link>
+                      {category.blurb ? <p className="mt-1 text-[11px] leading-5 text-muted-foreground">{category.blurb}</p> : null}
+                      <ul className="mt-3 space-y-2">
+                        {category.children.map((child) => (
+                          <li key={child.id}>
+                            <Link
+                              to="/category/$slug"
+                              params={{ slug: child.slug }}
+                              className="text-xs text-muted-foreground transition-colors hover:text-brand"
+                            >
+                              {child.title}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              ) : null}
+            </div>
 
-          {isAdmin ? (
-            <Link to="/admin" className="ms-auto rounded-xl bg-installment px-3 py-1.5 text-xs font-bold text-installment-foreground">
-              پنل مدیریت
-            </Link>
-          ) : null}
+            <div className="hide-scrollbar flex flex-1 items-center gap-1 overflow-x-auto rounded-full bg-white/65 px-2 py-1">
+              {QUICK_LINKS.map((link) => (
+                <Link
+                  key={link.href}
+                  to={link.href}
+                  className="whitespace-nowrap rounded-full px-4 py-2 text-sm font-semibold text-foreground transition-colors hover:bg-brand-soft hover:text-brand"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+
+            {isAdmin ? (
+              <Link
+                to="/admin"
+                className="rounded-full bg-charcoal px-4 py-2 text-xs font-extrabold text-white transition-opacity hover:opacity-90"
+              >
+                پنل مدیریت
+              </Link>
+            ) : null}
+          </div>
         </div>
       </div>
 
-      {/* منوی موبایل */}
       {mobileOpen ? (
         <div className="fixed inset-0 z-[60] lg:hidden">
-          <button type="button" className="absolute inset-0 bg-charcoal/50" onClick={() => setMobileOpen(false)} aria-label="بستن منو" />
-          <nav className="absolute inset-y-0 end-0 flex w-[86%] max-w-sm flex-col gap-4 overflow-y-auto bg-background p-5">
+          <button type="button" className="absolute inset-0 bg-charcoal/55" onClick={() => setMobileOpen(false)} aria-label="بستن منو" />
+          <nav className="absolute inset-y-0 end-0 flex w-[88%] max-w-sm flex-col gap-4 overflow-y-auto bg-[linear-gradient(180deg,#fff9f4_0%,#ffffff_100%)] p-5 shadow-lift">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-extrabold">منوی فروشگاه</span>
+              <div className="flex items-center gap-3">
+                <span className="relative grid size-12 place-items-center rounded-[1.35rem] bg-gradient-to-br from-brand to-sale text-xl font-black text-white">
+                  ج
+                  <span className="absolute -bottom-2 rounded-full bg-white px-2 py-0.5 text-[8px] font-black text-brand">kids</span>
+                </span>
+                <div>
+                  <p className="text-sm font-extrabold">{business.shortName}</p>
+                  <p className="text-[11px] text-muted-foreground">منوی فروشگاه</p>
+                </div>
+              </div>
               <button type="button" onClick={() => setMobileOpen(false)} aria-label="بستن">
                 <X className="size-5" aria-hidden />
               </button>
             </div>
 
+            <Link
+              to={userName ? "/account" : "/auth/login"}
+              onClick={() => setMobileOpen(false)}
+              className="inline-flex items-center justify-center rounded-full bg-brand px-4 py-3 text-sm font-extrabold text-primary-foreground"
+            >
+              {userName ?? "ورود و عضویت"}
+            </Link>
+
             <div className="space-y-3">
               {categories.map((category) => (
-                <details key={category.id} className="rounded-2xl border border-border p-3">
+                <details key={category.id} className="rounded-[1.5rem] border border-border bg-white/80 p-4 shadow-soft">
                   <summary className="cursor-pointer text-sm font-bold">{category.title}</summary>
-                  <ul className="mt-2 space-y-2 ps-3">
+                  <ul className="mt-3 space-y-2 ps-3">
                     <li>
                       <Link
                         to="/category/$slug"
                         params={{ slug: category.slug }}
                         onClick={() => setMobileOpen(false)}
-                        className="text-xs text-brand"
+                        className="text-xs font-bold text-brand"
                       >
                         مشاهدهٔ همهٔ {category.title}
                       </Link>
@@ -311,7 +346,7 @@ export function SiteHeader({
                   key={link.href}
                   to={link.href}
                   onClick={() => setMobileOpen(false)}
-                  className="block rounded-xl px-2 py-2 text-sm text-foreground hover:bg-secondary"
+                  className="block rounded-2xl px-3 py-3 text-sm font-semibold text-foreground hover:bg-brand-soft/40"
                 >
                   {link.label}
                 </Link>

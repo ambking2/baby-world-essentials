@@ -1,6 +1,6 @@
 import useEmblaCarousel from "embla-carousel-react";
 import { Link } from "@tanstack/react-router";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, PhoneCall, Sparkles, Star } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 
 import { business } from "@/data/business";
@@ -15,39 +15,42 @@ type Slide = {
   href: string;
   image: string;
   tone: string;
+  badge: string;
 };
 
 const SLIDES: Array<Slide> = [
   {
-    title: "سرویس خواب نوزاد",
-    highlight: "ساخت کارگاه خودمان",
-    body: `چوب خشک‌شده، رنگ بدون سرب و ${toFaDigits(business.structureWarrantyMonths)} ماه ضمانت سازه. سارخ دلخواهتان را برایتان می‌سازیم.`,
+    title: "اتاق نوزاد را گرم، لطیف و واقعی بچینید",
+    highlight: "سرویس خواب و دکور اتاق کودک",
+    body: `چوب سالم، رنگ بی‌خطر و ${toFaDigits(business.structureWarrantyMonths)} ماه ضمانت سازه؛ با امکان سفارش‌سازی در کارگاه خودمان.`,
     cta: "دیدن سرویس‌های خواب",
     href: "/category/servis-khab",
     image: "/images/hero-nursery.jpg",
-    tone: "from-brand-soft",
+    tone: "from-[#ffe0c6] via-[#fff0e4] to-[#fffdf8]",
+    badge: "محبوب خانواده‌ها",
   },
   {
-    title: "کالسکه و تجهیزات سفر",
-    highlight: "سبک، جمع‌شو و ایمن",
-    body: "مدل‌های مناسب کوچه و خیابان شهر، با قابلیت تست حضوری در فروشگاه.",
-    cta: "خرید کالسکه",
-    href: "/category/kalaskeh",
-    image: "/images/cat-stroller.jpg",
-    tone: "from-sky",
-  },
-  {
-    title: "لباس نوزاد و سرهمی",
-    highlight: "پارچهٔ پنبه‌ای نرم",
-    body: `انتخاب سایز هنگام ثبت سفارش — ارسال رایگان بالای ${formatToman(business.freeShippingThreshold)}.`,
-    cta: "دیدن لباس‌ها",
+    title: "لباس نوزاد و سرهمی‌هایی که واقعاً راحت‌اند",
+    highlight: "پارچهٔ پنبه‌ای نرم و سایزبندی واقعی",
+    body: `از بادی و سرهمی تا ست‌های مهمانی؛ با ارسال رایگان خریدهای بالای ${formatToman(business.freeShippingThreshold)}.`,
+    cta: "خرید لباس نوزاد",
     href: "/category/lebas",
     image: "/images/cat-clothing.jpg",
-    tone: "from-mint",
+    tone: "from-[#ffd8e5] via-[#fff0f5] to-[#fffdf8]",
+    badge: "فروش ویژهٔ امروز",
+  },
+  {
+    title: "برای بیرون رفتن آماده باشید؛ سبک، امن و خوش‌دست",
+    highlight: "کالسکه، کریر و تجهیزات سفر کودک",
+    body: "مدل‌های مناسب استفادهٔ روزمره، تست‌پذیر در فروشگاه، با مشاوره قبل از خرید و انتخاب دقیق‌تر.",
+    cta: "مشاهده کالسکه‌ها",
+    href: "/category/kalaskeh",
+    image: "/images/cat-stroller.jpg",
+    tone: "from-[#d8ecff] via-[#eef7ff] to-[#fffdf8]",
+    badge: "پیشنهاد سفر و گردش",
   },
 ];
 
-/** اسلایدر اصلی صفحهٔ اول با پخش خودکار و دکمه‌های جابجایی. */
 export function HeroSlider() {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, direction: "rtl", align: "start" });
   const [selected, setSelected] = useState(0);
@@ -69,42 +72,80 @@ export function HeroSlider() {
   }, [emblaApi, onSelect]);
 
   return (
-    <section className="container-page pt-5" aria-label="اسلایدر پیشنهادها">
-      <div className="relative overflow-hidden rounded-[2rem] border border-border bg-card">
+    <section className="container-page pt-3" aria-label="اسلایدر پیشنهادها">
+      <div className="storybook-panel relative shadow-lift">
         <div ref={emblaRef} className="overflow-hidden">
           <div className="flex">
             {SLIDES.map((slide) => (
               <div key={slide.title} className="min-w-0 flex-[0_0_100%]">
-                <div className="grid items-center gap-6 p-6 md:grid-cols-2 md:p-10">
-                  <div className="space-y-4">
-                    <span className="inline-flex items-center rounded-full bg-brand-soft px-3 py-1 text-xs font-bold text-brand">
-                      {slide.highlight}
-                    </span>
-                    <h2 className="text-2xl font-extrabold leading-tight text-foreground md:text-4xl">{slide.title}</h2>
-                    <p className="max-w-md text-sm leading-7 text-muted-foreground">{slide.body}</p>
-                    <div className="flex flex-wrap gap-2">
+                <div className={cn("relative grid min-h-[540px] items-center gap-8 overflow-hidden bg-gradient-to-br px-6 pb-20 pt-8 md:grid-cols-[1.05fr_0.95fr] md:px-10 lg:px-14", slide.tone)}>
+                  <div className="absolute left-10 top-10 size-32 rounded-full bg-white/35 blur-3xl" />
+                  <div className="absolute bottom-10 right-8 size-40 rounded-full bg-brand/10 blur-3xl" />
+
+                  <div className="relative z-10 space-y-5">
+                    <div className="inline-flex items-center gap-2 rounded-full bg-white/85 px-4 py-1.5 text-[11px] font-extrabold text-brand shadow-soft">
+                      <Sparkles className="size-3.5" aria-hidden />
+                      {slide.badge}
+                    </div>
+                    <div>
+                      <p className="mb-3 text-sm font-bold text-brand">{slide.highlight}</p>
+                      <h2 className="max-w-xl text-3xl font-black leading-[1.2] text-foreground md:text-5xl">
+                        {slide.title}
+                      </h2>
+                    </div>
+                    <p className="max-w-lg text-sm leading-8 text-foreground/75 md:text-base">{slide.body}</p>
+
+                    <div className="flex flex-wrap gap-3">
                       <Link
                         to={slide.href}
-                        className="inline-flex items-center rounded-full bg-brand px-5 py-3 text-sm font-bold text-primary-foreground transition-transform hover:scale-[1.03]"
+                        className="toy-button inline-flex items-center rounded-full bg-gradient-to-r from-brand to-sale px-6 py-3 text-sm font-extrabold text-primary-foreground transition-transform hover:scale-[1.03]"
                       >
                         {slide.cta}
                       </Link>
                       <a
                         href={business.phoneHref}
-                        className="inline-flex items-center rounded-full border border-border px-5 py-3 text-sm font-bold text-foreground transition-colors hover:border-brand hover:text-brand"
+                        className="inline-flex items-center gap-2 rounded-full border border-white/80 bg-white/75 px-5 py-3 text-sm font-bold text-foreground transition-colors hover:border-brand hover:text-brand"
                       >
+                        <PhoneCall className="size-4" aria-hidden />
                         مشاورهٔ تلفنی
                       </a>
                     </div>
+
+                    <div className="grid max-w-2xl gap-3 sm:grid-cols-3">
+                      <div className="rounded-[1.6rem] border border-white/70 bg-white/70 p-4 shadow-soft">
+                        <p className="text-[11px] font-bold text-muted-foreground">ارسال رایگان</p>
+                        <p className="mt-1 text-sm font-extrabold text-foreground">بالای {formatToman(business.freeShippingThreshold)}</p>
+                      </div>
+                      <div className="rounded-[1.6rem] border border-white/70 bg-white/70 p-4 shadow-soft">
+                        <p className="text-[11px] font-bold text-muted-foreground">ضمانت سازه</p>
+                        <p className="mt-1 text-sm font-extrabold text-foreground">{toFaDigits(business.structureWarrantyMonths)} ماه واقعی</p>
+                      </div>
+                      <div className="rounded-[1.6rem] border border-white/70 bg-white/70 p-4 shadow-soft">
+                        <p className="text-[11px] font-bold text-muted-foreground">پشتیبانی خرید</p>
+                        <p className="mt-1 text-sm font-extrabold text-foreground">{business.city} و سراسر ایران</p>
+                      </div>
+                    </div>
                   </div>
 
-                  <div className={cn("relative overflow-hidden rounded-3xl bg-gradient-to-tl to-transparent p-2", slide.tone)}>
-                    <img
-                      src={slide.image}
-                      alt={slide.title}
-                      className="aspect-[4/3] w-full rounded-2xl object-cover"
-                      loading="eager"
-                    />
+                  <div className="relative z-10 flex justify-center md:justify-end">
+                    <div className="relative w-full max-w-[520px]">
+                      <div className="absolute inset-0 rounded-[2.3rem] bg-white/35 blur-3xl" />
+                      <div className="relative overflow-hidden rounded-[2.3rem] border border-white/80 bg-white/65 p-3 shadow-lift">
+                        <img
+                          src={slide.image}
+                          alt={slide.title}
+                          className="aspect-[4/4.1] w-full rounded-[1.8rem] object-cover"
+                          loading="eager"
+                        />
+                      </div>
+                      <div className="absolute -bottom-4 -left-2 rounded-[1.6rem] border border-white/70 bg-white/90 px-4 py-3 shadow-soft">
+                        <p className="text-[11px] font-bold text-muted-foreground">تجربهٔ محبوب مشتریان</p>
+                        <p className="mt-1 flex items-center gap-1 text-sm font-extrabold text-foreground">
+                          <Star className="size-4 fill-brand text-brand" aria-hidden />
+                          ۴.۸ از ۵ در خریدهای ثبت‌شده
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -116,7 +157,7 @@ export function HeroSlider() {
           type="button"
           onClick={() => emblaApi?.scrollPrev()}
           aria-label="اسلاید قبل"
-          className="absolute end-3 top-1/2 hidden size-10 -translate-y-1/2 items-center justify-center rounded-full bg-background/90 shadow-soft transition-colors hover:text-brand md:inline-flex"
+          className="absolute end-4 top-1/2 hidden size-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/80 bg-white/85 shadow-soft transition-colors hover:text-brand md:inline-flex"
         >
           <ChevronRight className="size-5" aria-hidden />
         </button>
@@ -124,12 +165,12 @@ export function HeroSlider() {
           type="button"
           onClick={() => emblaApi?.scrollNext()}
           aria-label="اسلاید بعد"
-          className="absolute start-3 top-1/2 hidden size-10 -translate-y-1/2 items-center justify-center rounded-full bg-background/90 shadow-soft transition-colors hover:text-brand md:inline-flex"
+          className="absolute start-4 top-1/2 hidden size-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/80 bg-white/85 shadow-soft transition-colors hover:text-brand md:inline-flex"
         >
           <ChevronLeft className="size-5" aria-hidden />
         </button>
 
-        <div className="absolute inset-x-0 bottom-3 flex items-center justify-center gap-1.5">
+        <div className="absolute inset-x-0 bottom-5 flex items-center justify-center gap-2">
           {SLIDES.map((slide, index) => (
             <button
               key={slide.title}
@@ -137,12 +178,15 @@ export function HeroSlider() {
               onClick={() => emblaApi?.scrollTo(index)}
               aria-label={`اسلاید ${index + 1}`}
               className={cn(
-                "h-1.5 rounded-full transition-all",
-                index === selected ? "w-7 bg-brand" : "w-2.5 bg-border",
+                "h-2 rounded-full transition-all",
+                index === selected ? "w-8 bg-brand" : "w-2.5 bg-foreground/20",
               )}
             />
           ))}
         </div>
+
+        <div className="cloud-bottom" />
+        <div className="zigzag-bottom" />
       </div>
     </section>
   );
