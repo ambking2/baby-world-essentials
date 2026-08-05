@@ -64,7 +64,7 @@ export function HeroSlider() {
                     alt={slide.title}
                     className="h-full w-full object-cover object-center transition-transform duration-[10s] scale-105 group-hover:scale-100"
                   />
-                  <div className="absolute inset-0 bg-black/10" />
+                  <div className="absolute inset-0 bg-gradient-to-l from-white/90 via-white/50 to-transparent lg:from-white/95 lg:via-white/70" />
                 </div>
                 
                 <div className="container-page relative flex h-full items-center">
