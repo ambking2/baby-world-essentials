@@ -36,7 +36,7 @@ export function ProductSection({
       <SectionHeading 
         title={title} 
         subtitle={subtitle || ""} 
-        moreHref={moreTo} 
+        moreHref={moreTo as string} 
         moreLabel={linkLabel}
         align="center"
       />
