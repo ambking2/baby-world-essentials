@@ -95,7 +95,6 @@ export async function applyCoupon(rawCode: string, itemsTotal: number): Promise<
 /* ثبت سفارش                                                        */
 /* ------------------------------------------------------------------ */
 
-/** کد پیگیری خوانا: JK-05-1001 */
 export async function generateOrderCode(): Promise<string> {
   const total = await count("SELECT COUNT(*) AS c FROM orders");
   const year = new Date().getFullYear() % 100;
@@ -115,13 +114,6 @@ export type CheckoutInput = {
   couponCode?: string | null;
 };
 
-/**
- * ثبت سفارش.
- *
- * توجه مهم درباره‌ی D1: تراکنش تعاملی (BEGIN/COMMIT) پشتیبانی نمی‌شود؛
- * به جای آن ابتدا همه‌ی خواندن‌ها و اعتبارسنجی‌ها انجام می‌شود، سپس همه‌ی
- * نوشتن‌ها در یک batch اتمیک فرستاده می‌شود.
- */
 export async function placeOrder(
   cart: { id: number; token: string; user_id: number | null },
   input: CheckoutInput,
@@ -142,7 +134,6 @@ export async function placeOrder(
   const now = nowIso();
   const code = await generateOrderCode();
 
-  // سررسید سفارش اول درج می‌شود تا شناسه‌ی آن برای اقلام در دسترس باشد.
   const order = await run(
     `INSERT INTO orders (
        code, user_id, status, payment_method, receiver, phone, province, city,
@@ -151,7 +142,6 @@ export async function placeOrder(
      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     code,
     input.userId ?? cart.user_id ?? null,
-    // پرداخت در محل نیاز به رسید ندارد و مستقیم در صف آماده‌سازی قرار می‌گیرد.
     input.paymentMethod === "cash_on_delivery" ? "processing" : "pending_payment",
     input.paymentMethod,
     input.receiver,
@@ -219,9 +209,7 @@ export async function placeOrder(
   }
 
   if (coupon) {
-    writes.push(
-      statement("UPDATE coupons SET used_count = used_count + 1 WHERE code = ?", coupon.code),
-    );
+    writes.push(statement("UPDATE coupons SET used_count = used_count + 1 WHERE code = ?", coupon.code));
   }
 
   writes.push(statement("DELETE FROM cart_items WHERE cart_id = ?", cart.id));
@@ -248,6 +236,7 @@ export type OrderItem = {
 };
 
 export type OrderPayment = {
+  id: number;
   method: string;
   amount: number;
   payerName: string | null;
@@ -323,6 +312,7 @@ async function mapOrder(row: OrderRow): Promise<Order> {
       row.id,
     ),
     all<{
+      id: number;
       method: string;
       amount: number;
       payer_name: string | null;
@@ -332,7 +322,10 @@ async function mapOrder(row: OrderRow): Promise<Order> {
       status: string;
       admin_note: string | null;
       created_at: string;
-    }>("SELECT * FROM payments WHERE order_id = ? ORDER BY id DESC", row.id),
+    }>(
+      "SELECT id, method, amount, payer_name, reference, paid_at_text, receipt_url, status, admin_note, created_at FROM payments WHERE order_id = ? ORDER BY id DESC",
+      row.id,
+    ),
   ]);
 
   return {
@@ -367,6 +360,7 @@ async function mapOrder(row: OrderRow): Promise<Order> {
       lineTotal: Number(item.line_total),
     })),
     payments: paymentRows.map((payment) => ({
+      id: Number(payment.id),
       method: payment.method,
       amount: Number(payment.amount),
       payerName: payment.payer_name,
@@ -381,22 +375,15 @@ async function mapOrder(row: OrderRow): Promise<Order> {
 }
 
 export async function orderByCode(code: string): Promise<Order | null> {
-  const row = await one<OrderRow>(
-    "SELECT * FROM orders WHERE code = ?",
-    code.trim().toUpperCase(),
-  );
+  const row = await one<OrderRow>("SELECT * FROM orders WHERE code = ?", code.trim().toUpperCase());
   return row ? mapOrder(row) : null;
 }
 
 export async function ordersForUser(userId: number): Promise<Array<Order>> {
-  const rows = await all<OrderRow>(
-    "SELECT * FROM orders WHERE user_id = ? ORDER BY id DESC",
-    userId,
-  );
+  const rows = await all<OrderRow>("SELECT * FROM orders WHERE user_id = ? ORDER BY id DESC", userId);
   return Promise.all(rows.map(mapOrder));
 }
 
-/** ثبت رسید کارت‌به‌کارت توسط مشتری. */
 export async function submitPaymentReceipt(input: {
   orderCode: string;
   payerName: string;
@@ -423,11 +410,7 @@ export async function submitPaymentReceipt(input: {
       input.receiptUrl ?? null,
       now,
     ),
-    statement(
-      "UPDATE orders SET status = 'awaiting_review', updated_at = ? WHERE id = ?",
-      now,
-      order.id,
-    ),
+    statement("UPDATE orders SET status = 'awaiting_review', updated_at = ? WHERE id = ?", now, order.id),
   ]);
 }
 
@@ -522,27 +505,19 @@ export async function adminListOrders(
 
 export async function adminSetOrderStatus(code: string, status: OrderStatus): Promise<void> {
   const now = nowIso();
-  const writes = [
-    statement("UPDATE orders SET status = ?, updated_at = ? WHERE code = ?", status, now, code),
-  ];
+  const writes = [statement("UPDATE orders SET status = ?, updated_at = ? WHERE code = ?", status, now, code)];
   if (status === "paid") {
-    writes.push(
-      statement("UPDATE orders SET paid_at = COALESCE(paid_at, ?) WHERE code = ?", now, code),
-    );
+    writes.push(statement("UPDATE orders SET paid_at = COALESCE(paid_at, ?) WHERE code = ?", now, code));
   }
   await batch(writes);
 }
 
-/** تأیید یا رد رسید پرداخت توسط مدیر. */
 export async function adminReviewPayment(
   paymentId: number,
   approve: boolean,
   adminNote?: string | null,
 ): Promise<void> {
-  const payment = await one<{ order_id: number }>(
-    "SELECT order_id FROM payments WHERE id = ?",
-    paymentId,
-  );
+  const payment = await one<{ order_id: number }>("SELECT order_id FROM payments WHERE id = ?", paymentId);
   if (!payment) return;
   const now = nowIso();
 
@@ -603,12 +578,8 @@ export async function dashboardStats(): Promise<DashboardStats> {
     count("SELECT COUNT(*) AS c FROM orders"),
     count(`SELECT COUNT(*) AS c FROM orders WHERE status IN ${paidStatuses}`),
     count("SELECT COUNT(*) AS c FROM orders WHERE status = 'awaiting_review'"),
-    count(
-      `SELECT COALESCE(SUM(grand_total), 0) AS c FROM orders WHERE status IN ${paidStatuses}`,
-    ),
-    count(
-      `SELECT COALESCE(SUM(grand_total), 0) AS c FROM orders WHERE status IN ${paidStatuses} AND date(created_at) = date('now')`,
-    ),
+    count(`SELECT COALESCE(SUM(grand_total), 0) AS c FROM orders WHERE status IN ${paidStatuses}`),
+    count(`SELECT COALESCE(SUM(grand_total), 0) AS c FROM orders WHERE status IN ${paidStatuses} AND date(created_at) = date('now')`),
     count("SELECT COUNT(*) AS c FROM users WHERE role = 'customer'"),
     count("SELECT COUNT(*) AS c FROM products WHERE is_active = 1"),
     count("SELECT COUNT(*) AS c FROM products WHERE is_active = 1 AND stock <= 2"),

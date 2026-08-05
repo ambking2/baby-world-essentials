@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { Search } from "lucide-react";
+import { ExternalLink, Search } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -27,6 +27,10 @@ const STATUS_LABELS: Record<string, string> = {
   delivered: "تحویل شده",
   canceled: "لغو شده",
 };
+
+function paymentStatusLabel(status: string): string {
+  return status === "approved" ? "تأیید‌شده" : status === "rejected" ? "ردشده" : "در انتطار بررسی";
+}
 
 function AdminOrders() {
   const initial = Route.useSearch();
@@ -233,43 +237,90 @@ function AdminOrders() {
               </div>
 
               {order.payments.length > 0 ? (
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <h3 className="text-xs font-extrabold text-foreground">رسیدهای پرداخت</h3>
                   <input
                     value={note}
                     onChange={(event) => setNote(event.target.value)}
-                    placeholder="یادداشت مدیر (اختیاری)"
+                    placeholder="یادداشت مدیر برای تأیید/رد رسید (اختیاری)"
                     className="w-full rounded-xl border border-border bg-background px-3 py-2 text-[11px] outline-none focus:border-brand"
                   />
-                  {order.payments.map((payment, index) => (
-                    <div key={`payment-${index}`} className="flex flex-wrap items-center justify-between gap-2 rounded-2xl border border-border p-3">
-                      <span className="text-muted-foreground">
-                        {payment.payerName} · پیگیری {toFaDigits(payment.reference ?? "-")} · {payment.paidAtText} · {formatToman(payment.amount)}
-                      </span>
-                      <span className="font-bold">
-                        {payment.status === "approved" ? "تأیید‌شده" : payment.status === "rejected" ? "ردشده" : "در انتطار"}
-                      </span>
+
+                  {order.payments.map((payment) => (
+                    <div key={payment.id} className="space-y-3 rounded-2xl border border-border p-3">
+                      <div className="flex flex-wrap items-start justify-between gap-3">
+                        <div className="grid flex-1 gap-1 sm:grid-cols-2">
+                          <p className="text-muted-foreground">
+                            شناسه رسید: <span className="font-bold text-foreground">{toFaDigits(payment.id)}</span>
+                          </p>
+                          <p className="text-muted-foreground">
+                            وضعیت رسید: <span className="font-bold text-foreground">{paymentStatusLabel(payment.status)}</span>
+                          </p>
+                          <p className="text-muted-foreground">
+                            نام پرداخت‌کننده: <span className="font-bold text-foreground">{payment.payerName ?? "-"}</span>
+                          </p>
+                          <p className="text-muted-foreground">
+                            شماره پیگیری: <span className="font-bold text-foreground">{toFaDigits(payment.reference ?? "-")}</span>
+                          </p>
+                          <p className="text-muted-foreground">
+                            زمان اعلامی مشتری: <span className="font-bold text-foreground">{payment.paidAtText ?? "-"}</span>
+                          </p>
+                          <p className="text-muted-foreground">
+                            زمان ثبت در سایت: <span className="font-bold text-foreground">{formatJalaliTime(payment.createdAt)}</span>
+                          </p>
+                          <p className="text-muted-foreground">
+                            مبلغ: <span className="font-bold text-foreground">{formatToman(payment.amount)}</span>
+                          </p>
+                          <p className="text-muted-foreground">
+                            روش: <span className="font-bold text-foreground">{payment.method === "card_transfer" ? "کارت‌به‌کارت" : payment.method}</span>
+                          </p>
+                        </div>
+
+                        {payment.receiptUrl ? (
+                          <a
+                            href={payment.receiptUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex items-center gap-1 rounded-full border border-border px-3 py-1.5 text-[11px] font-bold hover:border-brand hover:text-brand"
+                          >
+                            <ExternalLink className="size-3" aria-hidden />
+                            مشاهده رسید
+                          </a>
+                        ) : null}
+                      </div>
+
+                      {payment.receiptUrl ? (
+                        <a href={payment.receiptUrl} target="_blank" rel="noreferrer" className="block overflow-hidden rounded-2xl border border-border bg-secondary">
+                          <img src={payment.receiptUrl} alt="رسید پرداخت" className="max-h-72 w-full object-contain" />
+                        </a>
+                      ) : null}
+
+                      {payment.adminNote ? (
+                        <p className="rounded-xl bg-secondary px-3 py-2 text-muted-foreground">
+                          یادداشت مدیر: <span className="font-bold text-foreground">{payment.adminNote}</span>
+                        </p>
+                      ) : null}
+
+                      <div className="flex flex-wrap gap-2">
+                        <button
+                          type="button"
+                          disabled={reviewPayment.isPending}
+                          onClick={() => reviewPayment.mutate({ paymentId: payment.id, approve: true })}
+                          className="rounded-full bg-brand px-4 py-2 text-[11px] font-bold text-primary-foreground disabled:opacity-60"
+                        >
+                          تأیید این رسید
+                        </button>
+                        <button
+                          type="button"
+                          disabled={reviewPayment.isPending}
+                          onClick={() => reviewPayment.mutate({ paymentId: payment.id, approve: false })}
+                          className="rounded-full border border-border px-4 py-2 text-[11px] font-bold hover:border-sale hover:text-sale disabled:opacity-60"
+                        >
+                          رد این رسید
+                        </button>
+                      </div>
                     </div>
                   ))}
-                  <p className="text-[10px] text-muted-foreground">
-                    برای تأیید یا رد، شناسهٔ رسید لازم است؛ از دکمه‌های زیر برای آخرین رسید استفاده کنید.
-                  </p>
-                  <div className="flex gap-2">
-                    <button
-                      type="button"
-                      onClick={() => changeStatus.mutate({ code: order.code, status: "paid" })}
-                      className="rounded-full bg-brand px-4 py-2 text-[11px] font-bold text-primary-foreground"
-                    >
-                      تأیید پرداخت و تغییر وضعیت
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => changeStatus.mutate({ code: order.code, status: "pending_payment" })}
-                      className="rounded-full border border-border px-4 py-2 text-[11px] font-bold hover:border-sale hover:text-sale"
-                    >
-                      بازگرداندن به انتطار پرداخت
-                    </button>
-                  </div>
                 </div>
               ) : null}
 
