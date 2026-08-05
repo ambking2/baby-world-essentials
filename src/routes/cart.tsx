@@ -49,7 +49,7 @@ function CartPage() {
   return (
     <StoreShell>
       <div className="container-page py-8">
-        <h1 className="mb-5 text-xl font-extrabold text-foreground">سبد خرید</h1>
+        <h1 className="mb-8 text-xl font-bold text-gray-900">سبد خرید</h1>
 
         {cartQuery.isLoading ? (
           <div className="space-y-3">
@@ -57,14 +57,14 @@ function CartPage() {
             <div className="skeleton h-24 rounded-3xl" />
           </div>
         ) : lines.length === 0 ? (
-          <div className="rounded-2xl border border-border bg-white p-10 text-center shadow-sm">
-            <ShoppingBag className="mx-auto mb-3 size-10 text-primary" aria-hidden />
-            <p className="text-sm font-bold">سبد خرید شما خالی است</p>
-            <p className="mt-2 text-xs text-muted-foreground">از میان دسته‌بندی‌های فروشگاه کالای مورد نیازتان را انتخاب کنید.</p>
+          <div className="rounded-xl border border-border bg-white p-16 text-center shadow-sm">
+            <ShoppingBag className="mx-auto mb-4 size-10 text-gray-900" aria-hidden />
+            <p className="text-sm font-bold text-gray-900">سبد خرید شما خالی است</p>
+            <p className="mt-2 text-xs text-gray-400">از میان دسته‌بندی‌های فروشگاه کالای مورد نیازتان را انتخاب کنید.</p>
             <Link
               to="/search"
               search={{ q: "" }}
-              className="mt-4 inline-flex rounded-full bg-primary px-6 py-2.5 text-xs font-bold text-white shadow-md hover:bg-primary/90 transition-premium"
+              className="btn-primary mt-6"
             >
               شروع خرید
             </Link>
@@ -73,12 +73,12 @@ function CartPage() {
           <div className="grid gap-5 lg:grid-cols-[1fr_320px]">
             <div className="space-y-3">
               {lines.map((line) => (
-                <div key={line.itemId} className="flex gap-3 rounded-2xl border border-border bg-white p-3 shadow-sm">
+                <div key={line.itemId} className="flex gap-4 rounded-xl border border-border bg-white p-4">
                   <Link to="/product/$slug" params={{ slug: line.slug }} className="shrink-0">
                     <img
                       src={line.image ?? "/images/cat-toys.jpg"}
                       alt={line.title}
-                      className="size-24 rounded-2xl object-cover"
+                      className="size-24 rounded-lg object-cover"
                     />
                   </Link>
 
@@ -119,7 +119,7 @@ function CartPage() {
                       </div>
 
                       <div className="flex items-center gap-3">
-                        <span className="text-sm font-extrabold text-foreground">{formatToman(line.lineTotal)}</span>
+                        <span className="text-sm font-bold text-gray-900">{formatToman(line.lineTotal)}</span>
                         <button
                           type="button"
                           onClick={() => removeItem.mutate(line.itemId)}

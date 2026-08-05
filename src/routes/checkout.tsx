@@ -77,7 +77,7 @@ function CheckoutPage() {
   const payable = Math.max((cart?.grandTotal ?? 0) - discount, 0);
 
   const inputClass =
-    "w-full rounded-xl border border-border bg-white px-3 py-2.5 text-xs outline-none transition-colors focus:border-primary shadow-sm";
+    "w-full rounded-sm border border-border bg-white px-3 py-3 text-[11px] font-medium text-gray-900 outline-none transition-all focus:border-gray-900";
 
   return (
     <StoreShell>
@@ -97,8 +97,8 @@ function CheckoutPage() {
             className="grid gap-5 lg:grid-cols-[1fr_340px]"
           >
             <div className="space-y-5">
-              <section className="space-y-6 rounded-2xl border border-border bg-white p-6 shadow-sm">
-                <h2 className="text-sm font-bold border-b border-border pb-2">اطلاعات تحویل‌گیرنده</h2>
+              <section className="space-y-6 rounded-xl border border-border bg-white p-6">
+                <h2 className="text-[11px] font-bold uppercase tracking-widest text-gray-900 border-b border-border pb-3">اطلاعات تحویل‌گیرنده</h2>
                 <div className="grid gap-3 sm:grid-cols-2">
                   <input
                     required
@@ -154,18 +154,18 @@ function CheckoutPage() {
                 />
               </section>
 
-              <section className="space-y-6 rounded-2xl border border-border bg-white p-6 shadow-sm">
-                <h2 className="text-sm font-bold border-b border-border pb-2">روش پرداخت</h2>
+              <section className="space-y-6 rounded-xl border border-border bg-white p-6">
+                <h2 className="text-[11px] font-bold uppercase tracking-widest text-gray-900 border-b border-border pb-3">روش پرداخت</h2>
                 <div className="grid gap-3 sm:grid-cols-2">
                   <button
                     type="button"
                     onClick={() => setPaymentMethod("card_transfer")}
                     className={cn(
-                      "flex items-start gap-3 rounded-2xl border p-4 text-start transition-colors",
-                      paymentMethod === "card_transfer" ? "border-primary bg-primary/5 ring-1 ring-primary/20 shadow-sm" : "border-border hover:border-primary/50",
+                      "flex items-start gap-3 rounded-sm border p-4 text-start transition-all duration-300",
+                      paymentMethod === "card_transfer" ? "border-gray-900 bg-gray-50" : "border-border hover:border-gray-900",
                     )}
                   >
-                    <CreditCard className="mt-0.5 size-4 text-primary" aria-hidden />
+                    <CreditCard className="mt-0.5 size-4 text-gray-900" aria-hidden />
                     <span>
                       <span className="block text-xs font-extrabold">کارت‌به‌کارت</span>
                       <span className="mt-1 block text-[11px] leading-5 text-muted-foreground">
@@ -178,11 +178,11 @@ function CheckoutPage() {
                     type="button"
                     onClick={() => setPaymentMethod("cash_on_delivery")}
                     className={cn(
-                      "flex items-start gap-3 rounded-2xl border p-4 text-start transition-colors",
-                      paymentMethod === "cash_on_delivery" ? "border-primary bg-primary/5 ring-1 ring-primary/20 shadow-sm" : "border-border hover:border-primary/50",
+                      "flex items-start gap-3 rounded-sm border p-4 text-start transition-all duration-300",
+                      paymentMethod === "cash_on_delivery" ? "border-gray-900 bg-gray-50" : "border-border hover:border-gray-900",
                     )}
                   >
-                    <BanknoteArrowUp className="mt-0.5 size-4 text-primary" aria-hidden />
+                    <BanknoteArrowUp className="mt-0.5 size-4 text-gray-900" aria-hidden />
                     <span>
                       <span className="block text-xs font-extrabold">پرداخت در محل</span>
                       <span className="mt-1 block text-[11px] leading-5 text-muted-foreground">
@@ -201,8 +201,8 @@ function CheckoutPage() {
               </section>
             </div>
 
-            <aside className="h-fit space-y-4 rounded-2xl border border-border bg-white p-6 shadow-sm lg:sticky lg:top-24">
-              <h2 className="text-sm font-bold border-b border-border pb-2">خلاصهٔ پرداخت</h2>
+            <aside className="h-fit space-y-6 rounded-xl border border-border bg-white p-6 lg:sticky lg:top-24">
+              <h2 className="text-[11px] font-bold uppercase tracking-widest text-gray-900 border-b border-border pb-3">خلاصهٔ پرداخت</h2>
 
               <div className="space-y-2 text-xs">
                 <div className="flex items-center justify-between">
@@ -234,7 +234,7 @@ function CheckoutPage() {
                   type="button"
                   onClick={() => tryCoupon.mutate()}
                   disabled={couponInput.trim().length < 2 || tryCoupon.isPending}
-                  className="shrink-0 rounded-xl border border-border px-3 text-xs font-bold transition-colors hover:border-primary hover:text-primary disabled:opacity-50"
+                  className="shrink-0 rounded-sm border border-gray-900 px-3 text-[10px] font-bold uppercase transition-all duration-300 hover:bg-gray-900 hover:text-white disabled:opacity-50"
                 >
                   اعمال
                 </button>
@@ -242,7 +242,7 @@ function CheckoutPage() {
 
               <div className="flex items-center justify-between border-t border-border pt-3">
                 <span className="text-xs font-extrabold">مبلغ قابل پرداخت</span>
-                <span className="text-base font-bold text-primary">{formatToman(payable)}</span>
+                <span className="text-base font-bold text-gray-900">{formatToman(payable)}</span>
               </div>
 
               <button
