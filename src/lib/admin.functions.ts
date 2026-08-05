@@ -30,6 +30,7 @@ import {
 } from "@/server/repo/blog";
 import { allSettings, categoryTree, flatCategories, setSetting } from "@/server/repo/catalog";
 import {
+  adminDeleteOrder,
   adminListOrders,
   adminReviewPayment,
   adminSetOrderStatus,
@@ -39,6 +40,8 @@ import {
   ORDER_STATUSES,
 } from "@/server/repo/orders";
 import {
+  adminDeleteMessage,
+  adminDeleteNewsletter,
   adminListCustomers,
   adminListMessages,
   adminListNewsletter,
@@ -379,6 +382,30 @@ export const getAdminCustomers = createServerFn({ method: "GET" })
       adminListMessages(),
     ]);
     return { customers, newsletter, messages };
+  });
+
+export const removeAdminOrder = createServerFn({ method: "POST" })
+  .validator((data: unknown) => z.object({ code: z.string().min(3).max(30) }).parse(data))
+  .handler(async ({ data }) => {
+    await requireAdmin();
+    await adminDeleteOrder(data.code);
+    return { ok: true, message: "سفارش حذف شد." };
+  });
+
+export const removeAdminMessage = createServerFn({ method: "POST" })
+  .validator((data: unknown) => z.object({ id: z.number().int().positive() }).parse(data))
+  .handler(async ({ data }) => {
+    await requireAdmin();
+    await adminDeleteMessage(data.id);
+    return { ok: true, message: "پیام حذف شد." };
+  });
+
+export const removeAdminNewsletter = createServerFn({ method: "POST" })
+  .validator((data: unknown) => z.object({ email: z.string().email() }).parse(data))
+  .handler(async ({ data }) => {
+    await requireAdmin();
+    await adminDeleteNewsletter(data.email);
+    return { ok: true, message: "عضویت خبرنامه حذف شد." };
   });
 
 export const markAdminMessageRead = createServerFn({ method: "POST" })

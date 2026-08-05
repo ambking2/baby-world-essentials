@@ -414,6 +414,16 @@ export async function submitPaymentReceipt(input: {
   ]);
 }
 
+export async function adminDeleteOrder(code: string): Promise<void> {
+  const order = await one<{ id: number }>("SELECT id FROM orders WHERE code = ?", code);
+  if (!order) return;
+  await batch([
+    statement("DELETE FROM order_items WHERE order_id = ?", order.id),
+    statement("DELETE FROM payments WHERE order_id = ?", order.id),
+    statement("DELETE FROM orders WHERE id = ?", order.id),
+  ]);
+}
+
 /* ------------------------------------------------------------------ */
 /* پنل مدیریت                                                        */
 /* ------------------------------------------------------------------ */
