@@ -94,13 +94,13 @@ export function HeroSlider() {
         <div className="flex gap-4">
           <button
             onClick={() => emblaApi?.scrollPrev()}
-            className="flex size-12 items-center justify-center rounded-full border border-border bg-white/80 transition-premium hover:bg-white"
+            className="flex size-12 items-center justify-center rounded-full border border-border bg-white transition-premium hover:bg-secondary shadow-sm"
           >
             <ChevronRight className="size-5" />
           </button>
           <button
             onClick={() => emblaApi?.scrollNext()}
-            className="flex size-12 items-center justify-center rounded-full border border-border bg-white/80 transition-premium hover:bg-white"
+            className="flex size-12 items-center justify-center rounded-full border border-border bg-white transition-premium hover:bg-secondary shadow-sm"
           >
             <ChevronLeft className="size-5" />
           </button>
