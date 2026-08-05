@@ -87,7 +87,7 @@ export function SiteHeader({
           </form>
 
           {/* Actions */}
-          <div className="flex items-center gap-4 sm:gap-8">
+          <div className="flex items-center gap-3 sm:gap-8">
             <Link to={userName ? "/account" : "/auth/login"} className="hidden items-center gap-2.5 text-[13px] font-bold text-gray-900 hover:text-primary transition-colors lg:flex uppercase tracking-wide">
               <User className="size-5" />
               <span>{userName ?? "حساب کاربری"}</span>
