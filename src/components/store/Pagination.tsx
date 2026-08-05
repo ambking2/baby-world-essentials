@@ -23,7 +23,7 @@ export function Pagination({ page, pageCount, onChange, className }: PaginationP
   if (pageCount <= 1) return null;
 
   const buttonClass =
-    "inline-flex size-9 items-center justify-center rounded-xl border border-border bg-card text-sm font-semibold transition-colors hover:border-brand hover:text-brand disabled:opacity-40 disabled:hover:border-border disabled:hover:text-foreground";
+    "inline-flex size-9 items-center justify-center rounded-xl border border-border bg-white text-sm font-semibold transition-colors hover:border-primary hover:text-primary disabled:opacity-40 disabled:hover:border-border disabled:hover:text-foreground shadow-sm";
 
   return (
     <nav className={cn("flex items-center justify-center gap-1.5", className)} aria-label="صفحه‌بندی">
@@ -36,7 +36,7 @@ export function Pagination({ page, pageCount, onChange, className }: PaginationP
           type="button"
           onClick={() => onChange(item)}
           aria-current={item === page ? "page" : undefined}
-          className={cn(buttonClass, item === page && "border-brand bg-brand text-primary-foreground hover:text-primary-foreground")}
+          className={cn(buttonClass, item === page && "border-primary bg-primary text-primary-foreground hover:text-primary-foreground")}
         >
           {toFaDigits(item)}
         </button>
