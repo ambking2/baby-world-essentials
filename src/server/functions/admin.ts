@@ -3,15 +3,6 @@ import { z } from "zod";
 
 import { requireAdmin } from "../context";
 import {
-  adminDeleteComment,
-  adminDeletePost,
-  adminListComments,
-  adminListPosts,
-  adminSavePost,
-  adminSetCommentStatus,
-} from "../repo/blog";
-import { allSettings, categoryTree, flatCategories, setSetting } from "../repo/catalog";
-import {
   adminDeleteCategory,
   adminDeleteCoupon,
   adminDeleteProduct,
@@ -29,6 +20,15 @@ import {
   adminToggleProduct,
   type ProductFormValues,
 } from "../repo/admin-products";
+import {
+  adminDeleteComment,
+  adminDeletePost,
+  adminListComments,
+  adminListPosts,
+  adminSavePost,
+  adminSetCommentStatus,
+} from "../repo/blog";
+import { allSettings, categoryTree, flatCategories, setSetting } from "../repo/catalog";
 import {
   adminListOrders,
   adminReviewPayment,
@@ -50,11 +50,9 @@ const statusEnum = z.enum(["pending", "approved", "rejected"]);
 /* ---------------------------- داشبورد ---------------------------- */
 
 export const getAdminDashboard = createServerFn({ method: "GET" }).handler(async () => {
-  requireAdmin();
-  return {
-    stats: dashboardStats(),
-    latestOrders: adminListOrders({ page: 1 }).items.slice(0, 8),
-  };
+  await requireAdmin();
+  const [stats, orders] = await Promise.all([dashboardStats(), adminListOrders({ page: 1 })]);
+  return { stats, latestOrders: orders.items.slice(0, 8) };
 });
 
 /* ---------------------------- محصولات ---------------------------- */
@@ -70,22 +68,27 @@ export const getAdminProducts = createServerFn({ method: "GET" })
       .parse(data ?? {}),
   )
   .handler(async ({ data }) => {
-    requireAdmin();
+    await requireAdmin();
     const filters: { q?: string; categoryId?: number; page?: number } = {};
     if (data.q !== undefined) filters.q = data.q;
     if (data.categoryId !== undefined) filters.categoryId = data.categoryId;
     if (data.page !== undefined) filters.page = data.page;
-    return { ...adminListProducts(filters), categories: flatCategories() };
+
+    const [list, categories] = await Promise.all([adminListProducts(filters), flatCategories()]);
+    return { ...list, categories };
   });
 
 export const getAdminProductForm = createServerFn({ method: "GET" })
-  .validator((data: unknown) => z.object({ id: z.number().int().positive().nullable() }).parse(data))
+  .validator((data: unknown) =>
+    z.object({ id: z.number().int().positive().nullable() }).parse(data),
+  )
   .handler(async ({ data }) => {
-    requireAdmin();
-    return {
-      values: data.id === null ? null : adminProductForm(data.id),
-      categories: flatCategories(),
-    };
+    await requireAdmin();
+    const [values, categories] = await Promise.all([
+      data.id === null ? Promise.resolve(null) : adminProductForm(data.id),
+      flatCategories(),
+    ]);
+    return { values, categories };
   });
 
 const productSchema = z.object({
@@ -107,8 +110,17 @@ const productSchema = z.object({
   isFeatured: z.boolean().optional(),
   madeInWorkshop: z.boolean().optional(),
   badge: z.string().max(60).nullable().optional(),
-  images: z.array(z.object({ url: z.string().min(1).max(400), alt: z.string().max(160).nullable().optional() })).optional(),
-  attributes: z.array(z.object({ name: z.string().min(1).max(60), value: z.string().min(1).max(200) })).optional(),
+  images: z
+    .array(
+      z.object({
+        url: z.string().min(1).max(400),
+        alt: z.string().max(160).nullable().optional(),
+      }),
+    )
+    .optional(),
+  attributes: z
+    .array(z.object({ name: z.string().min(1).max(60), value: z.string().min(1).max(200) }))
+    .optional(),
   variants: z
     .array(
       z.object({
@@ -125,16 +137,16 @@ const productSchema = z.object({
 export const saveAdminProduct = createServerFn({ method: "POST" })
   .validator((data: unknown) => productSchema.parse(data))
   .handler(async ({ data }) => {
-    requireAdmin();
-    const id = adminSaveProduct(data as ProductFormValues);
+    await requireAdmin();
+    const id = await adminSaveProduct(data as ProductFormValues);
     return { ok: true, id, message: "محصول ذخیره شد." };
   });
 
 export const removeAdminProduct = createServerFn({ method: "POST" })
   .validator((data: unknown) => z.object({ id: z.number().int().positive() }).parse(data))
   .handler(async ({ data }) => {
-    requireAdmin();
-    adminDeleteProduct(data.id);
+    await requireAdmin();
+    await adminDeleteProduct(data.id);
     return { ok: true, message: "محصول حذف شد." };
   });
 
@@ -150,10 +162,10 @@ export const setAdminProductFlags = createServerFn({ method: "POST" })
       .parse(data),
   )
   .handler(async ({ data }) => {
-    requireAdmin();
-    if (data.isActive !== undefined) adminToggleProduct(data.id, data.isActive);
-    if (data.stock !== undefined) adminSetStock(data.id, data.stock);
-    if (data.price !== undefined) adminSetPrice(data.id, data.price);
+    await requireAdmin();
+    if (data.isActive !== undefined) await adminToggleProduct(data.id, data.isActive);
+    if (data.stock !== undefined) await adminSetStock(data.id, data.stock);
+    if (data.price !== undefined) await adminSetPrice(data.id, data.price);
     return { ok: true, message: "تغییرات ذخیره شد." };
   });
 
@@ -171,8 +183,8 @@ export const setAdminProductDiscount = createServerFn({ method: "POST" })
       .parse(data),
   )
   .handler(async ({ data }) => {
-    requireAdmin();
-    adminSetDiscount(data.id, {
+    await requireAdmin();
+    await adminSetDiscount(data.id, {
       percent: data.percent,
       ...(data.timed === undefined ? {} : { timed: data.timed }),
       startsAt: data.startsAt ?? null,
@@ -184,8 +196,9 @@ export const setAdminProductDiscount = createServerFn({ method: "POST" })
 /* --------------------------- دسته‌بندی‌ها --------------------------- */
 
 export const getAdminCategories = createServerFn({ method: "GET" }).handler(async () => {
-  requireAdmin();
-  return { tree: categoryTree(), flat: flatCategories() };
+  await requireAdmin();
+  const [tree, flat] = await Promise.all([categoryTree(), flatCategories()]);
+  return { tree, flat };
 });
 
 export const saveAdminCategory = createServerFn({ method: "POST" })
@@ -205,16 +218,16 @@ export const saveAdminCategory = createServerFn({ method: "POST" })
       .parse(data),
   )
   .handler(async ({ data }) => {
-    requireAdmin();
-    const id = adminSaveCategory(data);
+    await requireAdmin();
+    const id = await adminSaveCategory(data);
     return { ok: true, id, message: "دسته‌بندی ذخیره شد." };
   });
 
 export const removeAdminCategory = createServerFn({ method: "POST" })
   .validator((data: unknown) => z.object({ id: z.number().int().positive() }).parse(data))
   .handler(async ({ data }) => {
-    requireAdmin();
-    adminDeleteCategory(data.id);
+    await requireAdmin();
+    await adminDeleteCategory(data.id);
     return { ok: true, message: "دسته‌بندی حذف شد." };
   });
 
@@ -231,19 +244,19 @@ export const getAdminOrders = createServerFn({ method: "GET" })
       .parse(data ?? {}),
   )
   .handler(async ({ data }) => {
-    requireAdmin();
+    await requireAdmin();
     const filters: { status?: string; q?: string; page?: number } = {};
     if (data.status !== undefined) filters.status = data.status;
     if (data.q !== undefined) filters.q = data.q;
     if (data.page !== undefined) filters.page = data.page;
-    return { ...adminListOrders(filters), statuses: ORDER_STATUSES };
+    return { ...(await adminListOrders(filters)), statuses: ORDER_STATUSES };
   });
 
 export const getAdminOrder = createServerFn({ method: "GET" })
   .validator((data: unknown) => z.object({ code: z.string().min(3).max(30) }).parse(data))
   .handler(async ({ data }) => {
-    requireAdmin();
-    return { order: orderByCode(data.code) };
+    await requireAdmin();
+    return { order: await orderByCode(data.code) };
   });
 
 export const setAdminOrderStatus = createServerFn({ method: "POST" })
@@ -251,9 +264,9 @@ export const setAdminOrderStatus = createServerFn({ method: "POST" })
     z.object({ code: z.string().min(3).max(30), status: z.string().min(3).max(40) }).parse(data),
   )
   .handler(async ({ data }) => {
-    requireAdmin();
+    await requireAdmin();
     if (!isOrderStatus(data.status)) return { ok: false, message: "وضعیت انتخابی معتبر نیست." };
-    adminSetOrderStatus(data.code, data.status);
+    await adminSetOrderStatus(data.code, data.status);
     return { ok: true, message: "وضعیت سفارش به‌روز شد." };
   });
 
@@ -269,16 +282,16 @@ export const reviewAdminPayment = createServerFn({ method: "POST" })
       .parse(data),
   )
   .handler(async ({ data }) => {
-    requireAdmin();
-    adminReviewPayment(data.paymentId, data.approve, data.adminNote ?? null);
+    await requireAdmin();
+    await adminReviewPayment(data.paymentId, data.approve, data.adminNote ?? null);
     return { ok: true, message: data.approve ? "پرداخت تأیید شد." : "رسید رد شد." };
   });
 
 /* ------------------------------- وبلاگ ------------------------------- */
 
 export const getAdminPosts = createServerFn({ method: "GET" }).handler(async () => {
-  requireAdmin();
-  return { posts: adminListPosts() };
+  await requireAdmin();
+  return { posts: await adminListPosts() };
 });
 
 export const saveAdminPost = createServerFn({ method: "POST" })
@@ -299,29 +312,30 @@ export const saveAdminPost = createServerFn({ method: "POST" })
       .parse(data),
   )
   .handler(async ({ data }) => {
-    requireAdmin();
-    const id = adminSavePost(data);
+    await requireAdmin();
+    const id = await adminSavePost(data);
     return { ok: true, id, message: "مقاله ذخیره شد." };
   });
 
 export const removeAdminPost = createServerFn({ method: "POST" })
   .validator((data: unknown) => z.object({ id: z.number().int().positive() }).parse(data))
   .handler(async ({ data }) => {
-    requireAdmin();
-    adminDeletePost(data.id);
+    await requireAdmin();
+    await adminDeletePost(data.id);
     return { ok: true, message: "مقاله حذف شد." };
   });
 
-/* ------------------- دیدگاه‌ها و نظرات محصول ------------------- */
+/* ------------------- دیدگاه‌ها و نطرات محصول ------------------- */
 
 export const getAdminComments = createServerFn({ method: "GET" })
   .validator((data: unknown) => z.object({ status: statusEnum.optional() }).parse(data ?? {}))
   .handler(async ({ data }) => {
-    requireAdmin();
-    return {
-      comments: data.status === undefined ? adminListComments() : adminListComments(data.status),
-      reviews: data.status === undefined ? adminListReviews() : adminListReviews(data.status),
-    };
+    await requireAdmin();
+    const [comments, reviews] = await Promise.all([
+      data.status === undefined ? adminListComments() : adminListComments(data.status),
+      data.status === undefined ? adminListReviews() : adminListReviews(data.status),
+    ]);
+    return { comments, reviews };
   });
 
 export const setAdminCommentStatus = createServerFn({ method: "POST" })
@@ -329,16 +343,16 @@ export const setAdminCommentStatus = createServerFn({ method: "POST" })
     z.object({ id: z.number().int().positive(), status: statusEnum }).parse(data),
   )
   .handler(async ({ data }) => {
-    requireAdmin();
-    adminSetCommentStatus(data.id, data.status);
+    await requireAdmin();
+    await adminSetCommentStatus(data.id, data.status);
     return { ok: true, message: "وضعیت دیدگاه به‌روز شد." };
   });
 
 export const removeAdminComment = createServerFn({ method: "POST" })
   .validator((data: unknown) => z.object({ id: z.number().int().positive() }).parse(data))
   .handler(async ({ data }) => {
-    requireAdmin();
-    adminDeleteComment(data.id);
+    await requireAdmin();
+    await adminDeleteComment(data.id);
     return { ok: true, message: "دیدگاه حذف شد." };
   });
 
@@ -347,9 +361,9 @@ export const setAdminReviewStatus = createServerFn({ method: "POST" })
     z.object({ id: z.number().int().positive(), status: statusEnum }).parse(data),
   )
   .handler(async ({ data }) => {
-    requireAdmin();
-    adminSetReviewStatus(data.id, data.status);
-    return { ok: true, message: "وضعیت نظر محصول به‌روز شد." };
+    await requireAdmin();
+    await adminSetReviewStatus(data.id, data.status);
+    return { ok: true, message: "وضعیت نطر محصول به‌روز شد." };
   });
 
 /* --------------------- مشتریان، پیام‌ها و خبرنامه --------------------- */
@@ -357,12 +371,13 @@ export const setAdminReviewStatus = createServerFn({ method: "POST" })
 export const getAdminCustomers = createServerFn({ method: "GET" })
   .validator((data: unknown) => z.object({ q: z.string().max(120).optional() }).parse(data ?? {}))
   .handler(async ({ data }) => {
-    requireAdmin();
-    return {
-      customers: data.q === undefined ? adminListCustomers() : adminListCustomers(data.q),
-      newsletter: adminListNewsletter(),
-      messages: adminListMessages(),
-    };
+    await requireAdmin();
+    const [customers, newsletter, messages] = await Promise.all([
+      data.q === undefined ? adminListCustomers() : adminListCustomers(data.q),
+      adminListNewsletter(),
+      adminListMessages(),
+    ]);
+    return { customers, newsletter, messages };
   });
 
 export const markAdminMessageRead = createServerFn({ method: "POST" })
@@ -370,16 +385,16 @@ export const markAdminMessageRead = createServerFn({ method: "POST" })
     z.object({ id: z.number().int().positive(), isRead: z.boolean().optional() }).parse(data),
   )
   .handler(async ({ data }) => {
-    requireAdmin();
-    adminMarkMessageRead(data.id, data.isRead ?? true);
+    await requireAdmin();
+    await adminMarkMessageRead(data.id, data.isRead ?? true);
     return { ok: true };
   });
 
 /* ---------------------------- کدهای تخفیف ---------------------------- */
 
 export const getAdminCoupons = createServerFn({ method: "GET" }).handler(async () => {
-  requireAdmin();
-  return { coupons: adminListCoupons() };
+  await requireAdmin();
+  return { coupons: await adminListCoupons() };
 });
 
 export const saveAdminCoupon = createServerFn({ method: "POST" })
@@ -400,24 +415,24 @@ export const saveAdminCoupon = createServerFn({ method: "POST" })
       .parse(data),
   )
   .handler(async ({ data }) => {
-    requireAdmin();
-    const id = adminSaveCoupon(data);
+    await requireAdmin();
+    const id = await adminSaveCoupon(data);
     return { ok: true, id, message: "کد تخفیف ذخیره شد." };
   });
 
 export const removeAdminCoupon = createServerFn({ method: "POST" })
   .validator((data: unknown) => z.object({ id: z.number().int().positive() }).parse(data))
   .handler(async ({ data }) => {
-    requireAdmin();
-    adminDeleteCoupon(data.id);
+    await requireAdmin();
+    await adminDeleteCoupon(data.id);
     return { ok: true, message: "کد تخفیف حذف شد." };
   });
 
 /* ------------------------------ تنطیمات ------------------------------ */
 
 export const getAdminSettings = createServerFn({ method: "GET" }).handler(async () => {
-  requireAdmin();
-  return { settings: allSettings() };
+  await requireAdmin();
+  return { settings: await allSettings() };
 });
 
 export const saveAdminSettings = createServerFn({ method: "POST" })
@@ -425,7 +440,7 @@ export const saveAdminSettings = createServerFn({ method: "POST" })
     z.object({ values: z.record(z.string().max(60), z.string().max(400)) }).parse(data),
   )
   .handler(async ({ data }) => {
-    requireAdmin();
-    for (const [key, value] of Object.entries(data.values)) setSetting(key, value);
-    return { ok: true, settings: allSettings(), message: "تنطیمات ذخیره شد." };
+    await requireAdmin();
+    for (const [key, value] of Object.entries(data.values)) await setSetting(key, value);
+    return { ok: true, settings: await allSettings(), message: "تنطیمات ذخیره شد." };
   });
