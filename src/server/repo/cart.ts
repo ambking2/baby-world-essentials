@@ -41,7 +41,7 @@ export type CartSummary = {
   grandTotal: number;
 };
 
-type CartRow = { id: number; token: string; user_id: number | null };
+export type CartRow = { id: number; token: string; user_id: number | null };
 
 /** توکن تصادفی با Web Crypto — node:crypto روی Workers قابل اتکا نیست. */
 function cartToken(): string {
