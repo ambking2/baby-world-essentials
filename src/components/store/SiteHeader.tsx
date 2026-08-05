@@ -50,7 +50,7 @@ export function SiteHeader({
   return (
     <header className="relative w-full">
       {/* Announcement Bar */}
-      <div className="bg-primary py-2.5 text-center text-[10px] font-bold tracking-[0.1em] text-white uppercase sm:text-[11px]">
+      <div className="bg-primary py-2 text-center text-[9px] font-semibold tracking-[0.2em] text-white uppercase sm:text-[10px]">
         ارسال رایگان برای تمام سفارش‌های بالای {formatToman(business.freeShippingThreshold)}
       </div>
 
@@ -67,7 +67,7 @@ export function SiteHeader({
 
           {/* Logo */}
           <Link to="/" className="shrink-0">
-            <h1 className="text-lg font-bold tracking-tight text-foreground md:text-xl lg:text-2xl">
+            <h1 className="text-xl font-bold tracking-tight text-gray-900 md:text-2xl">
               {business.name}
             </h1>
           </Link>
@@ -75,7 +75,7 @@ export function SiteHeader({
           {/* Search Bar - Desktop */}
           <form 
             onSubmit={submitSearch}
-            className="hidden max-w-xl flex-1 items-center gap-3 rounded-full border border-border bg-muted/30 px-6 py-2.5 focus-within:border-primary focus-within:bg-white lg:flex transition-all duration-200"
+            className="hidden max-w-lg flex-1 items-center gap-3 rounded-sm border border-border bg-gray-50 px-4 py-2 focus-within:border-gray-900 focus-within:bg-white lg:flex transition-all duration-300"
           >
             <Search className="size-4 text-muted-foreground" />
             <input
@@ -117,10 +117,10 @@ export function SiteHeader({
         <div className="container-page flex justify-center">
           <ul className="flex gap-10">
             <li>
-              <Link to="/" className="relative block py-4 text-[13px] font-bold uppercase tracking-wide hover:text-primary transition-colors after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all hover:after:w-full">خانه</Link>
+              <Link to="/" className="relative block py-4 text-[11px] font-bold uppercase tracking-widest text-gray-900 hover:text-primary transition-colors after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all hover:after:w-full">خانه</Link>
             </li>
             <li className="group relative">
-              <button className="flex items-center gap-1.5 py-4 text-[13px] font-bold uppercase tracking-wide group-hover:text-primary transition-colors">
+              <button className="flex items-center gap-1.5 py-4 text-[11px] font-bold uppercase tracking-widest text-gray-900 group-hover:text-primary transition-colors">
                 دسته‌بندی‌ها
                 <ChevronDown className="size-3 transition-transform group-hover:rotate-180" />
               </button>
@@ -147,13 +147,13 @@ export function SiteHeader({
               </div>
             </li>
             <li>
-              <Link to="/search" className="relative block py-4 text-[13px] font-bold uppercase tracking-wide hover:text-primary transition-colors after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all hover:after:w-full">فروشگاه</Link>
+              <Link to="/search" className="relative block py-4 text-[11px] font-bold uppercase tracking-widest text-gray-900 hover:text-primary transition-colors after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all hover:after:w-full">فروشگاه</Link>
             </li>
             <li>
-              <Link to="/offers" className="relative block py-4 text-[13px] font-bold uppercase tracking-wide text-destructive hover:opacity-80 transition-colors">تخفیف‌های ویژه</Link>
+              <Link to="/offers" className="relative block py-4 text-[11px] font-bold uppercase tracking-widest text-destructive hover:opacity-80 transition-colors">تخفیف‌های ویژه</Link>
             </li>
             <li>
-              <Link to="/blog" className="relative block py-4 text-[13px] font-bold uppercase tracking-wide hover:text-primary transition-colors after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all hover:after:w-full">مجله آموزشی</Link>
+              <Link to="/blog" className="relative block py-4 text-[11px] font-bold uppercase tracking-widest text-gray-900 hover:text-primary transition-colors after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all hover:after:w-full">مجله آموزشی</Link>
             </li>
           </ul>
         </div>
