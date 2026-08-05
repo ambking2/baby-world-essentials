@@ -25,8 +25,8 @@ export function SortBar({
   className?: string;
 }) {
   return (
-    <div className={cn("mb-8 flex flex-wrap items-center gap-4 lg:gap-8 border-b border-border pb-4", className)}>
-      <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">مرتب‌سازی:</span>
+    <div className={cn("mb-8 flex flex-wrap items-center gap-4 lg:gap-8 border-b border-border pb-2", className)}>
+      <span className="text-[9px] font-bold uppercase tracking-widest text-gray-400">مرتب‌سازی:</span>
       <div className="hide-scrollbar flex items-center gap-1.5 overflow-x-auto">
         {OPTIONS.map((option) => (
           <button
@@ -34,15 +34,15 @@ export function SortBar({
             type="button"
             onClick={() => onChange(option.key)}
             className={cn(
-              "whitespace-nowrap text-[10px] font-bold uppercase tracking-widest transition-colors",
-              sort === option.key ? "text-primary font-bold border-b-2 border-primary pb-4 -mb-[17px]" : "text-muted-foreground hover:text-foreground pb-4 -mb-[17px]",
+              "whitespace-nowrap text-[9px] font-bold uppercase tracking-widest transition-colors",
+              sort === option.key ? "text-gray-900 border-b-2 border-gray-900 pb-4 -mb-[18px]" : "text-gray-400 hover:text-gray-900 pb-4 -mb-[18px]",
             )}
           >
             {option.label}
           </button>
         ))}
       </div>
-      <span className="ms-auto text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{toFaDigits(total)} کالا</span>
+      <span className="ms-auto text-[9px] font-bold uppercase tracking-widest text-gray-400">{toFaDigits(total)} کالا</span>
     </div>
   );
 }
