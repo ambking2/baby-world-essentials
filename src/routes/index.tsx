@@ -7,7 +7,9 @@ import { SiteHeader } from "@/components/store/SiteHeader";
 import { HeroSlider } from "@/components/store/HeroSlider";
 import { StoreShell } from "@/components/store/StoreShell";
 import { ProductSection } from "@/components/site/ProductSection";
+import { SectionHeading } from "@/components/store/SectionHeading";
 import { BlogPreview } from "@/components/site/BlogPreview";
+
 import { business } from "@/data/business";
 import { categoriesQuery } from "@/lib/api/catalog";
 import { getHomeProducts } from "@/server/functions/products";
