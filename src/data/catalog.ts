@@ -1,24 +1,26 @@
-import furniture from "@/assets/cat-furniture.jpg";
-import stroller from "@/assets/cat-stroller.jpg";
-import clothing from "@/assets/cat-clothing.jpg";
-import toys from "@/assets/cat-toys.jpg";
-import feeding from "@/assets/cat-feeding.jpg";
-import dresser from "@/assets/cat-dresser.jpg";
-
 import type { Category, Product } from "@/types/catalog";
+
+const IMAGES = {
+  furniture: "https://images.unsplash.com/photo-1595113316349-9fa4ee24f884?q=80&w=2072&auto=format&fit=crop",
+  stroller: "https://images.unsplash.com/photo-1519689680058-324335c77eba?q=80&w=2070&auto=format&fit=crop",
+  clothing: "https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?q=80&w=2075&auto=format&fit=crop",
+  toys: "https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?q=80&w=2070&auto=format&fit=crop",
+  feeding: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?q=80&w=2070&auto=format&fit=crop",
+  dresser: "https://images.unsplash.com/photo-1537726235470-8504e3bdb28d?q=80&w=2070&auto=format&fit=crop",
+};
 
 export const categories: Category[] = [
   {
     slug: "servis-khab",
     title: "سرویس خواب نوزاد",
     note: "تخت، کمد و دراور ست",
-    image: furniture,
+    image: IMAGES.furniture,
   },
-  { slug: "kalaskeh", title: "کالسکه و کریر", note: "سبک، تاشو و ایمن", image: stroller },
-  { slug: "lebas", title: "لباس نوزاد", note: "نخ پنبه، سایز ۰ تا ۲۴ ماه", image: clothing },
-  { slug: "asbab-bazi", title: "اسباب‌بازی چوبی", note: "مناسب ۶ ماه به بالا", image: toys },
-  { slug: "shirdehi", title: "شیردهی و تغذیه", note: "شیشه شیر، استریلایزر، پیش‌بند", image: feeding },
-  { slug: "dekor", title: "دکور اتاق کودک", note: "دراور، تعویض‌کن و قفسه", image: dresser },
+  { slug: "kalaskeh", title: "کالسکه و کریر", note: "سبک، تاشو و ایمن", image: IMAGES.stroller },
+  { slug: "lebas", title: "لباس نوزاد", note: "نخ پنبه، سایز ۰ تا ۲۴ ماه", image: IMAGES.clothing },
+  { slug: "asbab-bazi", title: "اسباب‌بازی چوبی", note: "مناسب ۶ ماه به بالا", image: IMAGES.toys },
+  { slug: "shirdehi", title: "شیردهی و تغذیه", note: "شیشه شیر، استریلایزر، پیش‌بند", image: IMAGES.feeding },
+  { slug: "dekor", title: "دکور اتاق کودک", note: "دراور، تعویض‌کن و قفسه", image: IMAGES.dresser },
 ];
 
 export const products: Product[] = [
@@ -31,7 +33,7 @@ export const products: Product[] = [
     categoryTitle: "سرویس خواب نوزاد",
     price: 28500000,
     oldPrice: 31900000,
-    image: furniture,
+    image: IMAGES.furniture,
     rating: 4.8,
     reviewCount: 37,
     stock: 4,
@@ -47,7 +49,7 @@ export const products: Product[] = [
     categoryTitle: "دکور اتاق کودک",
     price: 12900000,
     oldPrice: 14200000,
-    image: dresser,
+    image: IMAGES.dresser,
     rating: 4.6,
     reviewCount: 21,
     stock: 7,
@@ -63,7 +65,7 @@ export const products: Product[] = [
     categoryTitle: "کالسکه و کریر",
     price: 9450000,
     oldPrice: 10200000,
-    image: stroller,
+    image: IMAGES.stroller,
     rating: 4.4,
     reviewCount: 58,
     stock: 12,
@@ -77,7 +79,7 @@ export const products: Product[] = [
     categorySlug: "lebas",
     categoryTitle: "لباس نوزاد",
     price: 1180000,
-    image: clothing,
+    image: IMAGES.clothing,
     rating: 4.7,
     reviewCount: 96,
     stock: 40,
@@ -91,7 +93,7 @@ export const products: Product[] = [
     categorySlug: "asbab-bazi",
     categoryTitle: "اسباب‌بازی چوبی",
     price: 890000,
-    image: toys,
+    image: IMAGES.toys,
     rating: 4.5,
     reviewCount: 33,
     stock: 0,
@@ -106,7 +108,7 @@ export const products: Product[] = [
     categoryTitle: "شیردهی و تغذیه",
     price: 2350000,
     oldPrice: 2600000,
-    image: feeding,
+    image: IMAGES.feeding,
     rating: 4.3,
     reviewCount: 44,
     stock: 18,
@@ -121,7 +123,7 @@ export const products: Product[] = [
     categoryTitle: "سرویس خواب نوزاد",
     price: 16400000,
     oldPrice: 17800000,
-    image: furniture,
+    image: IMAGES.furniture,
     rating: 4.9,
     reviewCount: 15,
     stock: 3,
@@ -136,7 +138,7 @@ export const products: Product[] = [
     categorySlug: "kalaskeh",
     categoryTitle: "کالسکه و کریر",
     price: 5900000,
-    image: stroller,
+    image: IMAGES.stroller,
     rating: 4.2,
     reviewCount: 27,
     stock: 9,
@@ -151,7 +153,7 @@ export const products: Product[] = [
     categoryTitle: "لباس نوزاد",
     price: 1750000,
     oldPrice: 1980000,
-    image: clothing,
+    image: IMAGES.clothing,
     rating: 4.4,
     reviewCount: 61,
     stock: 25,
@@ -165,7 +167,7 @@ export const products: Product[] = [
     categorySlug: "dekor",
     categoryTitle: "دکور اتاق کودک",
     price: 2450000,
-    image: dresser,
+    image: IMAGES.dresser,
     rating: 4.6,
     reviewCount: 12,
     stock: 14,
@@ -181,7 +183,7 @@ export const products: Product[] = [
     categoryTitle: "اسباب‌بازی چوبی",
     price: 640000,
     oldPrice: 720000,
-    image: toys,
+    image: IMAGES.toys,
     rating: 4.5,
     reviewCount: 48,
     stock: 30,
@@ -195,7 +197,7 @@ export const products: Product[] = [
     categorySlug: "shirdehi",
     categoryTitle: "شیردهی و تغذیه",
     price: 3850000,
-    image: feeding,
+    image: IMAGES.feeding,
     rating: 4.1,
     reviewCount: 19,
     stock: 6,

@@ -31,7 +31,7 @@ export function ProductCard({
       <div className="relative aspect-[3/4] overflow-hidden bg-secondary">
         <Link to="/product/$slug" params={{ slug: product.slug }} className="block h-full w-full">
           <img
-            src={product.image || product.cover || "/images/cat-toys.jpg"}
+            src={product.image || product.cover || "https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?q=80&w=2070&auto=format&fit=crop"}
             alt={product.title}
             className={cn(
               "h-full w-full object-cover transition-transform duration-700 group-hover:scale-105",
