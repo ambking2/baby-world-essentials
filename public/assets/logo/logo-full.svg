@@ -1,0 +1,16 @@
+<svg width="400" height="100" viewBox="0 0 400 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Icon Part -->
+  <g transform="translate(10, 10)">
+    <rect width="80" height="80" rx="20" fill="#3D5A40"/>
+    <path d="M40 20C25 20 15 30 15 45C15 60 25 70 40 70C55 70 65 60 65 45C65 30 55 20 40 20Z" fill="white" fill-opacity="0.1"/>
+    <circle cx="32" cy="42" r="8" fill="white"/>
+    <circle cx="48" cy="42" r="8" fill="white"/>
+    <path d="M30 60C30 60 35 65 40 65C45 65 50 60 50 60" stroke="white" stroke-width="4" stroke-linecap="round"/>
+    <path d="M65 35C72 35 77 42 77 50C77 58 72 65 65 65" stroke="white" stroke-width="3" stroke-linecap="round" opacity="0.5"/>
+    <path d="M15 35C8 35 3 42 3 50C3 58 8 65 15 65" stroke="white" stroke-width="3" stroke-linecap="round" opacity="0.5"/>
+  </g>
+  
+  <!-- Text Part -->
+  <text x="105" y="55" fill="#111827" style="font-family: 'Vazirmatn', sans-serif; font-weight: 900; font-size: 34px;">سیسمونی جهان کودک</text>
+  <text x="105" y="82" fill="#6B7280" style="font-family: sans-serif; font-weight: 600; font-size: 14px; letter-spacing: 0.2em; text-transform: uppercase;">JAHAN KOODAK</text>
+</svg>
