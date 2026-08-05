@@ -1,23 +1,110 @@
 import { createServerFn } from "@tanstack/react-start";
+import { z } from "zod";
+
+import {
+  allSettings,
+  breadcrumbFor,
+  categoryBySlug,
+  categoryIdsWithChildren,
+  categoryTree,
+  saveContactMessage,
+  subscribeNewsletter,
+} from "../server/repo/catalog";
+import { listProducts, type ProductFilters, type SortKey } from "../server/repo/products";
+
+const sortKeys = ["newest", "cheapest", "expensive", "popular", "rating", "discount"] as const;
 
 export const getCatalogShell = createServerFn({ method: "GET" }).handler(async () => {
-  return (await import("../server/functions/catalog")).getCatalogShell();
+  const [settings, categories] = await Promise.all([allSettings(), categoryTree()]);
+  return {
+    categories,
+    announcement: settings["announcement"] ?? "",
+    settings,
+  };
+});
+
+const categoryPageSchema = z.object({
+  slug: z.string().min(1).max(160),
+  page: z.number().int().positive().optional(),
+  perPage: z.number().int().positive().max(48).optional(),
+  sort: z.enum(sortKeys).optional(),
+  minPrice: z.number().int().nonnegative().optional(),
+  maxPrice: z.number().int().nonnegative().optional(),
+  sizes: z.array(z.string().max(40)).optional(),
+  colors: z.array(z.string().max(40)).optional(),
+  onlyAvailable: z.boolean().optional(),
+  onlyDiscounted: z.boolean().optional(),
+  q: z.string().max(120).optional(),
 });
 
 export const getCategoryPage = createServerFn({ method: "GET" })
-  .validator((data: unknown) => data as any)
+  .validator((data: unknown) => categoryPageSchema.parse(data))
   .handler(async ({ data }) => {
-    return (await import("../server/functions/catalog")).getCategoryPage({ data });
+    const category = await categoryBySlug(data.slug);
+    if (!category) return { category: null, breadcrumb: [], children: [], products: null };
+
+    const [tree, breadcrumb, categoryIds] = await Promise.all([
+      categoryTree(),
+      breadcrumbFor(category.slug),
+      categoryIdsWithChildren(category.id),
+    ]);
+
+    const node = tree.find((root) => root.id === category.id);
+    const children =
+      node?.children ??
+      tree.flatMap((root) => root.children).find((child) => child.id === category.id)?.children ??
+      [];
+
+    const filters: ProductFilters = {
+      categoryIds,
+      sort: (data.sort ?? "newest") as SortKey,
+      page: data.page ?? 1,
+      perPage: data.perPage ?? 12,
+    };
+    if (typeof data.minPrice === "number") filters.minPrice = data.minPrice;
+    if (typeof data.maxPrice === "number") filters.maxPrice = data.maxPrice;
+    if (data.sizes && data.sizes.length > 0) filters.sizes = data.sizes;
+    if (data.colors && data.colors.length > 0) filters.colors = data.colors;
+    if (data.onlyAvailable === true) filters.onlyAvailable = true;
+    if (data.onlyDiscounted === true) filters.onlyDiscounted = true;
+    if (data.q && data.q.trim().length > 0) filters.q = data.q.trim();
+
+    return {
+      category,
+      breadcrumb,
+      children,
+      products: await listProducts(filters),
+    };
   });
 
 export const joinNewsletter = createServerFn({ method: "POST" })
-  .validator((data: unknown) => data as any)
+  .validator((data: unknown) =>
+    z.object({ email: z.string().email("ایمیل معتبر وارد کنید.").max(160) }).parse(data),
+  )
   .handler(async ({ data }) => {
-    return (await import("../server/functions/catalog")).joinNewsletter({ data });
+    await subscribeNewsletter(data.email);
+    return { ok: true, message: "عضویت شما در خبرنامه ثبت شد." };
   });
 
 export const sendContactMessage = createServerFn({ method: "POST" })
-  .validator((data: unknown) => data as any)
+  .validator((data: unknown) =>
+    z
+      .object({
+        name: z.string().min(2, "نام را وارد کنید.").max(80),
+        phone: z.string().max(20).optional(),
+        email: z.string().email("ایمیل معتبر وارد کنید.").max(160).optional(),
+        subject: z.string().max(120).optional(),
+        body: z.string().min(5, "متن پیام کوتاه است.").max(2000),
+      })
+      .parse(data),
+  )
   .handler(async ({ data }) => {
-    return (await import("../server/functions/catalog")).sendContactMessage({ data });
+    await saveContactMessage({
+      name: data.name.trim(),
+      phone: data.phone ?? null,
+      email: data.email ?? null,
+      subject: data.subject ?? null,
+      body: data.body.trim(),
+    });
+    return { ok: true, message: "پیام شما ثبت شد؛ در اولین فرصت پاسخ می‌دهیم." };
   });
