@@ -26,7 +26,7 @@ export function ProductCard({
   const outOfStock = product.stock <= 0;
 
   return (
-    <div className={cn("group flex h-full flex-col bg-white border border-border/50 hover:border-primary/30 transition-premium shadow-sm hover:shadow-md", className)}>
+    <div className={cn("group flex h-full flex-col bg-white border border-border/50 hover:border-primary/30 transition-premium shadow-sm hover:shadow-md rounded-2xl overflow-hidden", className)}>
       {/* Image Container */}
       <div className="relative aspect-[3/4] overflow-hidden bg-muted/30">
         <Link to="/product/$slug" params={{ slug: product.slug }} className="block h-full w-full">
@@ -43,12 +43,12 @@ export function ProductCard({
         {/* Badges */}
         <div className="absolute right-4 top-4 flex flex-col gap-2">
           {off > 0 && !outOfStock && (
-            <span className="bg-destructive px-2 py-1 text-[10px] font-bold text-white uppercase tracking-tight">
+            <span className="bg-destructive px-2 py-1 text-[10px] font-bold text-white uppercase tracking-tight rounded-full">
               ٪{toFaDigits(off || 0)} تخفیف
             </span>
           )}
           {product.tags?.includes("new") && (
-            <span className="bg-primary px-2 py-1 text-[10px] font-bold text-white uppercase tracking-tight">
+            <span className="bg-primary px-2 py-1 text-[10px] font-bold text-white uppercase tracking-tight rounded-full">
               جدید
             </span>
           )}
@@ -59,7 +59,7 @@ export function ProductCard({
           <button
             onClick={() => onAddToCart ? onAddToCart(product) : toast.success("به سبد خرید اضافه شد")}
             disabled={outOfStock}
-            className="flex w-full items-center justify-center gap-2 bg-primary py-2.5 text-xs font-bold text-white shadow-sm transition-premium hover:bg-primary/90 disabled:opacity-50"
+            className="flex w-full items-center justify-center gap-2 bg-primary py-2.5 text-xs font-bold text-white shadow-sm transition-premium hover:bg-primary/90 disabled:opacity-50 rounded-full"
           >
             <ShoppingCart className="size-4" />
             {busy ? "در حال افزودن..." : "افزودن به سبد"}
@@ -76,7 +76,7 @@ export function ProductCard({
       </div>
 
       {/* Info Container */}
-      <div className="flex flex-1 flex-col pt-4">
+      <div className="flex flex-1 flex-col p-4">
         <div className="mb-1 flex items-center justify-between text-[11px] font-medium text-muted-foreground uppercase tracking-widest">
           <span>{product.brand}</span>
           <div className="flex items-center gap-0.5">
