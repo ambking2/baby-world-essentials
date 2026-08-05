@@ -149,5 +149,4 @@ function HomePage() {
   );
 }
 
-import { cn } from "@/lib/utils";
 import { Headphones, Heart, ShieldCheck, Truck } from "lucide-react";
