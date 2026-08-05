@@ -5,8 +5,6 @@ import { useMemo, useState } from "react";
 import { toast } from "sonner";
 
 import { Breadcrumb } from "@/components/store/Breadcrumb";
-import { Price } from "@/components/store/Price";
-import { ProductGrid } from "@/components/store/ProductGrid";
 import { SectionHeading } from "@/components/store/SectionHeading";
 import { StoreShell, storeKeys } from "@/components/store/StoreShell";
 import { business } from "@/data/business";
@@ -31,9 +29,6 @@ function ProductPage() {
   const [size, setSize] = useState<string | null>(null);
   const [color, setColor] = useState<string | null>(null);
   const [tab, setTab] = useState<TabKey>("description");
-  const [reviewName, setReviewName] = useState("");
-  const [reviewRating, setReviewRating] = useState(5);
-  const [reviewBody, setReviewBody] = useState("");
 
   const pageQuery = useQuery({
     queryKey: ["product", slug],
@@ -136,7 +131,7 @@ function ProductPage() {
           {/* Info & Purchase */}
           <div className="flex flex-col">
             <div className="mb-4 flex items-center justify-between text-xs font-bold uppercase tracking-widest text-muted-foreground">
-              <span>{product.brand}</span>
+              <span>{product.categoryTitle}</span>
               <div className="flex items-center gap-1">
                 <Star className="size-3 fill-primary text-primary" />
                 <span className="text-foreground">{toFaDigits(product.ratingAverage)}</span>
