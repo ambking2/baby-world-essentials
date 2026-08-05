@@ -49,7 +49,7 @@ export function SiteFooter({ categories, onSubscribe, subscribing = false }: Sit
   const [email, setEmail] = useState("");
 
   return (
-    <footer className="border-t border-border bg-white section-spacing !pb-0">
+    <footer className="border-t border-border bg-secondary/20 section-spacing !pb-0">
       <div className="container-page">
         {/* Newsletter Section */}
         <div className="mb-20 grid items-center gap-16 border-b border-border pb-20 lg:grid-cols-2">
