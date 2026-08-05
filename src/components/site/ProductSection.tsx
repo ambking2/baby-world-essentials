@@ -47,7 +47,7 @@ export function ProductSection({
             <StoreProductCard 
               product={product as any} 
               onAddToCart={() => addToCart.mutate(product as any)}
-              busy={addToCart.isPending && addToCart.variables?.id === product.id}
+              busy={addToCart.isPending && (addToCart.variables as any)?.id === product.id}
             />
           </div>
         ))}
