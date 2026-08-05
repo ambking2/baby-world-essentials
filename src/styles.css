@@ -114,17 +114,21 @@
 }
 
 @utility section-spacing {
-  padding-block: 80px;
+  padding-block: 64px;
   @media (min-width: 1024px) {
-    padding-block: 120px;
+    padding-block: 100px;
   }
 }
 
 @utility grid-products {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
+  gap: 12px;
+  @media (min-width: 640px) {
+    gap: 20px;
+  }
   @media (min-width: 768px) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 24px;
   }
   @media (min-width: 1024px) {
@@ -136,9 +140,9 @@
 @utility grid-categories {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
-  @media (min-width: 768px) {
-    gap: 24px;
+  gap: 12px;
+  @media (min-width: 640px) {
+    gap: 20px;
   }
   @media (min-width: 1024px) {
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -147,7 +151,7 @@
 }
 
 @utility transition-premium {
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @utility reveal {
@@ -260,12 +264,12 @@
 
 /* Redefine buttons to be elegant */
 .btn-primary {
-  @apply bg-primary text-primary-foreground px-8 py-3.5 rounded-md font-medium text-[13px] tracking-wide hover:bg-primary/95 active:scale-[0.98] shadow-sm;
+  @apply bg-primary text-primary-foreground px-8 py-3.5 rounded-lg font-bold text-[13px] tracking-wide hover:bg-primary/95 active:scale-[0.98] shadow-sm;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .btn-secondary {
-  @apply bg-white border border-border text-foreground px-8 py-3.5 rounded-md font-medium text-[13px] tracking-wide hover:bg-muted hover:border-foreground/20 active:scale-[0.98];
+  @apply bg-white border border-border text-foreground px-8 py-3.5 rounded-lg font-bold text-[13px] tracking-wide hover:bg-muted hover:border-foreground/20 active:scale-[0.98];
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 

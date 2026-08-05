@@ -43,10 +43,10 @@ function AboutPage() {
       <div className="container-page py-6" ref={containerRef}>
         <Breadcrumb items={[{ title: "دربارهٔ ما" }]} />
 
-        <section className="reveal grid gap-5 overflow-hidden rounded-3xl border border-border bg-card p-6 lg:grid-cols-2">
+        <section className="reveal grid gap-8 overflow-hidden rounded-3xl border border-border bg-white p-6 md:p-8 lg:p-12 lg:grid-cols-2">
           <div className="space-y-3">
-            <h1 className="text-xl font-extrabold leading-8 text-foreground">{business.name}</h1>
-            <p className="text-xs leading-7 text-muted-foreground">
+            <h1 className="text-3xl font-bold leading-tight text-gray-900 lg:text-4xl">{business.name}</h1>
+            <p className="text-sm leading-relaxed text-muted-foreground lg:text-base">
               از سال {toFaDigits(business.foundedJalali)} در {business.city} کنار خانواده‌هایی هستیم که برای اولین بار سیسمونی خرید می‌کنند.
               در این {toFaDigits(yearsInBusiness)} سال، هم کارگاه تولید سرویس خواب راه انداختیم و هم مجموعه‌ای از معتبرترین
               برندهای کالسکه، شیردهی و پوشاک نوزاد را گرد آوردیم.
@@ -58,13 +58,13 @@ function AboutPage() {
               <br />
               ساعات کاری: {business.hoursFull}
             </p>
-            <div className="flex flex-wrap gap-2 pt-2">
-              <Link to="/stores" className="rounded-full bg-brand px-5 py-2.5 text-xs font-bold text-primary-foreground">
-                مسیر فروشگاه
+            <div className="flex flex-wrap gap-4 pt-6">
+              <Link to="/search" className="btn-primary">
+                مشاهده محصولات
               </Link>
               <Link
                 to="/contact"
-                className="rounded-full border border-border px-5 py-2.5 text-xs font-bold transition-colors hover:border-brand hover:text-brand"
+                className="btn-secondary"
               >
                 تماس با ما
               </Link>
@@ -79,8 +79,8 @@ function AboutPage() {
 
         <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {PILLARS.map((pillar) => (
-            <div key={pillar.title} className="reveal card-hover rounded-3xl border border-border bg-card p-5">
-              <span className="grid size-10 place-items-center rounded-2xl bg-brand-soft text-brand">
+            <div key={pillar.title} className="reveal card-hover rounded-3xl border border-border bg-white p-6 shadow-subtle">
+              <span className="grid size-12 place-items-center rounded-2xl bg-primary/5 text-primary">
                 <pillar.icon className="size-5" aria-hidden />
               </span>
               <h2 className="mt-3 text-xs font-extrabold text-foreground">{pillar.title}</h2>

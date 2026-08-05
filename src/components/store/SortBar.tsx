@@ -37,7 +37,7 @@ export function SortBar({
               type="button"
               onClick={() => onChange(option.key)}
               className={cn(
-                "whitespace-nowrap text-[12px] font-bold transition-all relative pb-1",
+                "whitespace-nowrap text-[12px] font-bold transition-all relative pb-2 -mb-2",
                 sort === option.key 
                   ? "text-gray-900 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-primary" 
                   : "text-muted-foreground hover:text-gray-900"
@@ -50,7 +50,7 @@ export function SortBar({
       </div>
       
       <div className="flex items-center justify-between sm:justify-end gap-4 shrink-0">
-        <span className="text-[11px] font-medium text-muted-foreground">نمایش {toFaDigits(total)} کالا</span>
+        <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">نمایش {toFaDigits(total)} کالا</span>
       </div>
     </div>
   );

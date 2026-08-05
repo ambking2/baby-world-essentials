@@ -49,7 +49,7 @@ function CartPage() {
   return (
     <StoreShell>
       <div className="container-page py-10 lg:py-16">
-        <h1 className="mb-10 text-3xl font-bold text-gray-900">سبد خرید شما</h1>
+        <h1 className="mb-10 text-3xl font-bold text-gray-900 tracking-tight lg:text-4xl">سبد خرید شما</h1>
 
         {cartQuery.isLoading ? (
           <div className="grid gap-10 lg:grid-cols-[1fr_380px]">
@@ -98,7 +98,7 @@ function CartPage() {
 
               <div className="space-y-4">
                 {lines.map((line) => (
-                  <div key={line.itemId} className="group relative flex gap-6 rounded-2xl border border-border bg-white p-5 transition-all duration-300 hover:shadow-premium hover:border-foreground/10">
+                  <div key={line.itemId} className="group relative flex gap-4 md:gap-6 rounded-2xl border border-border bg-white p-4 md:p-5 transition-all duration-300 hover:shadow-premium hover:border-primary/20">
                     <Link to="/product/$slug" params={{ slug: line.slug }} className="shrink-0 size-24 md:size-32 rounded-xl overflow-hidden bg-[#F9F9F9] border border-border">
                       <img
                         src={line.image ?? "/images/cat-toys.jpg"}
@@ -113,7 +113,7 @@ function CartPage() {
                           <Link
                             to="/product/$slug"
                             params={{ slug: line.slug }}
-                            className="text-base font-bold text-gray-900 hover:text-primary transition-colors line-clamp-2 leading-relaxed"
+                            className="text-sm md:text-base font-bold text-gray-900 hover:text-primary transition-colors line-clamp-2 leading-relaxed"
                           >
                             {line.title}
                           </Link>
@@ -165,8 +165,8 @@ function CartPage() {
 
             {/* Summary Sidebar */}
             <aside className="h-fit">
-              <div className="sticky top-24 space-y-6 rounded-[24px] border border-border bg-white p-8 shadow-soft">
-                <h2 className="text-base font-bold text-gray-900 uppercase tracking-widest border-b border-border pb-4 mb-2">خلاصه خرید</h2>
+              <div className="sticky top-24 space-y-6 rounded-[24px] border border-border bg-white p-6 md:p-8 shadow-soft">
+                <h2 className="text-sm font-bold text-gray-900 uppercase tracking-widest border-b border-border pb-4 mb-2">خلاصه خرید</h2>
                 
                 <div className="space-y-4">
                   <div className="flex items-center justify-between text-sm">

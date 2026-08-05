@@ -79,7 +79,7 @@ export function FilterSidebar({
         {categories.length > 0 && (
           <div>
             <h3 className="mb-5 text-[10px] font-bold uppercase tracking-widest text-gray-400">دسته‌بندی‌ها</h3>
-            <ul className="space-y-3">
+            <ul className="space-y-4">
               {categories.map((category) => (
                 <li key={category.id}>
                   <Link

@@ -53,7 +53,7 @@ function HomePage() {
               to="/category/$slug" 
               params={{ slug: cat.slug }}
               className={cn(
-                "group relative overflow-hidden aspect-[4/5] bg-secondary"
+                "group relative overflow-hidden aspect-[4/5] bg-secondary rounded-[14px]"
               )}
             >
               <img 
@@ -84,7 +84,7 @@ function HomePage() {
       {/* Editorial Split Section */}
       <section className="container-page section-spacing">
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-32">
-          <div className="relative aspect-square overflow-hidden bg-secondary lg:aspect-[4/5]">
+          <div className="relative aspect-square overflow-hidden bg-secondary lg:aspect-[4/5] rounded-[14px]">
             <img 
               src="https://images.unsplash.com/photo-1595113316349-9fa4ee24f884?q=80&w=2072&auto=format&fit=crop" 
               alt="نوزاد و سیسمونی" 
@@ -96,7 +96,7 @@ function HomePage() {
             <span className="mb-6 block text-xs font-bold uppercase tracking-widest text-primary">ماموریت ما</span>
             <h2 className="mb-8 text-3xl font-bold leading-tight lg:text-5xl">همراه شما در زیباترین مسیر زندگی</h2>
             <p className="mb-10 text-base leading-relaxed text-muted-foreground lg:text-lg">
-              در جهان کودک، ما معتقدیم هر نوزاد شایسته بهترین‌هاست. به همین دلیل تمامی محصولات ما با دقت فراوان و با در نظر گرفتن سلامت و راحتی نوزاد انتخاب یا تولید می‌شوند. از کارگاه چوب اختصاصی تا برندهای معتبر جهانی.
+              در جهان کودک، ما معتقدیم هر نوزاد شایسته بهترین‌هاست. تمامی محصولات ما با دقت فراوان و با در نظر گرفتن سلامت و راحتی نوزاد انتخاب یا تولید می‌شوند؛ از کارگاه چوب اختصاصی تا برندهای معتبر جهانی.
             </p>
             <div className="flex flex-col gap-8 sm:flex-row">
               <div className="flex-1">

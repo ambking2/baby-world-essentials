@@ -156,7 +156,7 @@ function ProductPage() {
                       onClick={() => setActiveImage(idx)}
                       className={cn(
                         "size-24 shrink-0 border border-border bg-white rounded-xl p-1 transition-all duration-200 overflow-hidden",
-                        idx === activeImage ? "border-primary ring-2 ring-primary/20" : "opacity-70 hover:opacity-100"
+                        idx === activeImage ? "border-primary ring-2 ring-primary/20 scale-[1.02]" : "opacity-70 hover:opacity-100 hover:scale-[1.02]"
                       )}
                     >
                       <img src={image.url} alt="" className="h-full w-full object-cover rounded-lg" />
@@ -264,7 +264,7 @@ function ProductPage() {
                     <span>{stock <= 0 ? "ناموجود" : needsSelection ? "انتخاب مشخصات" : "افزودن به سبد خرید"}</span>
                   </button>
                   
-                  <button className="hidden sm:flex size-14 items-center justify-center border border-border rounded-xl transition-all duration-200 hover:border-foreground/20 hover:bg-muted/30">
+                  <button className="hidden sm:flex size-14 items-center justify-center border border-border rounded-xl transition-all duration-300 hover:border-foreground/20 hover:bg-muted/30 active:scale-95">
                     <Heart className="size-5" />
                   </button>
                 </div>

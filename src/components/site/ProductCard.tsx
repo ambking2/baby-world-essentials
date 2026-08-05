@@ -65,7 +65,7 @@ export function ProductCard({
         {/* Wishlist Button - Minimal */}
         <button 
           onClick={() => onToggleWishlist ? onToggleWishlist(product) : toast.success("به علاقه‌مندی‌ها اضافه شد")}
-          className="absolute right-4 top-4 p-2 bg-white/90 hover:bg-white text-gray-900 rounded-full shadow-sm transition-all duration-200 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0"
+          className="absolute right-4 top-4 p-2 bg-white/90 hover:bg-white text-gray-900 rounded-full shadow-sm transition-all duration-300 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 active:scale-90"
         >
           <Heart className={cn("size-4", inWishlist && "fill-destructive text-destructive")} />
         </button>
@@ -75,7 +75,7 @@ export function ProductCard({
           <button
             onClick={() => onAddToCart ? onAddToCart(product) : toast.success("به سبد خرید اضافه شد")}
             disabled={outOfStock}
-            className="w-full bg-white/95 backdrop-blur-sm text-gray-900 border border-border py-2.5 text-[11px] font-bold rounded-lg hover:bg-primary hover:text-white hover:border-primary transition-all duration-200"
+            className="w-full bg-white/95 backdrop-blur-sm text-gray-900 border border-border py-2.5 text-[11px] font-bold rounded-lg hover:bg-primary hover:text-white hover:border-primary transition-all duration-300 active:scale-[0.97]"
           >
             {outOfStock ? "ناموجود" : "افزودن سریع"}
           </button>

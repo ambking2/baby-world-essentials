@@ -75,7 +75,7 @@ export function SiteHeader({
           {/* Search Bar - Desktop */}
           <form 
             onSubmit={submitSearch}
-            className="hidden max-w-xl flex-1 items-center gap-4 rounded-xl border border-border bg-[#F9F9F9] px-5 py-3 focus-within:border-foreground/20 focus-within:bg-white lg:flex transition-all duration-300"
+            className="hidden max-w-xl flex-1 items-center gap-4 rounded-xl border border-border bg-[#F9F9F9] px-5 py-3 focus-within:border-primary/30 focus-within:bg-white lg:flex transition-all duration-300 shadow-subtle focus-within:shadow-premium"
           >
             <Search className="size-4 text-muted-foreground" />
             <input
@@ -116,7 +116,7 @@ export function SiteHeader({
       </div>
 
       {/* Navigation - Desktop */}
-      <nav className="hidden border-b border-border bg-white lg:block">
+      <nav className="hidden border-b border-border bg-white lg:block sticky top-[73px] z-40">
         <div className="container-page flex justify-center">
           <ul className="flex gap-12">
             <li>
@@ -181,7 +181,7 @@ export function SiteHeader({
                   value={term}
                   onChange={(e) => setTerm(e.target.value)}
                   placeholder="جستجوی محصول..." 
-                  className="w-full bg-[#F9F9F9] border border-border rounded-xl py-3.5 pl-10 pr-4 text-sm outline-none focus:border-primary/30"
+                  className="w-full bg-[#F9F9F9] border border-border rounded-xl py-3.5 pl-10 pr-4 text-sm outline-none focus:border-primary/30 focus:bg-white transition-all shadow-subtle"
                 />
               </form>
             </div>

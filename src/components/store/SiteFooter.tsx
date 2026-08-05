@@ -134,7 +134,7 @@ export function SiteFooter({ onSubscribe, subscribing = false }: SiteFooterProps
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-20 border-t border-border py-10">
+        <div className="mt-20 border-t border-border/60 py-10">
           <div className="flex flex-col items-center justify-between gap-8 lg:flex-row">
             <div className="flex items-center gap-6">
               <div className="flex items-center gap-2 rounded-lg border border-border/50 px-3 py-1.5 grayscale transition-all hover:grayscale-0">
