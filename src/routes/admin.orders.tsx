@@ -6,7 +6,7 @@ import { toast } from "sonner";
 
 import { Pagination } from "@/components/store/Pagination";
 import { formatJalaliTime, formatToman, toFaDigits } from "@/lib/format";
-import { getAdminOrder, getAdminOrders, reviewAdminPayment, setAdminOrderStatus } from "@/@/lib/admin.functions";
+import { getAdminOrder, getAdminOrders, reviewAdminPayment, setAdminOrderStatus } from "@/lib/admin.functions";
 
 type OrdersSearch = { status?: string; q?: string };
 

@@ -11,7 +11,7 @@ import {
   removeAdminProduct,
   setAdminProductDiscount,
   setAdminProductFlags,
-} from "@/@/lib/admin.functions";
+} from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/admin/products/")({
   component: AdminProducts,

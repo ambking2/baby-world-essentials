@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { formatToman, slugify } from "@/lib/format";
-import { getAdminProductForm, saveAdminProduct } from "@/@/lib/admin.functions";
+import { getAdminProductForm, saveAdminProduct } from "@/lib/admin.functions";
 import { uploadAdminImage } from "@/server/functions/upload";
 
 export const Route = createFileRoute("/admin/products/$id")({
