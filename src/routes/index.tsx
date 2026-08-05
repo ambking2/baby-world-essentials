@@ -38,7 +38,7 @@ function HomePage() {
       <HeroSlider />
 
       {/* Categories Grid - High End Editorial Style */}
-      <section className="container-page py-20 lg:py-32">
+      <section className="container-page section-spacing">
         <SectionHeading 
           eyebrow="کالکشن‌های منتخب"
           title="جستجو بر اساس دسته‌بندی"
@@ -46,15 +46,14 @@ function HomePage() {
         />
 
         
-        <div className="grid grid-cols-2 gap-4 lg:grid-cols-4 lg:gap-8">
+        <div className="grid-categories">
           {categories.slice(0, 4).map((cat, idx) => (
             <Link 
               key={cat.slug} 
               to="/category/$slug" 
               params={{ slug: cat.slug }}
               className={cn(
-                "group relative overflow-hidden aspect-[4/5] bg-secondary",
-                idx % 2 === 1 ? "mt-8 lg:mt-12" : ""
+                "group relative overflow-hidden aspect-[4/5] bg-secondary"
               )}
             >
               <img 
@@ -83,8 +82,8 @@ function HomePage() {
       </div>
 
       {/* Editorial Split Section */}
-      <section className="container-page py-20 lg:py-32">
-        <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-24">
+      <section className="container-page section-spacing">
+        <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-32">
           <div className="relative aspect-square overflow-hidden bg-secondary lg:aspect-[4/5]">
             <img 
               src="https://images.unsplash.com/photo-1595113316349-9fa4ee24f884?q=80&w=2072&auto=format&fit=crop" 
@@ -123,7 +122,7 @@ function HomePage() {
       />
 
       {/* Journal Section */}
-      <section className="bg-secondary/50 py-20 lg:py-32">
+      <section className="bg-secondary/50 section-spacing">
         <div className="container-page">
           <div className="mb-12 text-center lg:mb-20">
             <span className="mb-4 block text-xs font-bold uppercase tracking-widest text-primary">مجله جهان کودک</span>
@@ -137,9 +136,9 @@ function HomePage() {
       </section>
 
       {/* Trust Badges - Clean & Minimal */}
-      <section className="border-t border-border py-20 lg:py-32">
+      <section className="border-t border-border section-spacing">
         <div className="container-page">
-          <div className="grid grid-cols-2 gap-12 text-center md:grid-cols-4">
+          <div className="grid grid-cols-1 gap-16 text-center sm:grid-cols-2 lg:grid-cols-4">
             <div>
               <div className="mx-auto mb-6 flex size-12 items-center justify-center rounded-full bg-secondary">
                 <Heart className="size-6 text-primary" />
