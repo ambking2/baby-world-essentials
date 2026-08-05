@@ -154,7 +154,7 @@ function CartPage() {
                         </div>
                         <div className="text-right">
                           <div className="text-lg font-bold text-gray-900">{formatToman(line.lineTotal)}</div>
-                          <div className="text-[10px] text-muted-foreground">واحد: {formatToman(line.price)}</div>
+                          <div className="text-[10px] text-muted-foreground">واحد: {formatToman(line.unitPrice)}</div>
                         </div>
                       </div>
                     </div>
