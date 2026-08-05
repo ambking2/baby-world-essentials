@@ -114,9 +114,11 @@
 
 /* Redefine buttons to be elegant */
 .btn-primary {
-  @apply bg-primary text-primary-foreground px-8 py-3 rounded-md font-medium transition-premium hover:opacity-90 active:scale-[0.98] shadow-sm;
+  @apply bg-primary text-primary-foreground px-8 py-3 rounded-md font-medium hover:opacity-90 active:scale-[0.98] shadow-sm;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .btn-secondary {
-  @apply bg-white border border-border text-foreground px-8 py-3 rounded-md font-medium transition-premium hover:bg-secondary active:scale-[0.98];
+  @apply bg-white border border-border text-foreground px-8 py-3 rounded-md font-medium hover:bg-secondary active:scale-[0.98];
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
