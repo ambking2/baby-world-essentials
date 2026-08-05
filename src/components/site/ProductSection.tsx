@@ -1,6 +1,6 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 
-import { StoreProductCard } from "@/components/store/StoreProductCard";
+import { ProductCard } from "@/components/site/ProductCard";
 import { SectionHeading } from "@/components/store/SectionHeading";
 import { productsQuery, type ProductQuery } from "@/lib/api/catalog";
 import { useAddToCart } from "@/hooks/use-cart";
@@ -45,11 +45,10 @@ export function ProductSection({
       <div className={rail ? "hide-scrollbar -mx-4 flex gap-6 overflow-x-auto px-4 pb-8 md:mx-0 md:grid md:grid-cols-4 md:px-0" : "grid gap-8 sm:grid-cols-2 lg:grid-cols-4"}>
         {products.map((product) => (
           <div key={product.id} className={rail ? "w-[300px] shrink-0 md:w-auto" : ""}>
-            <StoreProductCard 
+            <ProductCard 
               product={product as any} 
-              onAddToCart={() => addToCart.mutate(product as any)}
-              busy={addToCart.isPending && (addToCart.variables as any)?.id === product.id}
             />
+
           </div>
         ))}
       </div>
