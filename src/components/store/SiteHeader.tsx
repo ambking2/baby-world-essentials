@@ -50,24 +50,24 @@ export function SiteHeader({
   return (
     <header className="relative w-full">
       {/* Announcement Bar */}
-      <div className="bg-primary py-2 text-center text-[9px] font-semibold tracking-[0.2em] text-white uppercase sm:text-[10px]">
+      <div className="bg-primary py-2.5 text-center text-[9px] font-bold tracking-[0.15em] text-white uppercase sm:text-[10px]">
         ارسال رایگان برای تمام سفارش‌های بالای {formatToman(business.freeShippingThreshold)}
       </div>
 
       {/* Main Header Container */}
       <div className={cn(
         "z-50 w-full border-b border-border bg-white transition-all duration-300",
-        isScrolled ? "sticky top-0 shadow-sm py-2" : "py-4 lg:py-6"
+        isScrolled ? "sticky top-0 shadow-premium py-3" : "py-5 lg:py-7"
       )}>
-        <div className="container-page flex items-center justify-between gap-4 lg:gap-8">
+        <div className="container-page flex items-center justify-between gap-6 lg:gap-12">
           {/* Mobile Menu Toggle */}
-          <button className="lg:hidden" onClick={() => setMobileOpen(true)}>
-            <Menu className="size-5" />
+          <button className="lg:hidden p-2 -ms-2" onClick={() => setMobileOpen(true)}>
+            <Menu className="size-6 text-gray-900" />
           </button>
 
           {/* Logo */}
           <Link to="/" className="shrink-0">
-            <h1 className="text-xl font-bold tracking-tight text-gray-900 md:text-2xl">
+            <h1 className="text-2xl font-bold tracking-tight text-gray-900 md:text-3xl">
               {business.name}
             </h1>
           </Link>
@@ -75,38 +75,41 @@ export function SiteHeader({
           {/* Search Bar - Desktop */}
           <form 
             onSubmit={submitSearch}
-            className="hidden max-w-lg flex-1 items-center gap-3 rounded-sm border border-border bg-gray-50 px-4 py-2 focus-within:border-gray-900 focus-within:bg-white lg:flex transition-all duration-300"
+            className="hidden max-w-xl flex-1 items-center gap-4 rounded-xl border border-border bg-[#F9F9F9] px-5 py-3 focus-within:border-foreground/20 focus-within:bg-white lg:flex transition-all duration-300"
           >
             <Search className="size-4 text-muted-foreground" />
             <input
               value={term}
               onChange={(e) => setTerm(e.target.value)}
-              placeholder="جستجو در بین هزاران محصول..."
-              className="w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground/70"
+              placeholder="جستجو در بین محصولات جهان کودک..."
+              className="w-full bg-transparent text-[13px] outline-none placeholder:text-muted-foreground/60"
             />
           </form>
 
           {/* Actions */}
-          <div className="flex items-center gap-3 sm:gap-6">
-            <Link to={userName ? "/account" : "/auth/login"} className="hidden items-center gap-2 text-sm font-medium hover:text-primary transition-colors lg:flex">
+          <div className="flex items-center gap-4 sm:gap-8">
+            <Link to={userName ? "/account" : "/auth/login"} className="hidden items-center gap-2.5 text-[13px] font-bold text-gray-900 hover:text-primary transition-colors lg:flex uppercase tracking-wide">
               <User className="size-5" />
               <span>{userName ?? "حساب کاربری"}</span>
             </Link>
-            <Link to="/account/wishlist" className="hidden hover:text-primary transition-colors lg:block">
+            <Link to="/account/wishlist" className="hidden text-gray-900 hover:text-primary transition-colors lg:block">
               <Heart className="size-5" />
             </Link>
-            <Link to="/cart" className="relative flex items-center gap-2 text-sm font-medium hover:text-primary transition-colors">
+            <Link to="/cart" className="relative flex items-center gap-3 text-[13px] font-bold text-gray-900 hover:text-primary transition-colors group">
               <div className="relative">
                 <ShoppingCart className="size-5" />
                 {cartCount > 0 && (
-                  <span className="absolute -right-2 -top-2 flex size-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white shadow-sm">
+                  <span className="absolute -right-2.5 -top-2.5 flex size-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white shadow-sm ring-2 ring-white">
                     {toFaDigits(cartCount)}
                   </span>
                 )}
               </div>
-              <span className="hidden sm:inline font-bold">
-                {cartCount > 0 ? formatToman(cartTotal) : "سبد خرید"}
-              </span>
+              <div className="hidden sm:flex flex-col items-start leading-none">
+                <span className="text-[10px] text-muted-foreground font-medium mb-1 group-hover:text-primary/70 transition-colors uppercase tracking-widest">سبد خرید</span>
+                <span className="font-bold">
+                  {cartCount > 0 ? formatToman(cartTotal) : "۰ تومان"}
+                </span>
+              </div>
             </Link>
           </div>
         </div>
@@ -115,27 +118,27 @@ export function SiteHeader({
       {/* Navigation - Desktop */}
       <nav className="hidden border-b border-border bg-white lg:block">
         <div className="container-page flex justify-center">
-          <ul className="flex gap-10">
+          <ul className="flex gap-12">
             <li>
-              <Link to="/" className="relative block py-4 text-[11px] font-bold uppercase tracking-widest text-gray-900 hover:text-primary transition-colors after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all hover:after:w-full">خانه</Link>
+              <Link to="/" className="relative block py-4 text-[11px] font-bold uppercase tracking-[0.15em] text-gray-900 hover:text-primary transition-colors after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all hover:after:w-full">خانه</Link>
             </li>
             <li className="group relative">
-              <button className="flex items-center gap-1.5 py-4 text-[11px] font-bold uppercase tracking-widest text-gray-900 group-hover:text-primary transition-colors">
+              <button className="flex items-center gap-2 py-4 text-[11px] font-bold uppercase tracking-[0.15em] text-gray-900 group-hover:text-primary transition-colors">
                 دسته‌بندی‌ها
-                <ChevronDown className="size-3 transition-transform group-hover:rotate-180" />
+                <ChevronDown className="size-3.5 transition-transform group-hover:rotate-180" />
               </button>
-              {/* Mega Menu */}
-              <div className="invisible absolute right-0 top-full z-[100] w-[900px] translate-y-2 bg-white p-10 opacity-0 shadow-2xl transition-all duration-300 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 rounded-b-2xl border border-border border-t-0">
+              {/* Mega Menu - Refined with shadows and spacing */}
+              <div className="invisible absolute right-0 top-full z-[100] w-[1000px] translate-y-4 bg-white p-12 opacity-0 shadow-deep transition-all duration-300 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 rounded-b-[24px] border border-border border-t-0">
                 <div className="grid grid-cols-4 gap-12">
                   {categories.map((cat) => (
-                    <div key={cat.slug} className="space-y-4">
-                      <Link to="/category/$slug" params={{ slug: cat.slug }} className="block text-sm font-bold text-foreground hover:text-primary transition-colors">
+                    <div key={cat.slug} className="space-y-6">
+                      <Link to="/category/$slug" params={{ slug: cat.slug }} className="block text-[13px] font-bold text-gray-900 hover:text-primary transition-colors uppercase tracking-wide">
                         {cat.title}
                       </Link>
-                      <ul className="space-y-2.5 border-r border-border/50 pr-4">
+                      <ul className="space-y-3.5 border-r border-border/40 pr-5">
                         {cat.children.map((child) => (
                           <li key={child.slug}>
-                            <Link to="/category/$slug" params={{ slug: child.slug }} className="text-xs text-muted-foreground hover:text-primary hover:translate-x-[-4px] transition-all inline-block">
+                            <Link to="/category/$slug" params={{ slug: child.slug }} className="text-[12px] text-muted-foreground hover:text-primary hover:translate-x-[-4px] transition-all inline-block font-medium">
                               {child.title}
                             </Link>
                           </li>
@@ -147,13 +150,13 @@ export function SiteHeader({
               </div>
             </li>
             <li>
-              <Link to="/search" className="relative block py-4 text-[11px] font-bold uppercase tracking-widest text-gray-900 hover:text-primary transition-colors after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all hover:after:w-full">فروشگاه</Link>
+              <Link to="/search" className="relative block py-4 text-[11px] font-bold uppercase tracking-[0.15em] text-gray-900 hover:text-primary transition-colors after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all hover:after:w-full">فروشگاه</Link>
             </li>
             <li>
-              <Link to="/offers" className="relative block py-4 text-[11px] font-bold uppercase tracking-widest text-destructive hover:opacity-80 transition-colors">تخفیف‌های ویژه</Link>
+              <Link to="/offers" className="relative block py-4 text-[11px] font-bold uppercase tracking-[0.15em] text-destructive hover:opacity-80 transition-colors">تخفیف‌های ویژه</Link>
             </li>
             <li>
-              <Link to="/blog" className="relative block py-4 text-[11px] font-bold uppercase tracking-widest text-gray-900 hover:text-primary transition-colors after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all hover:after:w-full">مجله آموزشی</Link>
+              <Link to="/blog" className="relative block py-4 text-[11px] font-bold uppercase tracking-[0.15em] text-gray-900 hover:text-primary transition-colors after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all hover:after:w-full">مجله آموزشی</Link>
             </li>
           </ul>
         </div>
@@ -162,20 +165,43 @@ export function SiteHeader({
       {/* Mobile Menu */}
       {mobileOpen && (
         <div className="fixed inset-0 z-[100] flex">
-          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setMobileOpen(false)} />
-          <div className="relative flex w-[280px] flex-col bg-white p-6 shadow-2xl animate-fade-in-right">
-            <div className="mb-8 flex items-center justify-between">
-              <span className="text-xl font-bold tracking-tight">{business.name}</span>
-              <button onClick={() => setMobileOpen(false)} className="rounded-full bg-muted p-1 hover:bg-muted-foreground/10 transition-colors">
-                <X className="size-5" />
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" onClick={() => setMobileOpen(false)} />
+          <div className="relative flex w-[300px] flex-col bg-white p-8 shadow-deep animate-fade-in-right h-full">
+            <div className="mb-10 flex items-center justify-between">
+              <span className="text-2xl font-bold tracking-tight">{business.name}</span>
+              <button onClick={() => setMobileOpen(false)} className="rounded-full bg-muted/50 p-2 hover:bg-muted transition-colors">
+                <X className="size-6 text-gray-900" />
               </button>
             </div>
-            <ul className="flex flex-col gap-1">
-              <li><Link to="/" onClick={() => setMobileOpen(false)} className="block py-3 text-sm font-bold hover:text-primary">خانه</Link></li>
-              <li><Link to="/search" onClick={() => setMobileOpen(false)} className="block py-3 text-sm font-bold hover:text-primary">فروشگاه</Link></li>
-              <li><Link to="/blog" onClick={() => setMobileOpen(false)} className="block py-3 text-sm font-bold hover:text-primary">مجله</Link></li>
-              <li><Link to="/contact" onClick={() => setMobileOpen(false)} className="block py-3 text-sm font-bold hover:text-primary">تماس با ما</Link></li>
-            </ul>
+            
+            <div className="mb-8">
+              <form onSubmit={submitSearch} className="relative">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+                <input 
+                  value={term}
+                  onChange={(e) => setTerm(e.target.value)}
+                  placeholder="جستجوی محصول..." 
+                  className="w-full bg-[#F9F9F9] border border-border rounded-xl py-3.5 pl-10 pr-4 text-sm outline-none focus:border-primary/30"
+                />
+              </form>
+            </div>
+
+            <nav className="flex-1 overflow-y-auto hide-scrollbar">
+              <ul className="flex flex-col gap-2">
+                <li><Link to="/" onClick={() => setMobileOpen(false)} className="block py-4 text-[15px] font-bold border-b border-border/30 hover:text-primary">خانه</Link></li>
+                <li><Link to="/search" onClick={() => setMobileOpen(false)} className="block py-4 text-[15px] font-bold border-b border-border/30 hover:text-primary">فروشگاه</Link></li>
+                <li><Link to="/categories" onClick={() => setMobileOpen(false)} className="block py-4 text-[15px] font-bold border-b border-border/30 hover:text-primary">دسته‌بندی‌ها</Link></li>
+                <li><Link to="/blog" onClick={() => setMobileOpen(false)} className="block py-4 text-[15px] font-bold border-b border-border/30 hover:text-primary">مجله جهان کودک</Link></li>
+                <li><Link to="/contact" onClick={() => setMobileOpen(false)} className="block py-4 text-[15px] font-bold border-b border-border/30 hover:text-primary">تماس با ما</Link></li>
+              </ul>
+            </nav>
+            
+            <div className="mt-auto pt-8 border-t border-border space-y-4">
+              <Link to="/auth/login" className="btn-primary w-full text-center">ورود / ثبت‌نام</Link>
+              <div className="flex justify-center gap-6">
+                 {/* Social links could go here */}
+              </div>
+            </div>
           </div>
         </div>
       )}
