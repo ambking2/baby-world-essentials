@@ -43,6 +43,7 @@ import {
   adminListMessages,
   adminListNewsletter,
   adminMarkMessageRead,
+  adminUpdateUserRole,
 } from "../repo/users";
 
 const statusEnum = z.enum(["pending", "approved", "rejected"]);
@@ -388,6 +389,21 @@ export const markAdminMessageRead = createServerFn({ method: "POST" })
     await requireAdmin();
     await adminMarkMessageRead(data.id, data.isRead ?? true);
     return { ok: true };
+  });
+
+export const updateUserRole = createServerFn({ method: "POST" })
+  .validator((data: unknown) =>
+    z
+      .object({
+        userId: z.number().int().positive(),
+        role: z.enum(["customer", "admin", "sales"]),
+      })
+      .parse(data),
+  )
+  .handler(async ({ data }) => {
+    await requireAdmin();
+    await adminUpdateUserRole(data.userId, data.role);
+    return { ok: true, message: "نقش کاربر با موفقیت تغییر کرد." };
   });
 
 /* ---------------------------- کدهای تخفیف ---------------------------- */

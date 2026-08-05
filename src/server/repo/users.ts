@@ -213,6 +213,7 @@ export type AdminCustomer = {
   email: string;
   name: string | null;
   phone: string | null;
+  role: string;
   emailVerified: boolean;
   orderCount: number;
   totalSpent: number;
@@ -224,13 +225,14 @@ type AdminCustomerRow = {
   email: string;
   name: string | null;
   phone: string | null;
+  role: string;
   email_verified_at: string | null;
   order_count: number;
   total_spent: number;
   created_at: string;
 };
 
-const CUSTOMER_SELECT = `SELECT u.id, u.email, u.name, u.phone, u.email_verified_at, u.created_at,
+const CUSTOMER_SELECT = `SELECT u.id, u.email, u.name, u.phone, u.role, u.email_verified_at, u.created_at,
     (SELECT COUNT(*) FROM orders o WHERE o.user_id = u.id) AS order_count,
     (SELECT COALESCE(SUM(o.grand_total), 0) FROM orders o
       WHERE o.user_id = u.id AND o.status IN ('paid','processing','shipped','delivered')) AS total_spent
@@ -254,11 +256,16 @@ export async function adminListCustomers(q?: string): Promise<Array<AdminCustome
     email: row.email,
     name: row.name,
     phone: row.phone,
+    role: row.role,
     emailVerified: row.email_verified_at !== null,
     orderCount: Number(row.order_count),
     totalSpent: Number(row.total_spent),
     createdAt: row.created_at,
   }));
+}
+
+export async function adminUpdateUserRole(userId: number, role: string): Promise<void> {
+  await run("UPDATE users SET role = ? WHERE id = ?", role, userId);
 }
 
 export async function adminListNewsletter(): Promise<Array<{ email: string; createdAt: string }>> {

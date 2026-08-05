@@ -5,6 +5,7 @@ import { reportLovableError } from "@/lib/lovable-error-reporting";
 
 import { SiteFooter } from "@/components/store/SiteFooter";
 import { SiteHeader } from "@/components/store/SiteHeader";
+import { AdminFloatingButton } from "@/components/store/AdminFloatingButton";
 import { joinNewsletter, getCatalogShell } from "@/server/functions/catalog";
 import { getCart } from "@/server/functions/cart";
 import { getSession } from "@/server/functions/auth";
@@ -73,6 +74,8 @@ export function StoreShell({ children }: { children: ReactNode }) {
         onSubscribe={(email) => subscribe.mutate(email)}
         subscribing={subscribe.isPending}
       />
+      
+      <AdminFloatingButton />
     </div>
   );
 }

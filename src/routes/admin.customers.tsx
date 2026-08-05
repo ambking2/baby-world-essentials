@@ -5,7 +5,11 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 import { formatJalali, formatJalaliTime, formatToman, toFaDigits } from "@/lib/format";
-import { getAdminCustomers, markAdminMessageRead } from "@/server/functions/admin";
+import { 
+  getAdminCustomers, 
+  markAdminMessageRead, 
+  updateUserRole 
+} from "@/server/functions/admin";
 
 export const Route = createFileRoute("/admin/customers")({
   component: AdminCustomers,
@@ -26,6 +30,17 @@ function AdminCustomers() {
     onSuccess: () => {
       toast.success("وضعیت پیام به‌روز شد.");
       void queryClient.invalidateQueries({ queryKey: ["admin-customers"] });
+    },
+  });
+
+  const changeRole = useMutation({
+    mutationFn: (input: { userId: number; role: "customer" | "admin" | "sales" }) => updateUserRole({ data: input }),
+    onSuccess: (result: { message: string }) => {
+      toast.success(result.message);
+      void queryClient.invalidateQueries({ queryKey: ["admin-customers"] });
+    },
+    onError: () => {
+      toast.error("خطا در تغییر نقش.");
     },
   });
 
@@ -63,6 +78,7 @@ function AdminCustomers() {
                 <th className="p-2 text-start font-bold">ایمیل</th>
                 <th className="p-2 text-start font-bold">موبایل</th>
                 <th className="p-2 text-start font-bold">تأیید ایمیل</th>
+                <th className="p-2 text-start font-bold">نقش</th>
                 <th className="p-2 text-start font-bold">سفارش‌ها</th>
                 <th className="p-2 text-start font-bold">مجموع خرید</th>
                 <th className="p-2 text-start font-bold">عضویت</th>
@@ -77,6 +93,21 @@ function AdminCustomers() {
                   </td>
                   <td className="p-2 text-muted-foreground">{customer.phone ? toFaDigits(customer.phone) : "—"}</td>
                   <td className="p-2">{customer.emailVerified ? "تأییدشده" : "در انتطار"}</td>
+                  <td className="p-2">
+                    <select
+                      value={customer.role}
+                      disabled={changeRole.isPending}
+                      onChange={(e) => {
+                        const newRole = e.target.value as "customer" | "admin" | "sales";
+                        changeRole.mutate({ userId: customer.id, role: newRole });
+                      }}
+                      className="rounded-lg border border-border bg-background px-2 py-1 text-[10px] outline-none focus:border-brand disabled:opacity-50"
+                    >
+                      <option value="customer">مشتری</option>
+                      <option value="sales">کارشناس فروش</option>
+                      <option value="admin">مدیر کل</option>
+                    </select>
+                  </td>
                   <td className="p-2">{toFaDigits(customer.orderCount)}</td>
                   <td className="p-2 font-bold">{formatToman(customer.totalSpent)}</td>
                   <td className="p-2 text-muted-foreground">{formatJalali(customer.createdAt)}</td>
