@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Instagram, Mail, MapPin, Phone, Send, Facebook, Twitter } from "lucide-react";
+import { Instagram, Mail, MapPin, Phone, Send, Facebook, Twitter, ShieldCheck } from "lucide-react";
 import { useState } from "react";
 
 import { business } from "@/data/business";
@@ -12,106 +12,100 @@ type SiteFooterProps = {
   subscribing?: boolean;
 };
 
-const FOOTER_LINKS = [
-  {
-    title: "خرید آنلاین",
-    links: [
-      { label: "سرویس خواب", href: "/category/servis-khab" },
-      { label: "پوشاک نوزاد", href: "/category/lebas" },
-      { label: "حمل و نقل", href: "/category/kalaskeh" },
-      { label: "اسباب بازی", href: "/category/asbab-bazi" },
-      { label: "تخفیف‌های ویژه", href: "/offers" },
-    ],
-  },
-  {
-    title: "خدمات مشتریان",
-    links: [
-      { label: "سوالات متداول", href: "/faq" },
-      { label: "پیگیری سفارش", href: "/account/orders" },
-      { label: "روش‌های ارسال", href: "/faq" },
-      { label: "شرایط بازگشت کالا", href: "/faq" },
-      { label: "راهنمای سایز", href: "/faq" },
-    ],
-  },
-  {
-    title: "شرکت ما",
-    links: [
-      { label: "داستان ما", href: "/about" },
-      { label: "کارگاه اختصاصی", href: "/about" },
-      { label: "فرصت‌های شغلی", href: "/about" },
-      { label: "تماس با ما", href: "/contact" },
-      { label: "مجله نوزاد", href: "/blog" },
-    ],
-  },
-];
-
-export function SiteFooter({ categories, onSubscribe, subscribing = false }: SiteFooterProps) {
+export function SiteFooter({ onSubscribe, subscribing = false }: SiteFooterProps) {
   const [email, setEmail] = useState("");
 
-  return (
-    <footer className="border-t border-border bg-white section-spacing !pb-0">
-      <div className="container-page">
-        {/* Newsletter Section */}
-        <div className="mb-20 grid items-center gap-16 border-b border-border pb-20 lg:grid-cols-2">
-          <div>
-            <h2 className="mb-4 text-2xl font-bold lg:text-3xl">به خبرنامه ما بپیوندید</h2>
-            <p className="text-muted-foreground lg:text-lg">
-              از جدیدترین محصولات، تخفیف‌های ویژه و مقالات آموزشی ما باخبر شوید.
-            </p>
-          </div>
-          <form
-            onSubmit={(event) => {
-              event.preventDefault();
-              if (!email.trim()) return;
-              onSubscribe?.(email.trim());
-              setEmail("");
-            }}
-            className="flex items-center gap-4 bg-secondary/30 p-2 rounded-full border border-border/50 focus-within:border-primary transition-premium"
-          >
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="آدرس ایمیل شما"
-              className="flex-1 bg-transparent px-4 py-2 text-sm outline-none placeholder:text-muted-foreground/60"
-              dir="ltr"
-            />
-            <button
-              type="submit"
-              disabled={subscribing}
-              className="group flex items-center gap-2 rounded-full bg-primary px-6 py-2 text-sm font-bold text-white shadow-sm transition-premium hover:bg-primary/90 disabled:opacity-50"
-            >
-              عضویت
-              <Send className="size-4" />
-            </button>
-          </form>
-        </div>
+  const footerGroups = [
+    {
+      title: "درباره ما",
+      links: [
+        { label: "داستان جهان کودک", href: "/about" },
+        { label: "کارگاه اختصاصی", href: "/about" },
+        { label: "مجله آموزشی", href: "/blog" },
+        { label: "تماس با ما", href: "/contact" },
+      ],
+    },
+    {
+      title: "دسته‌بندی‌ها",
+      links: [
+        { label: "سرویس خواب نوزاد", href: "/category/servis-khab" },
+        { label: "پوشاک ارگانیک", href: "/category/lebas" },
+        { label: "لوازم حمل و نقل", href: "/category/kalaskeh" },
+        { label: "اسباب‌بازی آموزشی", href: "/category/asbab-bazi" },
+      ],
+    },
+    {
+      title: "خدمات مشتریان",
+      links: [
+        { label: "سوالات متداول", href: "/faq" },
+        { label: "پیگیری سفارش", href: "/account/orders" },
+        { label: "قوانین و مقررات", href: "/faq" },
+        { label: "حریم خصوصی", href: "/faq" },
+      ],
+    },
+  ];
 
-        {/* Main Footer Links */}
-        <div className="grid gap-20 md:grid-cols-2 lg:grid-cols-4">
-          <div className="space-y-8">
+  return (
+    <footer className="border-t border-border bg-white pt-20">
+      <div className="container-page">
+        {/* Newsletter & Brand Intro */}
+        <div className="mb-20 grid gap-16 lg:grid-cols-[1fr_450px]">
+          <div className="max-w-xl">
             <Link to="/">
-              <h1 className="text-xl font-bold tracking-tight text-foreground">{business.name}</h1>
+              <h2 className="text-2xl font-bold tracking-tight text-foreground lg:text-3xl">{business.name}</h2>
             </Link>
-            <p className="text-sm leading-relaxed text-muted-foreground">
-              ارائه دهنده برترین برندهای سیسمونی و تولید کننده اختصاصی سرویس خواب نوزاد با بیش از ۱۵ سال تجربه.
+            <p className="mt-6 text-base leading-relaxed text-muted-foreground">
+              تولیدکننده اختصاصی سرویس خواب نوزاد و ارائه‌دهنده برترین برندهای جهانی سیسمونی با بیش از ۱۵ سال تجربه در خدمت خانواده‌های ایرانی. ما معتقدیم کیفیت در جزئیات است.
             </p>
-            <div className="flex gap-4">
-              <a href="#" className="text-muted-foreground hover:text-primary transition-colors"><Instagram className="size-5" /></a>
-              <a href="#" className="text-muted-foreground hover:text-primary transition-colors"><Facebook className="size-5" /></a>
-              <a href="#" className="text-muted-foreground hover:text-primary transition-colors"><Twitter className="size-5" /></a>
+            <div className="mt-8 flex gap-5">
+              <a href="#" className="flex size-10 items-center justify-center rounded-full border border-border text-muted-foreground transition-all hover:border-primary hover:bg-primary hover:text-white"><Instagram className="size-5" /></a>
+              <a href="#" className="flex size-10 items-center justify-center rounded-full border border-border text-muted-foreground transition-all hover:border-primary hover:bg-primary hover:text-white"><Facebook className="size-5" /></a>
+              <a href="#" className="flex size-10 items-center justify-center rounded-full border border-border text-muted-foreground transition-all hover:border-primary hover:bg-primary hover:text-white"><Twitter className="size-5" /></a>
             </div>
           </div>
 
-          {FOOTER_LINKS.map((section) => (
-            <div key={section.title}>
-              <h3 className="mb-8 text-xs font-bold uppercase tracking-widest text-foreground">
-                {section.title}
+          <div className="rounded-2xl border border-border bg-muted/20 p-8 lg:p-10">
+            <h3 className="mb-4 text-lg font-bold">به خبرنامه ما بپیوندید</h3>
+            <p className="mb-8 text-sm text-muted-foreground">از جدیدترین محصولات و تخفیف‌های ویژه ما زودتر از بقیه باخبر شوید.</p>
+            <form
+              onSubmit={(event) => {
+                event.preventDefault();
+                if (!email.trim()) return;
+                onSubscribe?.(email.trim());
+                setEmail("");
+              }}
+              className="relative flex items-center"
+            >
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="آدرس ایمیل شما"
+                className="w-full rounded-full border border-border bg-white px-6 py-4 text-sm outline-none transition-all focus:border-primary pr-12"
+                dir="ltr"
+              />
+              <button
+                type="submit"
+                disabled={subscribing}
+                className="absolute left-1.5 flex size-11 items-center justify-center rounded-full bg-primary text-white shadow-sm transition-all hover:scale-105 active:scale-95 disabled:opacity-50"
+              >
+                <Send className="size-5" />
+              </button>
+            </form>
+          </div>
+        </div>
+
+        {/* Main Footer Links */}
+        <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-4">
+          {footerGroups.map((group) => (
+            <div key={group.title}>
+              <h3 className="mb-8 text-xs font-bold uppercase tracking-[0.2em] text-foreground">
+                {group.title}
               </h3>
               <ul className="space-y-4">
-                {section.links.map((link) => (
+                {group.links.map((link) => (
                   <li key={link.label}>
-                    <Link to={link.href as any} className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                    <Link to={link.href as any} className="text-sm text-muted-foreground transition-colors hover:text-primary">
                       {link.label}
                     </Link>
                   </li>
@@ -119,37 +113,48 @@ export function SiteFooter({ categories, onSubscribe, subscribing = false }: Sit
               </ul>
             </div>
           ))}
-        </div>
 
-        {/* Contact Info Row */}
-        <div className="mt-20 border-t border-border py-12 bg-secondary/10 -mx-[max(24px,calc((100vw-1320px)/2))] px-[max(24px,calc((100vw-1320px)/2))]">
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="flex items-start gap-4">
-              <MapPin className="size-5 shrink-0 text-primary" />
-              <span className="text-xs text-muted-foreground">{business.addressLine}</span>
-            </div>
-            <div className="flex items-center gap-4">
-              <Phone className="size-5 shrink-0 text-primary" />
-              <span className="text-xs text-muted-foreground" dir="ltr">{toFaDigits(business.phoneDisplay)}</span>
-            </div>
-            <div className="flex items-center gap-4">
-              <Mail className="size-5 shrink-0 text-primary" />
-              <span className="text-xs text-muted-foreground">{business.supportEmail}</span>
-            </div>
-            <div className="flex items-center justify-end gap-6 lg:justify-end">
-              {/* Payment Methods */}
-              <div className="h-6 w-10 bg-secondary rounded" />
-              <div className="h-6 w-10 bg-secondary rounded" />
-              <div className="h-6 w-10 bg-secondary rounded" />
-            </div>
+          <div>
+            <h3 className="mb-8 text-xs font-bold uppercase tracking-[0.2em] text-foreground">ارتباط با ما</h3>
+            <ul className="space-y-5">
+              <li className="flex items-start gap-3">
+                <MapPin className="mt-0.5 size-4 shrink-0 text-primary" />
+                <span className="text-sm leading-relaxed text-muted-foreground">{business.addressLine}</span>
+              </li>
+              <li className="flex items-center gap-3">
+                <Phone className="size-4 shrink-0 text-primary" />
+                <span className="text-sm text-muted-foreground" dir="ltr">{toFaDigits(business.phoneDisplay)}</span>
+              </li>
+              <li className="flex items-center gap-3">
+                <Mail className="size-4 shrink-0 text-primary" />
+                <span className="text-sm text-muted-foreground">{business.supportEmail}</span>
+              </li>
+            </ul>
           </div>
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-border py-8 text-center">
-          <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
-            © {toFaDigits(new Date().getFullYear())} {business.name}. تمامی حقوق محفوظ است. طراحی شده برای بهترین شروع زندگی.
-          </p>
+        <div className="mt-20 border-t border-border py-10">
+          <div className="flex flex-col items-center justify-between gap-8 lg:flex-row">
+            <div className="flex items-center gap-6">
+              <div className="flex items-center gap-2 rounded-lg border border-border/50 px-3 py-1.5 grayscale transition-all hover:grayscale-0">
+                <ShieldCheck className="size-4 text-primary" />
+                <span className="text-[10px] font-bold text-foreground">عضو رسمی اتحادیه</span>
+              </div>
+              <div className="h-6 w-10 bg-muted/40 rounded grayscale" />
+              <div className="h-6 w-10 bg-muted/40 rounded grayscale" />
+            </div>
+
+            <p className="text-[11px] font-medium tracking-wide text-muted-foreground">
+              © {toFaDigits(new Date().getFullYear())} {business.name}. تمامی حقوق محفوظ است.
+            </p>
+
+            <div className="flex gap-6 grayscale opacity-60">
+              <div className="h-5 w-8 bg-muted rounded" />
+              <div className="h-5 w-8 bg-muted rounded" />
+              <div className="h-5 w-8 bg-muted rounded" />
+            </div>
+          </div>
         </div>
       </div>
     </footer>
