@@ -1,4 +1,4 @@
-import { useSuspenseQuery, useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { createFileRoute } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
@@ -10,6 +10,7 @@ import { StoreShell } from "@/components/store/StoreShell";
 import { ProductSection } from "@/components/site/ProductSection";
 import { SectionHeading } from "@/components/store/SectionHeading";
 import { BlogPreview } from "@/components/site/BlogPreview";
+import { useEffect } from "react";
 
 import { business } from "@/data/business";
 import { categoriesQuery, productsQuery } from "@/lib/api/catalog";
@@ -33,6 +34,13 @@ export const Route = createFileRoute("/")({
 
 function HomePage() {
   const { data: categories } = useSuspenseQuery(categoriesQuery());
+  const queryClient = useQueryClient();
+
+  // Reset category/tag specific queries on home mount to ensure fresh data
+  useEffect(() => {
+    queryClient.invalidateQueries({ queryKey: ["products"] });
+    queryClient.invalidateQueries({ queryKey: ["posts"] });
+  }, [queryClient]);
 
   return (
     <StoreShell>
