@@ -213,6 +213,7 @@ export type AdminCustomer = {
   email: string;
   name: string | null;
   phone: string | null;
+  role: string;
   emailVerified: boolean;
   orderCount: number;
   totalSpent: number;
@@ -224,6 +225,7 @@ type AdminCustomerRow = {
   email: string;
   name: string | null;
   phone: string | null;
+  role: string;
   email_verified_at: string | null;
   order_count: number;
   total_spent: number;

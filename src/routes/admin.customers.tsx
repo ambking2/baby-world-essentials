@@ -31,7 +31,7 @@ function AdminCustomers() {
 
   const changeRole = useMutation({
     mutationFn: (input: { userId: number; role: "customer" | "admin" | "sales" }) => updateUserRole({ data: input }),
-    onSuccess: (result) => {
+    onSuccess: (result: { message: string }) => {
       toast.success(result.message);
       void queryClient.invalidateQueries({ queryKey: ["admin-customers"] });
     },
