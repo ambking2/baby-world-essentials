@@ -33,7 +33,7 @@ export function BlogPreview() {
             >
               <div className="relative aspect-[16/10] overflow-hidden rounded-[2.2rem] shadow-inner">
                 <img 
-                  src={post.cover ?? "/images/cat-clothing.jpg"} 
+                  src={(post as any).cover ?? "/images/cat-clothing.jpg"} 
                   alt="" 
                   className="size-full object-cover transition-transform duration-700 group-hover:scale-110" 
                 />
