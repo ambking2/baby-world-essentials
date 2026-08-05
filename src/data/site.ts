@@ -35,7 +35,7 @@ export const blogPosts: BlogPost[] = [
     excerpt:
       "فهرست خریدی که در فروشگاه به مشتری‌ها می‌دهیم؛ بر اساس چیزی که مادرها بعد از زایمان واقعاً استفاده می‌کنند.",
     date: "۱۴۰۴/۰۲/۱۸",
-    cover: "/images/hero-nursery.jpg",
+    cover: "https://images.unsplash.com/photo-1544124499-58912cbddaad?q=80&w=1974&auto=format&fit=crop",
     author: "آقای عسگری",
     readMinutes: 6,
     body: [
@@ -51,7 +51,7 @@ export const blogPosts: BlogPost[] = [
     excerpt:
       "تفاوت چوب راش، روسی و ام‌دی‌اف در دوام، وزن و قیمت — با توضیح اینکه در کارگاه خودمان از چه چیزی استفاده می‌کنیم.",
     date: "۱۴۰۴/۰۱/۲۹",
-    cover: "/images/cat-toys.jpg",
+    cover: "https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?q=80&w=2075&auto=format&fit=crop",
     author: "کارگاه جهان کودک",
     readMinutes: 8,
     body: [
@@ -66,7 +66,7 @@ export const blogPosts: BlogPost[] = [
     title: "شست‌وشوی لباس نوزاد بدون حساسیت پوستی",
     excerpt: "دمای آب، نوع شوینده و نکته‌ای که درباره نرم‌کننده باید بدانید.",
     date: "۱۴۰۳/۱۲/۰۹",
-    cover: "/images/cat-clothing.jpg",
+    cover: "https://images.unsplash.com/photo-1595113316349-9fa4ee24f884?q=80&w=2072&auto=format&fit=crop",
     author: "فروشگاه جهان کودک",
     readMinutes: 4,
     body: [
