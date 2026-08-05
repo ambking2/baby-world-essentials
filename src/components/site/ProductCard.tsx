@@ -27,11 +27,11 @@ export function ProductCard({
 
   return (
     <div className={cn(
-      "group relative flex h-full flex-col bg-white border border-border rounded-[14px] transition-all duration-300 hover:-translate-y-1 hover:shadow-soft",
+      "group relative flex h-full flex-col bg-white border border-accent/60 rounded-[14px] transition-all duration-300 hover:-translate-y-1 hover:shadow-premium",
       className
     )}>
       {/* Image Container - 4:5 Ratio */}
-      <div className="relative aspect-[4/5] overflow-hidden rounded-t-[14px] bg-[#F9F9F9]">
+      <div className="relative aspect-[4/5] overflow-hidden rounded-t-[14px] bg-secondary/30">
         <Link to="/product/$slug" params={{ slug: product.slug }} className="block h-full w-full">
           <img
             src={product.image || product.cover || "https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?q=80&w=2070&auto=format&fit=crop"}
@@ -75,7 +75,7 @@ export function ProductCard({
           <button
             onClick={() => onAddToCart ? onAddToCart(product) : toast.success("به سبد خرید اضافه شد")}
             disabled={outOfStock}
-            className="w-full bg-white/95 backdrop-blur-sm text-gray-900 border border-border py-2.5 text-[11px] font-bold rounded-lg hover:bg-primary hover:text-white hover:border-primary transition-all duration-300 active:scale-[0.97]"
+            className="w-full bg-primary text-white py-3 text-[11px] font-bold rounded-lg hover:bg-primary/90 transition-all duration-300 active:scale-[0.97] shadow-lg shadow-primary/20"
           >
             {outOfStock ? "ناموجود" : "افزودن سریع"}
           </button>
