@@ -43,14 +43,14 @@ export function FilterSidebar({
 
   return (
     <aside className={cn("space-y-4", className)}>
-      <div className="flex items-center gap-2 border-b border-border pb-4 mb-4">
-        <SlidersHorizontal className="size-4 text-primary" aria-hidden />
-        <span className="text-sm font-bold uppercase tracking-widest">فیلتر</span>
+      <div className="flex items-center gap-2 border-b border-border pb-3 mb-6">
+        <SlidersHorizontal className="size-4 text-gray-900" aria-hidden />
+        <span className="text-[11px] font-bold uppercase tracking-widest text-gray-900">فیلترها</span>
 
         <button
           type="button"
           onClick={() => onChange({ sizes: [], colors: [], onlyAvailable: false, onlyDiscounted: false })}
-          className="ms-auto text-[10px] font-bold text-muted-foreground uppercase tracking-widest hover:text-primary transition-colors"
+          className="ms-auto text-[9px] font-bold text-gray-400 uppercase tracking-widest hover:text-gray-900 transition-colors"
         >
           حذف همه
         </button>
@@ -58,7 +58,7 @@ export function FilterSidebar({
 
       {categories.length > 0 ? (
         <div className="mb-10">
-          <h3 className="mb-6 text-[11px] font-bold uppercase tracking-widest text-foreground">دسته‌بندی‌ها</h3>
+          <h3 className="mb-4 text-[10px] font-bold uppercase tracking-widest text-gray-900">دسته‌بندی‌ها</h3>
 
           <ul className="space-y-2">
             {categories.map((category) => (
@@ -67,8 +67,8 @@ export function FilterSidebar({
                   to="/category/$slug"
                   params={{ slug: category.slug }}
                   className={cn(
-                    "flex items-center justify-between text-xs transition-colors hover:text-primary",
-                    category.slug === activeSlug ? "font-extrabold text-primary" : "text-muted-foreground",
+                    "flex items-center justify-between text-[11px] transition-colors hover:text-gray-900",
+                    category.slug === activeSlug ? "font-bold text-gray-900" : "text-gray-500",
                   )}
                 >
                   <span>{category.title}</span>
@@ -100,7 +100,7 @@ export function FilterSidebar({
       ) : null}
 
       <div className="mb-10">
-        <h3 className="mb-6 text-[11px] font-bold uppercase tracking-widest text-foreground">محدودهٔ قیمت</h3>
+        <h3 className="mb-4 text-[10px] font-bold uppercase tracking-widest text-gray-900">محدودهٔ قیمت</h3>
 
         <input
           type="range"
@@ -109,18 +109,18 @@ export function FilterSidebar({
           step={50000}
           value={maxValue}
           onChange={(event) => onChange({ ...state, maxPrice: Number(event.target.value) })}
-          className="w-full accent-primary"
+          className="w-full accent-gray-900"
           aria-label="حداکثر قیمت"
         />
-        <div className="mt-2 flex items-center justify-between text-[11px] text-muted-foreground">
+        <div className="mt-2 flex items-center justify-between text-[10px] text-gray-400">
           <span>{formatToman(priceBounds.min)}</span>
-          <span className="font-bold text-foreground">تا {formatToman(maxValue)}</span>
+          <span className="font-bold text-gray-900">تا {formatToman(maxValue)}</span>
         </div>
       </div>
 
       {availableSizes.length > 0 ? (
         <div className="mb-10">
-          <h3 className="mb-6 text-[11px] font-bold uppercase tracking-widest text-foreground">سایز</h3>
+          <h3 className="mb-4 text-[10px] font-bold uppercase tracking-widest text-gray-900">سایز</h3>
 
           <div className="flex flex-wrap gap-2">
             {availableSizes.map((size) => {
@@ -131,8 +131,8 @@ export function FilterSidebar({
                   type="button"
                   onClick={() => onChange({ ...state, sizes: toggleValue(state.sizes, size) })}
                   className={cn(
-                    "rounded-xl border px-2.5 py-1.5 text-[11px] font-semibold transition-colors",
-                    active ? "border-primary bg-primary text-primary-foreground shadow-sm" : "border-border bg-white text-muted-foreground hover:border-primary shadow-sm",
+                    "rounded-sm border px-2.5 py-1.5 text-[10px] font-semibold transition-colors shadow-sm",
+                    active ? "border-gray-900 bg-gray-900 text-white" : "border-border bg-white text-gray-500 hover:border-gray-900",
                   )}
                 >
                   {size}
@@ -144,8 +144,8 @@ export function FilterSidebar({
       ) : null}
 
       {availableColors.length > 0 ? (
-        <div className="rounded-2xl border border-border bg-white p-4 shadow-sm">
-          <h3 className="mb-3 text-xs font-extrabold text-foreground">رنگ</h3>
+        <div className="rounded-sm border border-border bg-gray-50 p-4">
+          <h3 className="mb-4 text-[10px] font-bold uppercase tracking-widest text-gray-900">رنگ</h3>
           <div className="flex flex-wrap gap-2">
             {availableColors.map((item) => {
               const active = state.colors.includes(item.color);
@@ -156,8 +156,8 @@ export function FilterSidebar({
                   title={item.color}
                   onClick={() => onChange({ ...state, colors: toggleValue(state.colors, item.color) })}
                   className={cn(
-                    "flex items-center gap-1.5 rounded-xl border px-2 py-1.5 text-[11px] font-semibold transition-colors",
-                    active ? "border-primary text-primary bg-primary/5 shadow-sm" : "border-border bg-white text-muted-foreground hover:border-primary shadow-sm",
+                    "flex items-center gap-1.5 rounded-sm border px-2 py-1.5 text-[10px] font-semibold transition-colors shadow-sm",
+                    active ? "border-gray-900 text-gray-900 bg-white" : "border-border bg-white text-gray-400 hover:border-gray-900",
                   )}
                 >
                   <span
@@ -174,22 +174,22 @@ export function FilterSidebar({
         </div>
       ) : null}
 
-      <div className="space-y-2 rounded-2xl border border-border bg-white p-4 shadow-sm">
-        <label className="flex cursor-pointer items-center gap-2 text-xs text-foreground">
+      <div className="space-y-3 rounded-sm border border-border bg-gray-50 p-4">
+        <label className="flex cursor-pointer items-center gap-2 text-[11px] font-medium text-gray-900">
           <input
             type="checkbox"
             checked={state.onlyAvailable}
             onChange={(event) => onChange({ ...state, onlyAvailable: event.target.checked })}
-            className="size-4 accent-primary"
+            className="size-4 accent-gray-900"
           />
           فقط کالاهای موجود
         </label>
-        <label className="flex cursor-pointer items-center gap-2 text-xs text-foreground">
+        <label className="flex cursor-pointer items-center gap-2 text-[11px] font-medium text-gray-900">
           <input
             type="checkbox"
             checked={state.onlyDiscounted}
             onChange={(event) => onChange({ ...state, onlyDiscounted: event.target.checked })}
-            className="size-4 accent-primary"
+            className="size-4 accent-gray-900"
           />
           فقط کالاهای دارای تخفیف
         </label>
