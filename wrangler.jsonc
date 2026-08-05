@@ -29,7 +29,7 @@
     {
       "binding": "DB",
       "database_name": "jahankoodak",
-      "database_id": "REPLACE_WITH_D1_DATABASE_ID",
+      "database_id": "a71fbb41-92d4-4135-b44c-5f75959b7f9e",
       "migrations_dir": "migrations"
     }
   ],
