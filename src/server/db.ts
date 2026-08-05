@@ -1,298 +1,36 @@
-import { DatabaseSync } from "node:sqlite";
-import { mkdirSync } from "node:fs";
-import { dirname, resolve } from "node:path";
+import { schemaStatements } from "./schema";
+
+import type { CloudflareEnv, D1Database } from "@/types/cloudflare";
 
 /**
- * لایه‌ی دیتابیس فروشگاه.
+ * لایه‌ی دیتابیس فروشگاه — سازگار با Cloudflare Workers.
  *
- * از SQLite داخلی Node ۲۴ (`node:sqlite`) استفاده می‌کند؛ بنابراین هیچ پکیج
- * اضافه‌ای لازم نیست و راه‌اندازی روی هر سروری با یک دستور انجام می‌شود.
- * مسیر فایل دیتابیس با متغیر محیطی DATABASE_PATH قابل تغییر است.
+ * دو درایور دارد و بین‌شان به‌صورت خودکار انتخاب می‌کند:
+ *
+ *   ۱. Cloudflare D1  — وقتی binding با نام DB در دسترس باشد (روی ورکر).
+ *   ۲. node:sqlite    — برای اجرای محلی با `npm run dev` و اسکریپت seed.
+ *
+ * تمام توابع async هستند، چون D1 هیچ API همگامی ندارد. این تنها دلیل تبدیل
+ * کل لایه‌ی داده به async بود.
  */
 
 export type SqlValue = string | number | null;
 export type SqlInput = string | number | boolean | null | undefined;
 
-let db: DatabaseSync | null = null;
+export type RunResult = { changes: number; lastInsertRowid: number };
 
-function databasePath(): string {
-  return process.env["DATABASE_PATH"] ?? resolve(process.cwd(), "data/store.db");
+export type Statement = { query: string; params: Array<SqlValue> };
+
+interface Driver {
+  all<T>(query: string, params: Array<SqlValue>): Promise<Array<T>>;
+  one<T>(query: string, params: Array<SqlValue>): Promise<T | undefined>;
+  run(query: string, params: Array<SqlValue>): Promise<RunResult>;
+  batch(statements: Array<Statement>): Promise<Array<RunResult>>;
 }
 
-const SCHEMA = `
-CREATE TABLE IF NOT EXISTS settings (
-  key TEXT PRIMARY KEY,
-  value TEXT
-);
-
-CREATE TABLE IF NOT EXISTS categories (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  slug TEXT NOT NULL UNIQUE,
-  title TEXT NOT NULL,
-  blurb TEXT,
-  image TEXT,
-  parent_id INTEGER REFERENCES categories(id) ON DELETE SET NULL,
-  kind TEXT NOT NULL DEFAULT 'general',
-  sort INTEGER NOT NULL DEFAULT 0,
-  is_active INTEGER NOT NULL DEFAULT 1
-);
-
-CREATE TABLE IF NOT EXISTS products (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  code TEXT NOT NULL UNIQUE,
-  slug TEXT NOT NULL UNIQUE,
-  title TEXT NOT NULL,
-  subtitle TEXT,
-  description TEXT,
-  category_id INTEGER REFERENCES categories(id) ON DELETE SET NULL,
-  price INTEGER NOT NULL DEFAULT 0,
-  discount_percent INTEGER NOT NULL DEFAULT 0,
-  sale_percent INTEGER NOT NULL DEFAULT 0,
-  sale_starts_at TEXT,
-  sale_ends_at TEXT,
-  stock INTEGER NOT NULL DEFAULT 0,
-  weight_grams INTEGER NOT NULL DEFAULT 0,
-  is_active INTEGER NOT NULL DEFAULT 1,
-  is_featured INTEGER NOT NULL DEFAULT 0,
-  made_in_workshop INTEGER NOT NULL DEFAULT 0,
-  badge TEXT,
-  rating_sum INTEGER NOT NULL DEFAULT 0,
-  rating_count INTEGER NOT NULL DEFAULT 0,
-  sold_count INTEGER NOT NULL DEFAULT 0,
-  view_count INTEGER NOT NULL DEFAULT 0,
-  created_at TEXT NOT NULL,
-  updated_at TEXT NOT NULL
-);
-CREATE INDEX IF NOT EXISTS idx_products_category ON products(category_id);
-CREATE INDEX IF NOT EXISTS idx_products_active ON products(is_active, created_at DESC);
-
-CREATE TABLE IF NOT EXISTS product_images (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  product_id INTEGER NOT NULL REFERENCES products(id) ON DELETE CASCADE,
-  url TEXT NOT NULL,
-  alt TEXT,
-  sort INTEGER NOT NULL DEFAULT 0
-);
-
-CREATE TABLE IF NOT EXISTS product_attributes (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  product_id INTEGER NOT NULL REFERENCES products(id) ON DELETE CASCADE,
-  name TEXT NOT NULL,
-  value TEXT NOT NULL,
-  sort INTEGER NOT NULL DEFAULT 0
-);
-
-CREATE TABLE IF NOT EXISTS product_variants (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  product_id INTEGER NOT NULL REFERENCES products(id) ON DELETE CASCADE,
-  size TEXT,
-  color TEXT,
-  color_hex TEXT,
-  price_delta INTEGER NOT NULL DEFAULT 0,
-  stock INTEGER NOT NULL DEFAULT 0,
-  sort INTEGER NOT NULL DEFAULT 0
-);
-
-CREATE TABLE IF NOT EXISTS users (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  email TEXT NOT NULL UNIQUE,
-  password_hash TEXT NOT NULL,
-  name TEXT,
-  phone TEXT,
-  role TEXT NOT NULL DEFAULT 'customer',
-  email_verified_at TEXT,
-  created_at TEXT NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS email_codes (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-  code_hash TEXT NOT NULL,
-  purpose TEXT NOT NULL,
-  expires_at TEXT NOT NULL,
-  used_at TEXT,
-  created_at TEXT NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS sessions (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-  token_hash TEXT NOT NULL UNIQUE,
-  expires_at TEXT NOT NULL,
-  created_at TEXT NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS carts (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  token TEXT NOT NULL UNIQUE,
-  user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-  created_at TEXT NOT NULL,
-  updated_at TEXT NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS cart_items (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  cart_id INTEGER NOT NULL REFERENCES carts(id) ON DELETE CASCADE,
-  product_id INTEGER NOT NULL REFERENCES products(id) ON DELETE CASCADE,
-  variant_id INTEGER REFERENCES product_variants(id) ON DELETE SET NULL,
-  qty INTEGER NOT NULL DEFAULT 1,
-  created_at TEXT NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS wishlist (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-  product_id INTEGER NOT NULL REFERENCES products(id) ON DELETE CASCADE,
-  created_at TEXT NOT NULL,
-  UNIQUE(user_id, product_id)
-);
-
-CREATE TABLE IF NOT EXISTS addresses (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-  receiver TEXT NOT NULL,
-  phone TEXT NOT NULL,
-  province TEXT NOT NULL,
-  city TEXT NOT NULL,
-  postal_code TEXT,
-  line TEXT NOT NULL,
-  is_default INTEGER NOT NULL DEFAULT 0,
-  created_at TEXT NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS coupons (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  code TEXT NOT NULL UNIQUE,
-  kind TEXT NOT NULL DEFAULT 'percent',
-  value INTEGER NOT NULL DEFAULT 0,
-  min_total INTEGER NOT NULL DEFAULT 0,
-  max_off INTEGER,
-  max_uses INTEGER,
-  used_count INTEGER NOT NULL DEFAULT 0,
-  starts_at TEXT,
-  ends_at TEXT,
-  is_active INTEGER NOT NULL DEFAULT 1,
-  created_at TEXT NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS orders (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  code TEXT NOT NULL UNIQUE,
-  user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-  status TEXT NOT NULL DEFAULT 'pending_payment',
-  payment_method TEXT NOT NULL,
-  receiver TEXT NOT NULL,
-  phone TEXT NOT NULL,
-  province TEXT NOT NULL,
-  city TEXT NOT NULL,
-  postal_code TEXT,
-  address_line TEXT NOT NULL,
-  note TEXT,
-  coupon_code TEXT,
-  items_total INTEGER NOT NULL DEFAULT 0,
-  discount_total INTEGER NOT NULL DEFAULT 0,
-  shipping_total INTEGER NOT NULL DEFAULT 0,
-  grand_total INTEGER NOT NULL DEFAULT 0,
-  created_at TEXT NOT NULL,
-  paid_at TEXT,
-  updated_at TEXT NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS order_items (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  order_id INTEGER NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
-  product_id INTEGER REFERENCES products(id) ON DELETE SET NULL,
-  variant_id INTEGER REFERENCES product_variants(id) ON DELETE SET NULL,
-  title TEXT NOT NULL,
-  code TEXT,
-  size TEXT,
-  color TEXT,
-  image TEXT,
-  unit_price INTEGER NOT NULL DEFAULT 0,
-  qty INTEGER NOT NULL DEFAULT 1,
-  line_total INTEGER NOT NULL DEFAULT 0
-);
-
-CREATE TABLE IF NOT EXISTS payments (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  order_id INTEGER NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
-  method TEXT NOT NULL,
-  amount INTEGER NOT NULL DEFAULT 0,
-  payer_name TEXT,
-  reference TEXT,
-  paid_at_text TEXT,
-  receipt_url TEXT,
-  status TEXT NOT NULL DEFAULT 'submitted',
-  admin_note TEXT,
-  created_at TEXT NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS reviews (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  product_id INTEGER NOT NULL REFERENCES products(id) ON DELETE CASCADE,
-  user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-  name TEXT NOT NULL,
-  rating INTEGER NOT NULL DEFAULT 5,
-  body TEXT NOT NULL,
-  status TEXT NOT NULL DEFAULT 'pending',
-  created_at TEXT NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS blog_posts (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  slug TEXT NOT NULL UNIQUE,
-  title TEXT NOT NULL,
-  excerpt TEXT,
-  body TEXT NOT NULL,
-  cover TEXT,
-  tag TEXT,
-  author TEXT NOT NULL DEFAULT 'جهان کودک',
-  status TEXT NOT NULL DEFAULT 'published',
-  published_at TEXT,
-  view_count INTEGER NOT NULL DEFAULT 0
-);
-
-CREATE TABLE IF NOT EXISTS blog_comments (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  post_id INTEGER NOT NULL REFERENCES blog_posts(id) ON DELETE CASCADE,
-  parent_id INTEGER REFERENCES blog_comments(id) ON DELETE CASCADE,
-  name TEXT NOT NULL,
-  email TEXT,
-  body TEXT NOT NULL,
-  status TEXT NOT NULL DEFAULT 'pending',
-  created_at TEXT NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS newsletter (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  email TEXT NOT NULL UNIQUE,
-  created_at TEXT NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS contact_messages (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  name TEXT NOT NULL,
-  phone TEXT,
-  email TEXT,
-  subject TEXT,
-  body TEXT NOT NULL,
-  is_read INTEGER NOT NULL DEFAULT 0,
-  created_at TEXT NOT NULL
-);
-`;
-
-export function getDb(): DatabaseSync {
-  if (db) return db;
-  const path = databasePath();
-  mkdirSync(dirname(path), { recursive: true });
-  const instance = new DatabaseSync(path);
-  instance.exec("PRAGMA journal_mode = WAL;");
-  instance.exec("PRAGMA foreign_keys = ON;");
-  instance.exec("PRAGMA busy_timeout = 5000;");
-  instance.exec(SCHEMA);
-  db = instance;
-  return db;
-}
+/* ------------------------------------------------------------------ */
+/* تبدیل مقادیر ورودی                                                 */
+/* ------------------------------------------------------------------ */
 
 function normalize(values: Array<SqlInput>): Array<SqlValue> {
   return values.map((value) => {
@@ -302,46 +40,210 @@ function normalize(values: Array<SqlInput>): Array<SqlValue> {
   });
 }
 
-export function all<T>(query: string, ...params: Array<SqlInput>): Array<T> {
-  return getDb()
-    .prepare(query)
-    .all(...normalize(params)) as Array<T>;
-}
+/* ------------------------------------------------------------------ */
+/* درایور Cloudflare D1                                               */
+/* ------------------------------------------------------------------ */
 
-export function one<T>(query: string, ...params: Array<SqlInput>): T | undefined {
-  return getDb()
-    .prepare(query)
-    .get(...normalize(params)) as T | undefined;
-}
-
-export function run(
-  query: string,
-  ...params: Array<SqlInput>
-): { changes: number; lastInsertRowid: number } {
-  const result = getDb()
-    .prepare(query)
-    .run(...normalize(params));
+function d1Driver(database: D1Database): Driver {
   return {
-    changes: Number(result.changes),
-    lastInsertRowid: Number(result.lastInsertRowid),
+    async all<T>(query, params) {
+      const result = await database
+        .prepare(query)
+        .bind(...params)
+        .all<T>();
+      return result.results ?? [];
+    },
+    async one<T>(query, params) {
+      const row = await database
+        .prepare(query)
+        .bind(...params)
+        .first<T>();
+      return row ?? undefined;
+    },
+    async run(query, params) {
+      const result = await database
+        .prepare(query)
+        .bind(...params)
+        .run();
+      return {
+        changes: Number(result.meta?.changes ?? 0),
+        lastInsertRowid: Number(result.meta?.last_row_id ?? 0),
+      };
+    },
+    async batch(statements) {
+      if (statements.length === 0) return [];
+      const prepared = statements.map((statement) =>
+        database.prepare(statement.query).bind(...statement.params),
+      );
+      const results = await database.batch(prepared);
+      return results.map((result) => ({
+        changes: Number(result.meta?.changes ?? 0),
+        lastInsertRowid: Number(result.meta?.last_row_id ?? 0),
+      }));
+    },
   };
 }
 
-export function count(query: string, ...params: Array<SqlInput>): number {
-  const row = one<{ c: number }>(query, ...params);
+/* ------------------------------------------------------------------ */
+/* درایور محلی روی node:sqlite                                        */
+/* ------------------------------------------------------------------ */
+
+type LocalDatabase = {
+  exec(sql: string): void;
+  prepare(sql: string): {
+    all(...params: Array<SqlValue>): Array<unknown>;
+    get(...params: Array<SqlValue>): unknown;
+    run(...params: Array<SqlValue>): { changes: number | bigint; lastInsertRowid: number | bigint };
+  };
+};
+
+let localDatabase: LocalDatabase | null = null;
+
+async function openLocalDatabase(): Promise<LocalDatabase> {
+  if (localDatabase) return localDatabase;
+
+  const [{ DatabaseSync }, { mkdirSync }, { dirname, resolve }] = await Promise.all([
+    import("node:sqlite"),
+    import("node:fs"),
+    import("node:path"),
+  ]);
+
+  const path = process.env["DATABASE_PATH"] ?? resolve(process.cwd(), "data/store.db");
+  mkdirSync(dirname(path), { recursive: true });
+
+  const instance = new DatabaseSync(path) as unknown as LocalDatabase;
+  instance.exec("PRAGMA journal_mode = WAL;");
+  instance.exec("PRAGMA foreign_keys = ON;");
+  instance.exec("PRAGMA busy_timeout = 5000;");
+  for (const statement of schemaStatements()) instance.exec(`${statement};`);
+
+  localDatabase = instance;
+  return instance;
+}
+
+function localDriver(instance: LocalDatabase): Driver {
+  return {
+    async all<T>(query, params) {
+      return instance.prepare(query).all(...params) as Array<T>;
+    },
+    async one<T>(query, params) {
+      return (instance.prepare(query).get(...params) as T | undefined) ?? undefined;
+    },
+    async run(query, params) {
+      const result = instance.prepare(query).run(...params);
+      return {
+        changes: Number(result.changes),
+        lastInsertRowid: Number(result.lastInsertRowid),
+      };
+    },
+    async batch(statements) {
+      const results: Array<RunResult> = [];
+      instance.exec("BEGIN");
+      try {
+        for (const statement of statements) {
+          const result = instance.prepare(statement.query).run(...statement.params);
+          results.push({
+            changes: Number(result.changes),
+            lastInsertRowid: Number(result.lastInsertRowid),
+          });
+        }
+        instance.exec("COMMIT");
+      } catch (error) {
+        instance.exec("ROLLBACK");
+        throw error;
+      }
+      return results;
+    },
+  };
+}
+
+/* ------------------------------------------------------------------ */
+/* انتخاب درایور                                                      */
+/* ------------------------------------------------------------------ */
+
+let cachedEnv: CloudflareEnv | null | undefined;
+
+/** محیط ورکر را می‌خواند؛ بیرون از Cloudflare مقدار null برمی‌گرداند. */
+export async function cloudflareEnv(): Promise<CloudflareEnv | null> {
+  if (cachedEnv !== undefined) return cachedEnv;
+  try {
+    // فقط داخل رانتایم Cloudflare قابل resolve است.
+    const workers = await import(/* @vite-ignore */ "cloudflare:workers");
+    cachedEnv = (workers as { env?: CloudflareEnv }).env ?? null;
+  } catch {
+    cachedEnv = null;
+  }
+  return cachedEnv;
+}
+
+/** یک متغیر محیطی را از binding ورکر یا process.env می‌خواند. */
+export async function envVar(name: string): Promise<string | undefined> {
+  const env = await cloudflareEnv();
+  const fromWorker = env?.[name];
+  if (typeof fromWorker === "string" && fromWorker.length > 0) return fromWorker;
+  const fromProcess = typeof process === "undefined" ? undefined : process.env?.[name];
+  return fromProcess && fromProcess.length > 0 ? fromProcess : undefined;
+}
+
+let driverPromise: Promise<Driver> | null = null;
+
+async function resolveDriver(): Promise<Driver> {
+  const env = await cloudflareEnv();
+  if (env?.DB) return d1Driver(env.DB);
+  return localDriver(await openLocalDatabase());
+}
+
+function driver(): Promise<Driver> {
+  driverPromise ??= resolveDriver();
+  return driverPromise;
+}
+
+/* ------------------------------------------------------------------ */
+/* API عمومی                                                          */
+/* ------------------------------------------------------------------ */
+
+export async function all<T>(query: string, ...params: Array<SqlInput>): Promise<Array<T>> {
+  return (await driver()).all<T>(query, normalize(params));
+}
+
+export async function one<T>(query: string, ...params: Array<SqlInput>): Promise<T | undefined> {
+  return (await driver()).one<T>(query, normalize(params));
+}
+
+export async function run(query: string, ...params: Array<SqlInput>): Promise<RunResult> {
+  return (await driver()).run(query, normalize(params));
+}
+
+export async function count(query: string, ...params: Array<SqlInput>): Promise<number> {
+  const row = await one<{ c: number }>(query, ...params);
   return row ? Number(row.c) : 0;
 }
 
-export function transaction<T>(fn: () => T): T {
-  const instance = getDb();
-  instance.exec("BEGIN");
-  try {
-    const result = fn();
-    instance.exec("COMMIT");
-    return result;
-  } catch (error) {
-    instance.exec("ROLLBACK");
-    throw error;
+/** یک دستور آماده برای batch می‌سازد. */
+export function statement(query: string, ...params: Array<SqlInput>): Statement {
+  return { query, params: normalize(params) };
+}
+
+/**
+ * چند دستور نوشتنی را اتمیک اجرا می‌کند.
+ *
+ * روی D1 با batch() انجام می‌شود که خودش یک تراکنش ضمنی است، و روی محیط محلی
+ * با BEGIN/COMMIT. توجه: چون D1 تراکنش تعاملی ندارد، منطقی که لازم دارد بین
+ * نوشتن‌ها چیزی بخواند باید خواندن‌ها را قبل از ساختن این لیست انجام دهد.
+ */
+export async function batch(statements: Array<Statement>): Promise<Array<RunResult>> {
+  return (await driver()).batch(statements);
+}
+
+/** اسکیما را روی درایور فعال اعمال می‌کند (برای seed و اجرای محلی). */
+export async function ensureSchema(): Promise<void> {
+  const env = await cloudflareEnv();
+  if (!env?.DB) {
+    await openLocalDatabase();
+    return;
+  }
+  for (const item of schemaStatements()) {
+    await run(item);
   }
 }
 

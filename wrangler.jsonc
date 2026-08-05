@@ -1,0 +1,54 @@
+{
+  // پیکربندی استقرار روی Cloudflare Workers.
+  //
+  // پیش از نخستین استقرار این دو منبع را بسازید و مقادیر را جایگزین کنید:
+  //   npx wrangler d1 create jahankoodak
+  //   npx wrangler r2 bucket create jahankoodak-uploads
+  //
+  // سپس اسکیمای دیتابیس را اعمال کنید:
+  //   npx wrangler d1 migrations apply jahankoodak --remote
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "baby-world-essentials",
+  "main": ".output/server/index.mjs",
+  "compatibility_date": "2025-06-01",
+  "compatibility_flags": ["nodejs_compat"],
+
+  // خروجی استاتیک nitro (تصاویر، فونت، CSS و JS بیلدشده)
+  "assets": {
+    "directory": ".output/public",
+    "binding": "ASSETS"
+  },
+
+  "observability": {
+    "enabled": true
+  },
+
+  // دیتابیس اصلی فروشگاه
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "jahankoodak",
+      "database_id": "REPLACE_WITH_D1_DATABASE_ID",
+      "migrations_dir": "migrations"
+    }
+  ],
+
+  // فضای ذخیره‌سازی تصاویر محصول و رسید پرداخت
+  "r2_buckets": [
+    {
+      "binding": "UPLOADS",
+      "bucket_name": "jahankoodak-uploads"
+    }
+  ],
+
+  "vars": {
+    "SITE_URL": "https://jahankoodak.ir",
+    // اگر دامنه‌ی عمومی R2 را وصل کردید اینجا بگذارید تا لینک تصاویر مستقیم سرو شود.
+    // در غیر این صورت تصاویر از مسیر /uploads/* خود ورکر سرو می‌شوند.
+    "UPLOADS_PUBLIC_URL": ""
+  }
+
+  // متغیرهای محرمانه را با wrangler secret put ثبت کنید، نه اینجا:
+  //   npx wrangler secret put AUTH_SECRET
+  //   npx wrangler secret put MAIL_API_KEY
+}
