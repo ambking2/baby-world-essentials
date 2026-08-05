@@ -21,7 +21,7 @@ const SLIDES: Array<Slide> = [
     body: "طراحی شده با الهام از طبیعت، با استفاده از متریال‌های طبیعی و رنگ‌های آرام‌بخش برای بهترین شروع زندگی دلبند شما.",
     cta: "مشاهده کالکشن",
     href: "/category/servis-khab",
-    image: "/images/hero-nursery.jpg",
+    image: "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?q=80&w=2071&auto=format&fit=crop",
   },
   {
     title: "لطافت بی‌نظیر برای پوست‌های حساس",
@@ -29,7 +29,7 @@ const SLIDES: Array<Slide> = [
     body: "ما معتقدیم کیفیت در جزئیات است. لباس‌هایی که نه تنها زیبا هستند، بلکه نهایت راحتی را برای نوزاد شما فراهم می‌کنند.",
     cta: "خرید لباس",
     href: "/category/lebas",
-    image: "/images/cat-clothing.jpg",
+    image: "https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?q=80&w=2075&auto=format&fit=crop",
   },
 ];
 
