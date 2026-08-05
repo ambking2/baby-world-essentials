@@ -70,10 +70,18 @@ export function SiteHeader({
           </button>
 
           {/* Logo */}
-          <Link to="/" className="shrink-0 relative z-10">
-            <h1 className="text-xl font-bold tracking-tight text-gray-900 sm:text-2xl md:text-3xl">
-              {business.name}
-            </h1>
+          <Link to="/" className="shrink-0 relative z-10 flex items-center gap-3 group">
+            <div className="size-10 sm:size-12 rounded-xl bg-primary flex items-center justify-center overflow-hidden transition-transform group-hover:scale-105 shadow-sm">
+              <img src="/assets/logo/logo-icon.svg" alt="جهان کودک" className="size-8 sm:size-10" />
+            </div>
+            <div className="flex flex-col leading-tight">
+              <span className="text-lg font-black tracking-tight text-gray-900 sm:text-xl md:text-2xl">
+                {business.name}
+              </span>
+              <span className="hidden sm:block text-[10px] font-medium text-muted-foreground uppercase tracking-[0.2em]">
+                Jahan Koodak
+              </span>
+            </div>
           </Link>
 
           {/* Search Bar - Desktop */}
@@ -195,7 +203,12 @@ export function SiteHeader({
         )}>
           {/* Header */}
           <div className="flex items-center justify-between border-b border-border/50 p-6">
-            <span className="text-xl font-bold tracking-tight text-gray-900">{business.name}</span>
+            <div className="flex items-center gap-3">
+              <div className="size-9 rounded-lg bg-primary flex items-center justify-center">
+                <img src="/assets/logo/logo-icon.svg" alt="Logo" className="size-7" />
+              </div>
+              <span className="text-lg font-bold tracking-tight text-gray-900">{business.name}</span>
+            </div>
             <button 
               onClick={() => setMobileOpen(false)} 
               className="flex size-10 items-center justify-center rounded-full bg-muted/50 text-gray-900 transition-transform active:scale-90"
