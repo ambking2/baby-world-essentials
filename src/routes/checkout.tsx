@@ -248,7 +248,7 @@ function CheckoutPage() {
               <button
                 type="submit"
                 disabled={place.isPending}
-                className="w-full rounded-full bg-primary px-5 py-3.5 text-sm font-bold text-white shadow-md hover:bg-primary/90 transition-premium disabled:opacity-60"
+                className="btn-primary w-full"
               >
                 {place.isPending ? "در حال ثبت سفارش…" : "ثبت نهایی سفارش"}
               </button>
