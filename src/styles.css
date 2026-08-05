@@ -114,9 +114,9 @@
 }
 
 @utility section-spacing {
-  padding-block: 80px;
+  padding-block: 64px;
   @media (min-width: 1024px) {
-    padding-block: 120px;
+    padding-block: 100px;
   }
 }
 

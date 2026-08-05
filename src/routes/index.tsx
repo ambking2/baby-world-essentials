@@ -96,7 +96,7 @@ function HomePage() {
             <span className="mb-6 block text-xs font-bold uppercase tracking-widest text-primary">ماموریت ما</span>
             <h2 className="mb-8 text-3xl font-bold leading-tight lg:text-5xl">همراه شما در زیباترین مسیر زندگی</h2>
             <p className="mb-10 text-base leading-relaxed text-muted-foreground lg:text-lg">
-              در جهان کودک، ما معتقدیم هر نوزاد شایسته بهترین‌هاست. به همین دلیل تمامی محصولات ما با دقت فراوان و با در نظر گرفتن سلامت و راحتی نوزاد انتخاب یا تولید می‌شوند. از کارگاه چوب اختصاصی تا برندهای معتبر جهانی.
+              در جهان کودک، ما معتقدیم هر نوزاد شایسته بهترین‌هاست. تمامی محصولات ما با دقت فراوان و با در نظر گرفتن سلامت و راحتی نوزاد انتخاب یا تولید می‌شوند؛ از کارگاه چوب اختصاصی تا برندهای معتبر جهانی.
             </p>
             <div className="flex flex-col gap-8 sm:flex-row">
               <div className="flex-1">
