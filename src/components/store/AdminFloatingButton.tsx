@@ -16,7 +16,7 @@ export function AdminFloatingButton() {
   const user = sessionQuery.data?.user;
   const isStaff = user?.role === "admin" || user?.role === "sales";
   
-  const isAdminPath = location.pathname.startsWith("/admin");
+  const isAdminPath = location.pathname.includes("/admin");
 
   // Only show floating button for staff
   if (!isStaff) return null;
