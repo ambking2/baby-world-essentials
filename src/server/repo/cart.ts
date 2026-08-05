@@ -1,5 +1,3 @@
-import { randomBytes } from "node:crypto";
-
 import { business } from "@/data/business";
 
 import { all, nowIso, one, run } from "../db";
@@ -45,15 +43,24 @@ export type CartSummary = {
 
 type CartRow = { id: number; token: string; user_id: number | null };
 
-export function findCartByToken(token: string | undefined): CartRow | undefined {
+/** توکن تصادفی با Web Crypto — node:crypto روی Workers قابل اتکا نیست. */
+function cartToken(): string {
+  const bytes = new Uint8Array(18);
+  crypto.getRandomValues(bytes);
+  let binary = "";
+  for (const byte of bytes) binary += String.fromCharCode(byte);
+  return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+
+export async function findCartByToken(token: string | undefined): Promise<CartRow | undefined> {
   if (!token) return undefined;
   return one<CartRow>("SELECT id, token, user_id FROM carts WHERE token = ?", token);
 }
 
-export function createCart(userId?: number | null): CartRow {
-  const token = randomBytes(18).toString("base64url");
+export async function createCart(userId?: number | null): Promise<CartRow> {
+  const token = cartToken();
   const now = nowIso();
-  const result = run(
+  const result = await run(
     "INSERT INTO carts (token, user_id, created_at, updated_at) VALUES (?, ?, ?, ?)",
     token,
     userId ?? null,
@@ -64,27 +71,27 @@ export function createCart(userId?: number | null): CartRow {
 }
 
 /** پس از ورود کاربر، سبد مهمان به حساب او متصل می‌شود. */
-export function attachCartToUser(cartId: number, userId: number): void {
-  run("UPDATE carts SET user_id = ?, updated_at = ? WHERE id = ?", userId, nowIso(), cartId);
+export async function attachCartToUser(cartId: number, userId: number): Promise<void> {
+  await run("UPDATE carts SET user_id = ?, updated_at = ? WHERE id = ?", userId, nowIso(), cartId);
 }
 
-function touchCart(cartId: number): void {
-  run("UPDATE carts SET updated_at = ? WHERE id = ?", nowIso(), cartId);
+async function touchCart(cartId: number): Promise<void> {
+  await run("UPDATE carts SET updated_at = ? WHERE id = ?", nowIso(), cartId);
 }
 
 /* ------------------------------------------------------------------ */
 /* افزودن و ویرایش اقلام                                        */
 /* ------------------------------------------------------------------ */
 
-export function addToCart(input: {
+export async function addToCart(input: {
   cartId: number;
   productId: number;
   variantId?: number | null;
   qty?: number;
-}): void {
+}): Promise<void> {
   const qty = Math.max(1, Math.min(input.qty ?? 1, 20));
 
-  const product = one<{ id: number; stock: number; has_variants: number }>(
+  const product = await one<{ id: number; stock: number; has_variants: number }>(
     `SELECT p.id, p.stock,
        (SELECT COUNT(*) FROM product_variants v WHERE v.product_id = p.id) AS has_variants
      FROM products p WHERE p.id = ? AND p.is_active = 1`,
@@ -99,7 +106,7 @@ export function addToCart(input: {
 
   let stock = Number(product.stock);
   if (variantId !== null) {
-    const variant = one<{ stock: number }>(
+    const variant = await one<{ stock: number }>(
       "SELECT stock FROM product_variants WHERE id = ? AND product_id = ?",
       variantId,
       input.productId,
@@ -109,7 +116,7 @@ export function addToCart(input: {
   }
   if (stock <= 0) throw new CartError("موجودی این گزینه تمام شده است.");
 
-  const existing = one<{ id: number; qty: number }>(
+  const existing = await one<{ id: number; qty: number }>(
     `SELECT id, qty FROM cart_items
      WHERE cart_id = ? AND product_id = ? AND ((variant_id IS NULL AND ? IS NULL) OR variant_id = ?)`,
     input.cartId,
@@ -120,9 +127,9 @@ export function addToCart(input: {
 
   if (existing) {
     const nextQty = Math.min(existing.qty + qty, stock);
-    run("UPDATE cart_items SET qty = ? WHERE id = ?", nextQty, existing.id);
+    await run("UPDATE cart_items SET qty = ? WHERE id = ?", nextQty, existing.id);
   } else {
-    run(
+    await run(
       "INSERT INTO cart_items (cart_id, product_id, variant_id, qty, created_at) VALUES (?, ?, ?, ?, ?)",
       input.cartId,
       input.productId,
@@ -131,15 +138,15 @@ export function addToCart(input: {
       nowIso(),
     );
   }
-  touchCart(input.cartId);
+  await touchCart(input.cartId);
 }
 
-export function setCartItemQty(cartId: number, itemId: number, qty: number): void {
+export async function setCartItemQty(cartId: number, itemId: number, qty: number): Promise<void> {
   if (qty <= 0) {
-    removeCartItem(cartId, itemId);
+    await removeCartItem(cartId, itemId);
     return;
   }
-  const item = one<{ product_id: number; variant_id: number | null }>(
+  const item = await one<{ product_id: number; variant_id: number | null }>(
     "SELECT product_id, variant_id FROM cart_items WHERE id = ? AND cart_id = ?",
     itemId,
     cartId,
@@ -148,22 +155,29 @@ export function setCartItemQty(cartId: number, itemId: number, qty: number): voi
 
   const stockRow =
     item.variant_id === null
-      ? one<{ stock: number }>("SELECT stock FROM products WHERE id = ?", item.product_id)
-      : one<{ stock: number }>("SELECT stock FROM product_variants WHERE id = ?", item.variant_id);
+      ? await one<{ stock: number }>("SELECT stock FROM products WHERE id = ?", item.product_id)
+      : await one<{ stock: number }>(
+          "SELECT stock FROM product_variants WHERE id = ?",
+          item.variant_id,
+        );
 
   const stock = Number(stockRow?.stock ?? 0);
-  run("UPDATE cart_items SET qty = ? WHERE id = ?", Math.max(1, Math.min(qty, Math.max(stock, 1))), itemId);
-  touchCart(cartId);
+  await run(
+    "UPDATE cart_items SET qty = ? WHERE id = ?",
+    Math.max(1, Math.min(qty, Math.max(stock, 1))),
+    itemId,
+  );
+  await touchCart(cartId);
 }
 
-export function removeCartItem(cartId: number, itemId: number): void {
-  run("DELETE FROM cart_items WHERE id = ? AND cart_id = ?", itemId, cartId);
-  touchCart(cartId);
+export async function removeCartItem(cartId: number, itemId: number): Promise<void> {
+  await run("DELETE FROM cart_items WHERE id = ? AND cart_id = ?", itemId, cartId);
+  await touchCart(cartId);
 }
 
-export function clearCart(cartId: number): void {
-  run("DELETE FROM cart_items WHERE cart_id = ?", cartId);
-  touchCart(cartId);
+export async function clearCart(cartId: number): Promise<void> {
+  await run("DELETE FROM cart_items WHERE cart_id = ?", cartId);
+  await touchCart(cartId);
 }
 
 /* ------------------------------------------------------------------ */
@@ -171,16 +185,20 @@ export function clearCart(cartId: number): void {
 /* ------------------------------------------------------------------ */
 
 /** هزینه‌ی ارسال بر اساس تنطیمات قابل تغییر در پنل مدیریت. */
-export function shippingFor(itemsTotal: number): { fee: number; threshold: number; remaining: number } {
-  const threshold = getSettingNumber("free_shipping_threshold", business.freeShippingThreshold);
-  const flatFee = getSettingNumber("shipping_flat_fee", business.shippingFlatFee);
+export async function shippingFor(
+  itemsTotal: number,
+): Promise<{ fee: number; threshold: number; remaining: number }> {
+  const [threshold, flatFee] = await Promise.all([
+    getSettingNumber("free_shipping_threshold", business.freeShippingThreshold),
+    getSettingNumber("shipping_flat_fee", business.shippingFlatFee),
+  ]);
   if (itemsTotal <= 0) return { fee: 0, threshold, remaining: threshold };
   if (itemsTotal >= threshold) return { fee: 0, threshold, remaining: 0 };
   return { fee: flatFee, threshold, remaining: threshold - itemsTotal };
 }
 
-export function cartSummary(cart: CartRow): CartSummary {
-  const rows = all<{
+export async function cartSummary(cart: CartRow): Promise<CartSummary> {
+  const rows = await all<{
     item_id: number;
     product_id: number;
     variant_id: number | null;
@@ -248,7 +266,7 @@ export function cartSummary(cart: CartRow): CartSummary {
     };
   });
 
-  const shipping = shippingFor(itemsTotal);
+  const shipping = await shippingFor(itemsTotal);
 
   return {
     cartId: cart.id,

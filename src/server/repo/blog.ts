@@ -65,12 +65,14 @@ function mapCard(row: PostRow): BlogCard {
 /* فهرست مقالات                                                     */
 /* ------------------------------------------------------------------ */
 
-export function listPosts(filters: { page?: number; perPage?: number; tag?: string; q?: string } = {}): {
+export async function listPosts(
+  filters: { page?: number; perPage?: number; tag?: string; q?: string } = {},
+): Promise<{
   items: Array<BlogCard>;
   total: number;
   page: number;
   pageCount: number;
-} {
+}> {
   const perPage = Math.min(Math.max(filters.perPage ?? 9, 1), 24);
   const page = Math.max(filters.page ?? 1, 1);
   const clauses = ["b.status = 'published'"];
@@ -87,8 +89,8 @@ export function listPosts(filters: { page?: number; perPage?: number; tag?: stri
   }
 
   const where = clauses.join(" AND ");
-  const total = count(`SELECT COUNT(*) AS c FROM blog_posts b WHERE ${where}`, ...params);
-  const rows = all<PostRow>(
+  const total = await count(`SELECT COUNT(*) AS c FROM blog_posts b WHERE ${where}`, ...params);
+  const rows = await all<PostRow>(
     `SELECT b.*, ${COMMENT_COUNT_SQL} FROM blog_posts b WHERE ${where}
      ORDER BY datetime(b.published_at) DESC, b.id DESC LIMIT ? OFFSET ?`,
     ...params,
@@ -105,25 +107,27 @@ export function listPosts(filters: { page?: number; perPage?: number; tag?: stri
 }
 
 /** برای سایدبار «آخرین مطالب». */
-export function recentPosts(limit = 5): Array<BlogCard> {
-  return all<PostRow>(
+export async function recentPosts(limit = 5): Promise<Array<BlogCard>> {
+  const rows = await all<PostRow>(
     `SELECT b.*, ${COMMENT_COUNT_SQL} FROM blog_posts b WHERE b.status = 'published'
      ORDER BY datetime(b.published_at) DESC, b.id DESC LIMIT ?`,
     limit,
-  ).map(mapCard);
+  );
+  return rows.map(mapCard);
 }
 
 /** برای سایدبار «برچسب‌ها» و «دسته‌ها». */
-export function blogTags(): Array<{ tag: string; postCount: number }> {
-  return all<{ tag: string; c: number }>(
+export async function blogTags(): Promise<Array<{ tag: string; postCount: number }>> {
+  const rows = await all<{ tag: string; c: number }>(
     `SELECT tag, COUNT(*) AS c FROM blog_posts
      WHERE status = 'published' AND tag IS NOT NULL AND tag <> ''
      GROUP BY tag ORDER BY c DESC, tag ASC`,
-  ).map((row) => ({ tag: row.tag, postCount: Number(row.c) }));
+  );
+  return rows.map((row) => ({ tag: row.tag, postCount: Number(row.c) }));
 }
 
 /* ------------------------------------------------------------------ */
-/* یک مقاله با نظرات تودرتو                                     */
+/* یک مقاله با نطرات تودرتو                                     */
 /* ------------------------------------------------------------------ */
 
 type CommentRow = {
@@ -157,15 +161,15 @@ function buildTree(rows: Array<CommentRow>): Array<BlogComment> {
   return roots;
 }
 
-export function postBySlug(slug: string): BlogPost | null {
-  const row = one<PostRow>(
+export async function postBySlug(slug: string): Promise<BlogPost | null> {
+  const row = await one<PostRow>(
     `SELECT b.*, ${COMMENT_COUNT_SQL} FROM blog_posts b WHERE b.slug = ? AND b.status = 'published'`,
     slug,
   );
   if (!row) return null;
 
   const comments = buildTree(
-    all<CommentRow>(
+    await all<CommentRow>(
       `SELECT id, parent_id, name, body, created_at FROM blog_comments
        WHERE post_id = ? AND status = 'approved' ORDER BY id ASC`,
       row.id,
@@ -176,42 +180,41 @@ export function postBySlug(slug: string): BlogPost | null {
 }
 
 /** مقاله‌ی قبلی و بعدی — برای پایین صفحه‌ی مقاله. */
-export function adjacentPosts(post: BlogCard): {
+export async function adjacentPosts(post: BlogCard): Promise<{
   previous: { slug: string; title: string } | null;
   next: { slug: string; title: string } | null;
-} {
-  const previous =
+}> {
+  const [previousRow, nextRow] = await Promise.all([
     one<{ slug: string; title: string }>(
       `SELECT slug, title FROM blog_posts
        WHERE status = 'published' AND datetime(COALESCE(published_at, '1970-01-01')) < datetime(COALESCE(?, '1970-01-01'))
        ORDER BY datetime(published_at) DESC LIMIT 1`,
       post.publishedAt,
-    ) ?? null;
-
-  const next =
+    ),
     one<{ slug: string; title: string }>(
       `SELECT slug, title FROM blog_posts
        WHERE status = 'published' AND datetime(COALESCE(published_at, '1970-01-01')) > datetime(COALESCE(?, '1970-01-01'))
        ORDER BY datetime(published_at) ASC LIMIT 1`,
       post.publishedAt,
-    ) ?? null;
+    ),
+  ]);
 
-  return { previous, next };
+  return { previous: previousRow ?? null, next: nextRow ?? null };
 }
 
-export function incrementPostView(postId: number): void {
-  run("UPDATE blog_posts SET view_count = view_count + 1 WHERE id = ?", postId);
+export async function incrementPostView(postId: number): Promise<void> {
+  await run("UPDATE blog_posts SET view_count = view_count + 1 WHERE id = ?", postId);
 }
 
-/** نظر جدید در انتطار تأیید مدیر قرار می‌گیرد. */
-export function addComment(input: {
+/** نطر جدید در انتطار تأیید مدیر قرار می‌گیرد. */
+export async function addComment(input: {
   postId: number;
   parentId?: number | null;
   name: string;
   email?: string | null;
   body: string;
-}): void {
-  run(
+}): Promise<void> {
+  await run(
     `INSERT INTO blog_comments (post_id, parent_id, name, email, body, status, created_at)
      VALUES (?, ?, ?, ?, ?, 'pending', ?)`,
     input.postId,
@@ -229,15 +232,18 @@ export function addComment(input: {
 
 export type AdminPost = BlogCard & { status: string; body: string };
 
-export function adminListPosts(): Array<AdminPost> {
-  return all<PostRow>(`SELECT b.*, ${COMMENT_COUNT_SQL} FROM blog_posts b ORDER BY b.id DESC`).map((row) => ({
+export async function adminListPosts(): Promise<Array<AdminPost>> {
+  const rows = await all<PostRow>(
+    `SELECT b.*, ${COMMENT_COUNT_SQL} FROM blog_posts b ORDER BY b.id DESC`,
+  );
+  return rows.map((row) => ({
     ...mapCard(row),
     status: row.status,
     body: row.body,
   }));
 }
 
-export function adminSavePost(input: {
+export async function adminSavePost(input: {
   id?: number | null;
   slug: string;
   title: string;
@@ -248,12 +254,12 @@ export function adminSavePost(input: {
   author?: string | null;
   status?: "published" | "draft";
   publishedAt?: string | null;
-}): number {
+}): Promise<number> {
   const status = input.status ?? "published";
   const publishedAt = input.publishedAt ?? (status === "published" ? nowIso() : null);
 
   if (input.id) {
-    run(
+    await run(
       `UPDATE blog_posts SET slug = ?, title = ?, excerpt = ?, body = ?, cover = ?, tag = ?,
          author = COALESCE(?, author), status = ?, published_at = ? WHERE id = ?`,
       input.slug,
@@ -270,7 +276,7 @@ export function adminSavePost(input: {
     return input.id;
   }
 
-  const result = run(
+  const result = await run(
     `INSERT INTO blog_posts (slug, title, excerpt, body, cover, tag, author, status, published_at)
      VALUES (?, ?, ?, ?, ?, ?, COALESCE(?, 'جهان کودک'), ?, ?)`,
     input.slug,
@@ -286,8 +292,8 @@ export function adminSavePost(input: {
   return result.lastInsertRowid;
 }
 
-export function adminDeletePost(id: number): void {
-  run("DELETE FROM blog_posts WHERE id = ?", id);
+export async function adminDeletePost(id: number): Promise<void> {
+  await run("DELETE FROM blog_posts WHERE id = ?", id);
 }
 
 export type AdminComment = {
@@ -302,39 +308,31 @@ export type AdminComment = {
   createdAt: string;
 };
 
-export function adminListComments(status?: "pending" | "approved" | "rejected"): Array<AdminComment> {
+type AdminCommentRow = {
+  id: number;
+  post_id: number;
+  post_title: string;
+  post_slug: string;
+  name: string;
+  email: string | null;
+  body: string;
+  status: string;
+  created_at: string;
+};
+
+const ADMIN_COMMENT_SELECT = `SELECT bc.id, bc.post_id, b.title AS post_title, b.slug AS post_slug,
+    bc.name, bc.email, bc.body, bc.status, bc.created_at
+  FROM blog_comments bc JOIN blog_posts b ON b.id = bc.post_id`;
+
+export async function adminListComments(
+  status?: "pending" | "approved" | "rejected",
+): Promise<Array<AdminComment>> {
   const rows = status
-    ? all<{
-        id: number;
-        post_id: number;
-        post_title: string;
-        post_slug: string;
-        name: string;
-        email: string | null;
-        body: string;
-        status: string;
-        created_at: string;
-      }>(
-        `SELECT bc.id, bc.post_id, b.title AS post_title, b.slug AS post_slug, bc.name, bc.email, bc.body, bc.status, bc.created_at
-         FROM blog_comments bc JOIN blog_posts b ON b.id = bc.post_id
-         WHERE bc.status = ? ORDER BY bc.id DESC`,
+    ? await all<AdminCommentRow>(
+        `${ADMIN_COMMENT_SELECT} WHERE bc.status = ? ORDER BY bc.id DESC`,
         status,
       )
-    : all<{
-        id: number;
-        post_id: number;
-        post_title: string;
-        post_slug: string;
-        name: string;
-        email: string | null;
-        body: string;
-        status: string;
-        created_at: string;
-      }>(
-        `SELECT bc.id, bc.post_id, b.title AS post_title, b.slug AS post_slug, bc.name, bc.email, bc.body, bc.status, bc.created_at
-         FROM blog_comments bc JOIN blog_posts b ON b.id = bc.post_id
-         ORDER BY bc.id DESC`,
-      );
+    : await all<AdminCommentRow>(`${ADMIN_COMMENT_SELECT} ORDER BY bc.id DESC`);
 
   return rows.map((row) => ({
     id: row.id,
@@ -349,10 +347,13 @@ export function adminListComments(status?: "pending" | "approved" | "rejected"):
   }));
 }
 
-export function adminSetCommentStatus(id: number, status: "pending" | "approved" | "rejected"): void {
-  run("UPDATE blog_comments SET status = ? WHERE id = ?", status, id);
+export async function adminSetCommentStatus(
+  id: number,
+  status: "pending" | "approved" | "rejected",
+): Promise<void> {
+  await run("UPDATE blog_comments SET status = ? WHERE id = ?", status, id);
 }
 
-export function adminDeleteComment(id: number): void {
-  run("DELETE FROM blog_comments WHERE id = ?", id);
+export async function adminDeleteComment(id: number): Promise<void> {
+  await run("DELETE FROM blog_comments WHERE id = ?", id);
 }
