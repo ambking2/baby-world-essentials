@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
+import { BookOpenText, Sparkles } from "lucide-react";
 import { useState } from "react";
 
 import { BlogCard } from "@/components/store/BlogCard";
@@ -43,16 +44,34 @@ function BlogIndexPage() {
   return (
     <StoreShell>
       <div className="container-page py-6">
-        <Breadcrumb items={[{ title: "مجلهٔ جهان کودک" }]} />
-
-        <div className="mb-5 rounded-3xl border border-border bg-brand-soft/40 p-6">
-          <h1 className="text-lg font-extrabold text-foreground">مجلهٔ جهان کودک</h1>
-          <p className="mt-2 text-xs leading-6 text-muted-foreground">
-            راهنمای خرید سیسمونی، مراقبت از نوزاد و تجربهٔ ۱۵ سال فروشگاه در ابهر — {toFaDigits(total)} مقاله.
-          </p>
+        <div className="storybook-panel overflow-hidden p-6 md:p-8">
+          <Breadcrumb items={[{ title: "مجلهٔ جهان کودک" }]} />
+          <div className="mt-4 grid items-center gap-6 lg:grid-cols-[1fr_320px]">
+            <div>
+              <div className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1 text-[11px] font-extrabold text-brand shadow-soft">
+                <Sparkles className="size-3.5" aria-hidden />
+                مقاله، تجربه و راهنمای خرید
+              </div>
+              <h1 className="mt-4 text-2xl font-black text-foreground md:text-[2.2rem]">مجلهٔ جهان کودک</h1>
+              <p className="mt-3 max-w-2xl text-sm leading-8 text-muted-foreground">
+                راهنمای خرید سیسمونی، مراقبت از نوزاد و تجربهٔ واقعی فروشگاه در برخورد با خانواده‌ها — با {toFaDigits(total)} مقاله.
+              </p>
+            </div>
+            <div className="rounded-[2rem] border border-white/70 bg-gradient-to-br from-[#ffe0cf] to-[#fff6ef] p-5 shadow-soft">
+              <div className="flex items-center gap-3">
+                <span className="grid size-12 place-items-center rounded-[1.2rem] bg-white text-brand shadow-soft">
+                  <BookOpenText className="size-5" aria-hidden />
+                </span>
+                <div>
+                  <p className="text-sm font-black text-foreground">مطالب کاربردی و قابل‌استفاده</p>
+                  <p className="text-[11px] text-muted-foreground">نه فقط محتوا؛ راهنمای تصمیم‌گیری برای خرید</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div className="grid gap-5 lg:grid-cols-[1fr_300px]">
+        <div className="mt-6 grid gap-5 lg:grid-cols-[1fr_320px]">
           <div ref={containerRef}>
             {blogQuery.isLoading ? (
               <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
@@ -61,9 +80,7 @@ function BlogIndexPage() {
                 ))}
               </div>
             ) : posts.length === 0 ? (
-              <div className="rounded-3xl border border-border bg-card p-12 text-center text-xs text-muted-foreground">
-                مقاله‌ای مطابق جستجوی شما پیدا نشد.
-              </div>
+              <div className="section-shell p-12 text-center text-xs text-muted-foreground">مقاله‌ای مطابق جستجوی شما پیدا نشد.</div>
             ) : (
               <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
                 {posts.map((post) => (

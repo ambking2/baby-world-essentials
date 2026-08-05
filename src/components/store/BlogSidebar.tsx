@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
-import { Search } from "lucide-react";
+import { Search, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -51,7 +51,7 @@ export function BlogSidebar({
             event.preventDefault();
             onSearchSubmit?.();
           }}
-          className="flex items-center gap-2 rounded-2xl border border-border bg-card p-2"
+          className="storybook-panel flex items-center gap-2 p-3"
         >
           <Search className="ms-1 size-4 text-muted-foreground" aria-hidden />
           <input
@@ -63,19 +63,19 @@ export function BlogSidebar({
         </form>
       ) : null}
 
-      <section className="rounded-3xl border border-border bg-card p-4">
-        <h2 className="mb-3 text-xs font-extrabold text-foreground">آخرین مطالب</h2>
+      <section className="storybook-panel p-4">
+        <h2 className="mb-3 text-sm font-black text-foreground">آخرین مطالب</h2>
         <div className="space-y-3">
           {recent.map((post) => (
             <Link
               key={post.slug}
               to="/blog/$slug"
               params={{ slug: post.slug }}
-              className="flex items-center gap-3 transition-colors hover:text-brand"
+              className="flex items-center gap-3 rounded-[1.3rem] border border-white/70 bg-white/75 p-2.5 shadow-soft transition-colors hover:text-brand"
             >
-              <img src={post.cover ?? "/images/workshop.jpg"} alt={post.title} className="size-14 rounded-xl object-cover" />
+              <img src={post.cover ?? "/images/workshop.jpg"} alt={post.title} className="size-16 rounded-[1rem] object-cover" />
               <div className="min-w-0">
-                <p className="line-clamp-2 text-[11px] font-bold leading-5">{post.title}</p>
+                <p className="line-clamp-2 text-[11px] font-bold leading-6">{post.title}</p>
                 <p className="mt-1 text-[10px] text-muted-foreground">{post.publishedAt ? formatJalali(post.publishedAt) : "—"}</p>
               </div>
             </Link>
@@ -84,8 +84,8 @@ export function BlogSidebar({
       </section>
 
       {tags.length > 0 ? (
-        <section className="rounded-3xl border border-border bg-card p-4">
-          <h2 className="mb-3 text-xs font-extrabold text-foreground">برچسب‌ها</h2>
+        <section className="storybook-panel p-4">
+          <h2 className="mb-3 text-sm font-black text-foreground">برچسب‌ها</h2>
           <div className="flex flex-wrap gap-2">
             {tags.map((item) => {
               const active = activeTag === item.tag;
@@ -94,8 +94,8 @@ export function BlogSidebar({
                   key={item.tag}
                   type="button"
                   onClick={() => onTagSelect?.(active ? undefined : item.tag)}
-                  className={`rounded-full border px-3 py-1.5 text-[10px] font-bold transition-colors ${
-                    active ? "border-brand bg-brand text-primary-foreground" : "border-border text-muted-foreground hover:border-brand hover:text-brand"
+                  className={`rounded-full border px-3 py-1.5 text-[10px] font-extrabold transition-colors ${
+                    active ? "border-brand bg-gradient-to-r from-brand to-sale text-primary-foreground" : "border-white/80 bg-white/80 text-muted-foreground hover:border-brand hover:text-brand"
                   }`}
                 >
                   {item.tag} ({toFaDigits(item.postCount)})
@@ -106,9 +106,13 @@ export function BlogSidebar({
         </section>
       ) : null}
 
-      <section className="rounded-3xl border border-border bg-brand-soft/50 p-4">
-        <h2 className="text-xs font-extrabold text-foreground">خبرنامهٔ جهان کودک</h2>
-        <p className="mt-1 text-[11px] leading-6 text-muted-foreground">تخفیف‌ها و راهنمای خرید سیسمونی را ایمیل می‌کنیم.</p>
+      <section className="storybook-panel p-5">
+        <div className="inline-flex items-center gap-2 rounded-full bg-brand-soft px-3 py-1 text-[11px] font-extrabold text-brand">
+          <Sparkles className="size-3.5" aria-hidden />
+          خبرنامهٔ جهان کودک
+        </div>
+        <h2 className="mt-3 text-sm font-black text-foreground">مقاله و تخفیف را یک‌جا بگیرید</h2>
+        <p className="mt-2 text-[11px] leading-6 text-muted-foreground">راهنمای خرید سیسمونی و خبر تخفیف‌ها را ایمیل می‌کنیم.</p>
         <form
           onSubmit={(event) => {
             event.preventDefault();
@@ -123,20 +127,20 @@ export function BlogSidebar({
             onChange={(event) => setEmail(event.target.value)}
             placeholder="ایمیل شما"
             dir="ltr"
-            className="w-full rounded-xl border border-border bg-background px-3 py-2.5 text-xs outline-none focus:border-brand"
+            className="w-full rounded-full border border-white/80 bg-white px-4 py-3 text-xs outline-none focus:border-brand"
           />
           <button
             type="submit"
             disabled={subscribe.isPending}
-            className="w-full rounded-full bg-brand px-4 py-2.5 text-[11px] font-bold text-primary-foreground disabled:opacity-60"
+            className="toy-button w-full rounded-full bg-gradient-to-r from-brand to-sale px-4 py-3 text-[11px] font-extrabold text-primary-foreground disabled:opacity-60"
           >
             عضویت در خبرنامه
           </button>
         </form>
       </section>
 
-      <section className="rounded-3xl border border-border bg-card p-4 text-[11px] leading-6 text-muted-foreground">
-        <h2 className="mb-2 text-xs font-extrabold text-foreground">مشاورهٔ خرید</h2>
+      <section className="storybook-panel p-4 text-[11px] leading-6 text-muted-foreground">
+        <h2 className="mb-2 text-sm font-black text-foreground">مشاورهٔ خرید</h2>
         <p>تلفن فروشگاه: {business.phoneDisplay}</p>
         <p>{business.hoursFull}</p>
         <p>{business.addressLine}</p>

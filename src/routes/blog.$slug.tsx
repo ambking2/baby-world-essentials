@@ -23,7 +23,7 @@ type CommentNode = {
 };
 
 const inputClass =
-  "w-full rounded-xl border border-border bg-background px-3 py-2.5 text-xs outline-none transition-colors focus:border-brand";
+  "w-full rounded-full border border-white/80 bg-white px-4 py-3 text-xs outline-none transition-colors focus:border-brand";
 
 function CommentBranch({
   comments,
@@ -38,10 +38,10 @@ function CommentBranch({
     <div className={depth === 0 ? "space-y-3" : "mt-3 space-y-3 border-s border-border ps-4"}>
       {comments.map((comment) => (
         <div key={comment.id}>
-          <div className="rounded-2xl border border-border bg-card p-4">
+          <div className="storybook-panel p-4">
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-2">
-                <span className="grid size-8 place-items-center rounded-full bg-brand-soft text-brand">
+                <span className="grid size-9 place-items-center rounded-full bg-brand-soft text-brand">
                   <UserRound className="size-4" aria-hidden />
                 </span>
                 <div>
@@ -52,17 +52,15 @@ function CommentBranch({
               <button
                 type="button"
                 onClick={() => onReply(comment)}
-                className="text-[10px] font-bold text-brand hover:underline"
+                className="text-[10px] font-extrabold text-brand hover:underline"
               >
                 پاسخ
               </button>
             </div>
-            <p className="mt-2 whitespace-pre-line text-[11px] leading-6 text-muted-foreground">{comment.body}</p>
+            <p className="mt-2 whitespace-pre-line text-[11px] leading-7 text-muted-foreground">{comment.body}</p>
           </div>
 
-          {comment.replies.length > 0 ? (
-            <CommentBranch comments={comment.replies} depth={depth + 1} onReply={onReply} />
-          ) : null}
+          {comment.replies.length > 0 ? <CommentBranch comments={comment.replies} depth={depth + 1} onReply={onReply} /> : null}
         </div>
       ))}
     </div>
@@ -136,45 +134,47 @@ function BlogPostPage() {
   return (
     <StoreShell>
       <div className="container-page py-6">
-        <Breadcrumb items={[{ title: "مجلهٔ جهان کودک", href: "/blog" }, { title: post.title }]} />
-
-        <div className="grid gap-5 lg:grid-cols-[1fr_300px]">
+        <div className="grid gap-5 lg:grid-cols-[1fr_320px]">
           <article className="space-y-5">
-            <div className="overflow-hidden rounded-3xl border border-border bg-card">
-              <img src={post.cover ?? "/images/hero-nursery.jpg"} alt={post.title} className="h-72 w-full object-cover" />
-              <div className="space-y-3 p-6">
-                {post.tag ? (
-                  <span className="inline-flex rounded-full bg-brand-soft px-3 py-1 text-[10px] font-bold text-brand">{post.tag}</span>
-                ) : null}
-                <h1 className="text-xl font-extrabold leading-8 text-foreground">{post.title}</h1>
+            <div className="storybook-panel overflow-hidden p-2">
+              <div className="relative overflow-hidden rounded-[1.9rem]">
+                <img src={post.cover ?? "/images/hero-nursery.jpg"} alt={post.title} className="h-80 w-full object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-t from-charcoal/75 via-charcoal/10 to-transparent" />
+                <div className="absolute inset-x-6 bottom-6">
+                  <Breadcrumb items={[{ title: "مجلهٔ جهان کودک", href: "/blog" }, { title: post.title }]} className="mb-3 [&_a]:text-white/80 [&_span]:text-white/70" />
+                  {post.tag ? <span className="inline-flex rounded-full bg-white/90 px-3 py-1 text-[10px] font-extrabold text-brand shadow-soft">{post.tag}</span> : null}
+                  <h1 className="mt-3 max-w-3xl text-2xl font-black leading-[1.4] text-white md:text-[2.3rem]">{post.title}</h1>
+                </div>
+              </div>
 
-                <div className="flex flex-wrap items-center gap-4 text-[11px] text-muted-foreground">
+              <div className="space-y-4 p-5 md:p-7">
+                <div className="flex flex-wrap items-center gap-4 rounded-[1.4rem] border border-white/70 bg-white/75 px-4 py-3 text-[11px] text-muted-foreground shadow-soft">
                   <span className="inline-flex items-center gap-1">
-                    <UserRound className="size-3" aria-hidden />
+                    <UserRound className="size-3.5" aria-hidden />
                     {post.author}
                   </span>
                   <span className="inline-flex items-center gap-1">
-                    <CalendarDays className="size-3" aria-hidden />
+                    <CalendarDays className="size-3.5" aria-hidden />
                     {post.publishedAt ? formatJalali(post.publishedAt) : "—"}
                   </span>
                   <span className="inline-flex items-center gap-1">
-                    <Eye className="size-3" aria-hidden />
+                    <Eye className="size-3.5" aria-hidden />
                     {toFaDigits(post.viewCount)} بازدید
                   </span>
-                  <button type="button" onClick={share} className="inline-flex items-center gap-1 font-bold text-brand hover:underline">
-                    <Share2 className="size-3" aria-hidden />
+                  <button type="button" onClick={share} className="ms-auto inline-flex items-center gap-1 font-extrabold text-brand hover:underline">
+                    <Share2 className="size-3.5" aria-hidden />
                     اشتراک‌گذاری
                   </button>
                 </div>
 
-                <div className="space-y-3 pt-2">
+                <div className="space-y-4 pt-2">
                   {paragraphs.map((line, index) =>
                     line.startsWith("## ") ? (
-                      <h2 key={index} className="pt-2 text-sm font-extrabold text-foreground">
+                      <h2 key={index} className="pt-2 text-lg font-black text-foreground">
                         {line.replace("## ", "")}
                       </h2>
                     ) : (
-                      <p key={index} className="text-xs leading-7 text-muted-foreground">
+                      <p key={index} className="text-sm leading-8 text-muted-foreground">
                         {line}
                       </p>
                     ),
@@ -183,35 +183,23 @@ function BlogPostPage() {
               </div>
             </div>
 
-            <div className="flex items-center justify-between gap-3 text-[11px]">
+            <div className="grid gap-3 sm:grid-cols-2 text-[11px]">
               {postQuery.data?.previous ? (
-                <Link
-                  to="/blog/$slug"
-                  params={{ slug: postQuery.data.previous.slug }}
-                  className="flex-1 rounded-2xl border border-border bg-card p-3 font-bold transition-colors hover:border-brand hover:text-brand"
-                >
+                <Link to="/blog/$slug" params={{ slug: postQuery.data.previous.slug }} className="storybook-panel p-4 font-bold transition-colors hover:text-brand">
                   مقالهٔ قبلی: {postQuery.data.previous.title}
                 </Link>
               ) : null}
               {postQuery.data?.next ? (
-                <Link
-                  to="/blog/$slug"
-                  params={{ slug: postQuery.data.next.slug }}
-                  className="flex-1 rounded-2xl border border-border bg-card p-3 text-end font-bold transition-colors hover:border-brand hover:text-brand"
-                >
+                <Link to="/blog/$slug" params={{ slug: postQuery.data.next.slug }} className="storybook-panel p-4 text-end font-bold transition-colors hover:text-brand">
                   مقالهٔ بعدی: {postQuery.data.next.title}
                 </Link>
               ) : null}
             </div>
 
             <section className="space-y-3">
-              <h2 className="text-sm font-extrabold text-foreground">
-                دیدگاه‌ها ({toFaDigits(post.commentCount)})
-              </h2>
+              <h2 className="text-lg font-black text-foreground">دیدگاه‌ها ({toFaDigits(post.commentCount)})</h2>
               {post.comments.length === 0 ? (
-                <p className="rounded-2xl border border-border bg-card p-6 text-center text-[11px] text-muted-foreground">
-                  اولین دیدگاه را شما بنویسید.
-                </p>
+                <p className="section-shell p-6 text-center text-[11px] text-muted-foreground">اولین دیدگاه را شما بنویسید.</p>
               ) : (
                 <CommentBranch
                   comments={post.comments}
@@ -229,11 +217,9 @@ function BlogPostPage() {
                 event.preventDefault();
                 sendComment.mutate();
               }}
-              className="space-y-3 rounded-3xl border border-border bg-card p-5"
+              className="storybook-panel space-y-3 p-5"
             >
-              <h2 className="text-sm font-extrabold text-foreground">
-                {replyTo ? `پاسخ به ${replyTo.name}` : "دیدگاه شما"}
-              </h2>
+              <h2 className="text-lg font-black text-foreground">{replyTo ? `پاسخ به ${replyTo.name}` : "دیدگاه شما"}</h2>
               {replyTo ? (
                 <button type="button" onClick={() => setReplyTo(null)} className="text-[10px] text-muted-foreground hover:text-sale">
                   لغو پاسخ و ثبت دیدگاه مستقل
@@ -255,14 +241,14 @@ function BlogPostPage() {
                 required
                 value={body}
                 onChange={(event) => setBody(event.target.value)}
-                rows={4}
+                rows={5}
                 placeholder="متن دیدگاه…"
-                className={inputClass}
+                className="w-full rounded-[1.4rem] border border-white/80 bg-white px-4 py-3 text-xs outline-none transition-colors focus:border-brand"
               />
               <button
                 type="submit"
                 disabled={sendComment.isPending}
-                className="inline-flex items-center gap-2 rounded-full bg-brand px-5 py-2.5 text-xs font-bold text-primary-foreground disabled:opacity-60"
+                className="toy-button inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-brand to-sale px-5 py-3 text-xs font-extrabold text-primary-foreground disabled:opacity-60"
               >
                 <Send className="size-4" aria-hidden />
                 {sendComment.isPending ? "در حال ارسال…" : "ثبت دیدگاه"}

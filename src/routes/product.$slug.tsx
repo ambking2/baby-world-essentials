@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { BadgeCheck, Minus, Plus, ShoppingCart, Truck, Undo2 } from "lucide-react";
+import { BadgeCheck, Minus, Plus, ShoppingCart, Sparkles, Truck, Undo2 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 
@@ -137,179 +137,181 @@ function ProductPage() {
   return (
     <StoreShell>
       <div className="container-page py-6">
-        <Breadcrumb
-          items={[
-            ...(product.categoryTitle && product.categorySlug
-              ? [{ title: product.categoryTitle, href: `/category/${product.categorySlug}` }]
-              : []),
-            { title: product.title },
-          ]}
-          className="mb-4"
-        />
+        <div className="storybook-panel overflow-hidden p-6 md:p-8">
+          <Breadcrumb
+            items={[
+              ...(product.categoryTitle && product.categorySlug
+                ? [{ title: product.categoryTitle, href: `/category/${product.categorySlug}` }]
+                : []),
+              { title: product.title },
+            ]}
+            className="mb-5"
+          />
 
-        <div className="grid gap-6 lg:grid-cols-[1fr_1.1fr]">
-          {/* گالری */}
-          <div className="space-y-3">
-            <div className="overflow-hidden rounded-3xl border border-border bg-card">
-              <img
-                src={images[activeImage]?.url ?? images[0]?.url}
-                alt={images[activeImage]?.alt ?? product.title}
-                className="aspect-square w-full object-cover"
-              />
-            </div>
-            {images.length > 1 ? (
-              <div className="hide-scrollbar flex gap-2 overflow-x-auto">
-                {images.map((image, index) => (
-                  <button
-                    key={`${image.url}-${index}`}
-                    type="button"
-                    onClick={() => setActiveImage(index)}
-                    className={cn(
-                      "size-20 shrink-0 overflow-hidden rounded-2xl border-2 transition-colors",
-                      index === activeImage ? "border-brand" : "border-border",
-                    )}
-                  >
-                    <img src={image.url} alt={image.alt ?? ""} className="size-full object-cover" />
-                  </button>
-                ))}
+          <div className="grid gap-7 lg:grid-cols-[1fr_1.02fr]">
+            <div className="space-y-3">
+              <div className="overflow-hidden rounded-[2rem] border border-white/70 bg-white p-3 shadow-soft">
+                <img
+                  src={images[activeImage]?.url ?? images[0]?.url}
+                  alt={images[activeImage]?.alt ?? product.title}
+                  className="aspect-[1/1.02] w-full rounded-[1.6rem] object-cover"
+                />
               </div>
-            ) : null}
-          </div>
-
-          {/* اطلاعات خرید */}
-          <div className="space-y-4">
-            <div className="flex flex-wrap items-center gap-2">
-              {product.badge ? (
-                <span className="rounded-full bg-brand px-3 py-1 text-[11px] font-bold text-primary-foreground">{product.badge}</span>
+              {images.length > 1 ? (
+                <div className="hide-scrollbar flex gap-2 overflow-x-auto pb-1">
+                  {images.map((image, index) => (
+                    <button
+                      key={`${image.url}-${index}`}
+                      type="button"
+                      onClick={() => setActiveImage(index)}
+                      className={cn(
+                        "size-20 shrink-0 overflow-hidden rounded-[1.2rem] border-2 bg-white p-1 shadow-soft transition-colors",
+                        index === activeImage ? "border-brand" : "border-white/70",
+                      )}
+                    >
+                      <img src={image.url} alt={image.alt ?? ""} className="size-full rounded-[0.9rem] object-cover" />
+                    </button>
+                  ))}
+                </div>
               ) : null}
-              {product.madeInWorkshop ? (
-                <span className="rounded-full bg-installment px-3 py-1 text-[11px] font-bold text-installment-foreground">
-                  تولید کارگاه خودمان
-                </span>
-              ) : null}
-              <span className="text-[11px] text-muted-foreground">کد کالا: {toFaDigits(product.code)}</span>
             </div>
 
-            <h1 className="text-xl font-extrabold leading-8 text-foreground md:text-2xl">{product.title}</h1>
-            {product.subtitle ? <p className="text-sm text-muted-foreground">{product.subtitle}</p> : null}
-
-            <Rating value={product.ratingAverage} count={product.ratingCount} showValue />
-
-            <div className="rounded-3xl border border-border bg-card p-4">
-              <Price price={product.price + (selectedVariant?.priceDelta ?? 0)} effectivePrice={unitPrice} size="lg" />
-              {product.saleActive && product.saleEndsAt ? (
-                <div className="mt-3">
-                  <p className="mb-1.5 text-xs font-bold text-sale">زمان باقی‌مانده تا پایان تخفیف:</p>
-                  <Countdown endsAt={product.saleEndsAt} />
-                </div>
-              ) : null}
-
-              {/* انتخاب سایز و رنگ */}
-              {sizes.length > 0 ? (
-                <div className="mt-4">
-                  <p className="mb-2 text-xs font-extrabold">{isClothing ? "انتخاب سایز (ماه)" : "انتخاب اندازه"}</p>
-                  <div className="flex flex-wrap gap-2">
-                    {sizes.map((item) => (
-                      <button
-                        key={item}
-                        type="button"
-                        onClick={() => setSize(item)}
-                        className={cn(
-                          "rounded-xl border px-3 py-2 text-xs font-bold transition-colors",
-                          size === item ? "border-brand bg-brand text-primary-foreground" : "border-border hover:border-brand",
-                        )}
-                      >
-                        {item}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              ) : null}
-
-              {colors.length > 0 ? (
-                <div className="mt-4">
-                  <p className="mb-2 text-xs font-extrabold">انتخاب رنگ</p>
-                  <div className="flex flex-wrap gap-2">
-                    {colors.map((item) => (
-                      <button
-                        key={item.name}
-                        type="button"
-                        onClick={() => setColor(item.name)}
-                        className={cn(
-                          "flex items-center gap-2 rounded-xl border px-3 py-2 text-xs font-bold transition-colors",
-                          color === item.name ? "border-brand text-brand" : "border-border hover:border-brand",
-                        )}
-                      >
-                        <span className="size-4 rounded-full border border-border" style={{ backgroundColor: item.hex ?? "#ddd" }} aria-hidden />
-                        {item.name}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              ) : null}
-
-              {/* تعداد و خرید */}
-              <div className="mt-5 flex flex-wrap items-center gap-3">
-                <div className="flex items-center gap-2 rounded-xl border border-border p-1">
-                  <button
-                    type="button"
-                    onClick={() => setQty((value) => Math.min(value + 1, 20))}
-                    className="grid size-8 place-items-center rounded-lg hover:bg-secondary"
-                    aria-label="افزایش تعداد"
-                  >
-                    <Plus className="size-4" aria-hidden />
-                  </button>
-                  <span className="min-w-8 text-center text-sm font-extrabold">{toFaDigits(qty)}</span>
-                  <button
-                    type="button"
-                    onClick={() => setQty((value) => Math.max(value - 1, 1))}
-                    className="grid size-8 place-items-center rounded-lg hover:bg-secondary"
-                    aria-label="کاهش تعداد"
-                  >
-                    <Minus className="size-4" aria-hidden />
-                  </button>
-                </div>
-
-                <button
-                  type="button"
-                  disabled={stock <= 0 || addToCart.isPending || needsSelection}
-                  onClick={() => addToCart.mutate()}
-                  className="inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-brand px-6 py-3 text-sm font-bold text-primary-foreground transition-transform hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100"
-                >
-                  <ShoppingCart className="size-4" aria-hidden />
-                  {stock <= 0
-                    ? "فعلاً ناموجود"
-                    : needsSelection
-                      ? "ابتدا سایز/رنگ را انتخاب کنید"
-                      : "افزودن به سبد خرید"}
-                </button>
+            <div className="space-y-4">
+              <div className="flex flex-wrap items-center gap-2">
+                {product.badge ? (
+                  <span className="rounded-full bg-gradient-to-r from-brand to-sale px-3 py-1 text-[11px] font-extrabold text-primary-foreground shadow-soft">{product.badge}</span>
+                ) : null}
+                {product.madeInWorkshop ? (
+                  <span className="rounded-full bg-white px-3 py-1 text-[11px] font-extrabold text-brand shadow-soft">تولید کارگاه خودمان</span>
+                ) : null}
+                <span className="text-[11px] text-muted-foreground">کد کالا: {toFaDigits(product.code)}</span>
               </div>
 
-              <p className="mt-2 text-[11px] text-muted-foreground">
-                {stock > 0 ? `موجودی فعلی: ${toFaDigits(stock)} عدد` : "برای اطلاع از موجودی تماس بگیرید."}
-              </p>
-            </div>
+              <div>
+                <h1 className="text-2xl font-black leading-[1.45] text-foreground md:text-[2rem]">{product.title}</h1>
+                {product.subtitle ? <p className="mt-2 text-sm leading-7 text-muted-foreground">{product.subtitle}</p> : null}
+              </div>
 
-            <ul className="grid gap-2 sm:grid-cols-3">
-              <li className="flex items-center gap-2 rounded-2xl border border-border bg-card p-3 text-[11px]">
-                <Truck className="size-4 text-brand" aria-hidden />
-                ارسال رایگان بالای {formatToman(business.freeShippingThreshold)}
-              </li>
-              <li className="flex items-center gap-2 rounded-2xl border border-border bg-card p-3 text-[11px]">
-                <Undo2 className="size-4 text-brand" aria-hidden />
-                مردودی تا {toFaDigits(business.returnWindowDays)} روز
-              </li>
-              <li className="flex items-center gap-2 rounded-2xl border border-border bg-card p-3 text-[11px]">
-                <BadgeCheck className="size-4 text-brand" aria-hidden />
-                {toFaDigits(business.structureWarrantyMonths)} ماه ضمانت سازه
-              </li>
-            </ul>
+              <Rating value={product.ratingAverage} count={product.ratingCount} showValue />
+
+              <div className="rounded-[2rem] border border-white/70 bg-white/85 p-5 shadow-soft">
+                <Price price={product.price + (selectedVariant?.priceDelta ?? 0)} effectivePrice={unitPrice} size="lg" />
+                {product.saleActive && product.saleEndsAt ? (
+                  <div className="mt-4 rounded-[1.5rem] bg-brand-soft/40 p-3">
+                    <p className="mb-2 text-xs font-extrabold text-sale">زمان باقی‌مانده تا پایان تخفیف:</p>
+                    <Countdown endsAt={product.saleEndsAt} />
+                  </div>
+                ) : null}
+
+                {sizes.length > 0 ? (
+                  <div className="mt-5">
+                    <p className="mb-2 text-xs font-extrabold">{isClothing ? "انتخاب سایز (ماه)" : "انتخاب اندازه"}</p>
+                    <div className="flex flex-wrap gap-2">
+                      {sizes.map((item) => (
+                        <button
+                          key={item}
+                          type="button"
+                          onClick={() => setSize(item)}
+                          className={cn(
+                            "rounded-full border px-4 py-2 text-xs font-extrabold transition-colors",
+                            size === item ? "border-brand bg-gradient-to-r from-brand to-sale text-primary-foreground" : "border-white/80 bg-white hover:border-brand",
+                          )}
+                        >
+                          {item}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
+
+                {colors.length > 0 ? (
+                  <div className="mt-5">
+                    <p className="mb-2 text-xs font-extrabold">انتخاب رنگ</p>
+                    <div className="flex flex-wrap gap-2">
+                      {colors.map((item) => (
+                        <button
+                          key={item.name}
+                          type="button"
+                          onClick={() => setColor(item.name)}
+                          className={cn(
+                            "flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-extrabold transition-colors",
+                            color === item.name ? "border-brand text-brand bg-white" : "border-white/80 bg-white hover:border-brand",
+                          )}
+                        >
+                          <span className="size-4 rounded-full border border-border" style={{ backgroundColor: item.hex ?? "#ddd" }} aria-hidden />
+                          {item.name}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
+
+                <div className="mt-6 flex flex-wrap items-center gap-3">
+                  <div className="flex items-center gap-2 rounded-full border border-white/80 bg-white px-2 py-1 shadow-soft">
+                    <button
+                      type="button"
+                      onClick={() => setQty((value) => Math.min(value + 1, 20))}
+                      className="grid size-9 place-items-center rounded-full hover:bg-secondary"
+                      aria-label="افزایش تعداد"
+                    >
+                      <Plus className="size-4" aria-hidden />
+                    </button>
+                    <span className="min-w-8 text-center text-sm font-extrabold">{toFaDigits(qty)}</span>
+                    <button
+                      type="button"
+                      onClick={() => setQty((value) => Math.max(value - 1, 1))}
+                      className="grid size-9 place-items-center rounded-full hover:bg-secondary"
+                      aria-label="کاهش تعداد"
+                    >
+                      <Minus className="size-4" aria-hidden />
+                    </button>
+                  </div>
+
+                  <button
+                    type="button"
+                    disabled={stock <= 0 || addToCart.isPending || needsSelection}
+                    onClick={() => addToCart.mutate()}
+                    className="toy-button inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-gradient-to-r from-brand to-sale px-6 py-3 text-sm font-extrabold text-primary-foreground transition-transform hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100"
+                  >
+                    <ShoppingCart className="size-4" aria-hidden />
+                    {stock <= 0 ? "فعلاً ناموجود" : needsSelection ? "ابتدا سایز/رنگ را انتخاب کنید" : "افزودن به سبد خرید"}
+                  </button>
+                </div>
+
+                <p className="mt-3 text-[11px] text-muted-foreground">
+                  {stock > 0 ? `موجودی فعلی: ${toFaDigits(stock)} عدد` : "برای اطلاع از موجودی تماس بگیرید."}
+                </p>
+              </div>
+
+              <ul className="grid gap-3 sm:grid-cols-3">
+                <li className="rounded-[1.5rem] border border-white/80 bg-white/80 p-4 text-[11px] shadow-soft">
+                  <div className="mb-2 flex items-center gap-2 font-extrabold text-foreground">
+                    <Truck className="size-4 text-brand" aria-hidden />
+                    ارسال سریع
+                  </div>
+                  <p className="leading-6 text-muted-foreground">ارسال رایگان بالای {formatToman(business.freeShippingThreshold)}</p>
+                </li>
+                <li className="rounded-[1.5rem] border border-white/80 bg-white/80 p-4 text-[11px] shadow-soft">
+                  <div className="mb-2 flex items-center gap-2 font-extrabold text-foreground">
+                    <Undo2 className="size-4 text-brand" aria-hidden />
+                    بازگشت آسان
+                  </div>
+                  <p className="leading-6 text-muted-foreground">مردودی تا {toFaDigits(business.returnWindowDays)} روز</p>
+                </li>
+                <li className="rounded-[1.5rem] border border-white/80 bg-white/80 p-4 text-[11px] shadow-soft">
+                  <div className="mb-2 flex items-center gap-2 font-extrabold text-foreground">
+                    <BadgeCheck className="size-4 text-brand" aria-hidden />
+                    ضمانت سازه
+                  </div>
+                  <p className="leading-6 text-muted-foreground">{toFaDigits(business.structureWarrantyMonths)} ماه برای تولیدات کارگاه</p>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
 
-        {/* تب‌ها */}
-        <div className="mt-10 rounded-3xl border border-border bg-card">
-          <div className="flex flex-wrap gap-1 border-b border-border p-2">
+        <div className="mt-10 section-shell p-4 md:p-6">
+          <div className="flex flex-wrap gap-2 border-b border-border/70 pb-4">
             {([
               ["description", "توضیحات محصول"],
               ["attributes", "مشخصات فنی"],
@@ -320,8 +322,8 @@ function ProductPage() {
                 type="button"
                 onClick={() => setTab(key)}
                 className={cn(
-                  "rounded-xl px-4 py-2 text-xs font-bold transition-colors",
-                  tab === key ? "bg-brand text-primary-foreground" : "text-muted-foreground hover:bg-secondary",
+                  "rounded-full px-4 py-2 text-xs font-extrabold transition-colors",
+                  tab === key ? "bg-gradient-to-r from-brand to-sale text-primary-foreground" : "border border-white/70 bg-white text-muted-foreground hover:border-brand hover:text-brand",
                 )}
               >
                 {label}
@@ -329,7 +331,7 @@ function ProductPage() {
             ))}
           </div>
 
-          <div className="p-5">
+          <div className="pt-5">
             {tab === "description" ? (
               <p className="whitespace-pre-line text-sm leading-8 text-muted-foreground">
                 {product.description ?? "توضیحات این محصول به‌زودی تکمیل می‌شود."}
@@ -337,38 +339,42 @@ function ProductPage() {
             ) : null}
 
             {tab === "attributes" ? (
-              <table className="w-full text-sm">
-                <tbody>
-                  {product.attributes.map((attribute) => (
-                    <tr key={attribute.name} className="border-b border-border/60 last:border-0">
-                      <th className="w-40 py-2.5 text-start text-xs font-bold text-muted-foreground">{attribute.name}</th>
-                      <td className="py-2.5 text-xs text-foreground">{attribute.value}</td>
-                    </tr>
-                  ))}
-                  {product.weightGrams > 0 ? (
-                    <tr>
-                      <th className="w-40 py-2.5 text-start text-xs font-bold text-muted-foreground">وزن</th>
-                      <td className="py-2.5 text-xs text-foreground">{toFaDigits(product.weightGrams)} گرم</td>
-                    </tr>
-                  ) : null}
-                </tbody>
-              </table>
+              <div className="overflow-hidden rounded-[1.6rem] border border-white/80 bg-white shadow-soft">
+                <table className="w-full text-sm">
+                  <tbody>
+                    {product.attributes.map((attribute) => (
+                      <tr key={attribute.name} className="border-b border-border/60 last:border-0">
+                        <th className="w-40 bg-secondary/40 px-4 py-3 text-start text-xs font-extrabold text-muted-foreground">{attribute.name}</th>
+                        <td className="px-4 py-3 text-xs text-foreground">{attribute.value}</td>
+                      </tr>
+                    ))}
+                    {product.weightGrams > 0 ? (
+                      <tr>
+                        <th className="w-40 bg-secondary/40 px-4 py-3 text-start text-xs font-extrabold text-muted-foreground">وزن</th>
+                        <td className="px-4 py-3 text-xs text-foreground">{toFaDigits(product.weightGrams)} گرم</td>
+                      </tr>
+                    ) : null}
+                  </tbody>
+                </table>
+              </div>
             ) : null}
 
             {tab === "reviews" ? (
               <div className="grid gap-6 lg:grid-cols-2">
                 <div className="space-y-3">
                   {product.reviews.length === 0 ? (
-                    <p className="text-sm text-muted-foreground">هنوز دیدگاهی برای این محصول ثبت نشده است.</p>
+                    <p className="rounded-[1.6rem] border border-white/80 bg-white p-6 text-sm text-muted-foreground shadow-soft">
+                      هنوز دیدگاهی برای این محصول ثبت نشده است.
+                    </p>
                   ) : (
                     product.reviews.map((review) => (
-                      <div key={review.id} className="rounded-2xl border border-border p-4">
+                      <div key={review.id} className="rounded-[1.6rem] border border-white/80 bg-white p-4 shadow-soft">
                         <div className="mb-2 flex items-center justify-between">
                           <span className="text-xs font-extrabold">{review.name}</span>
                           <span className="text-[11px] text-muted-foreground">{formatJalali(review.createdAt)}</span>
                         </div>
                         <Rating value={review.rating} />
-                        <p className="mt-2 text-xs leading-6 text-muted-foreground">{review.body}</p>
+                        <p className="mt-2 text-xs leading-7 text-muted-foreground">{review.body}</p>
                       </div>
                     ))
                   )}
@@ -379,55 +385,59 @@ function ProductPage() {
                     event.preventDefault();
                     sendReview.mutate();
                   }}
-                  className="space-y-3 rounded-2xl border border-border p-4"
+                  className="rounded-[1.8rem] border border-white/80 bg-white p-5 shadow-soft"
                 >
-                  <h3 className="text-sm font-extrabold">ثبت دیدگاه دربارهٔ این کالا</h3>
-                  <input
-                    value={reviewName}
-                    onChange={(event) => setReviewName(event.target.value)}
-                    placeholder="نام شما"
-                    className="w-full rounded-xl border border-border bg-background px-3 py-2.5 text-xs outline-none focus:border-brand"
-                  />
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs text-muted-foreground">امتیاز:</span>
-                    {[1, 2, 3, 4, 5].map((value) => (
-                      <button
-                        key={value}
-                        type="button"
-                        onClick={() => setReviewRating(value)}
-                        className={cn(
-                          "size-8 rounded-lg border text-xs font-bold",
-                          reviewRating === value ? "border-brand bg-brand text-primary-foreground" : "border-border",
-                        )}
-                      >
-                        {toFaDigits(value)}
-                      </button>
-                    ))}
+                  <div className="mb-4 flex items-center gap-2 text-brand">
+                    <Sparkles className="size-4" aria-hidden />
+                    <h3 className="text-sm font-black text-foreground">ثبت دیدگاه دربارهٔ این کالا</h3>
                   </div>
-                  <textarea
-                    value={reviewBody}
-                    onChange={(event) => setReviewBody(event.target.value)}
-                    rows={4}
-                    placeholder="تجربهٔ خود را بنویسید…"
-                    className="w-full rounded-xl border border-border bg-background px-3 py-2.5 text-xs outline-none focus:border-brand"
-                  />
-                  <button
-                    type="submit"
-                    disabled={sendReview.isPending}
-                    className="rounded-full bg-brand px-5 py-2.5 text-xs font-bold text-primary-foreground disabled:opacity-60"
-                  >
-                    {sendReview.isPending ? "در حال ارسال…" : "ارسال دیدگاه"}
-                  </button>
+                  <div className="space-y-3">
+                    <input
+                      value={reviewName}
+                      onChange={(event) => setReviewName(event.target.value)}
+                      placeholder="نام شما"
+                      className="w-full rounded-full border border-white/80 bg-background px-4 py-3 text-xs outline-none focus:border-brand"
+                    />
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs text-muted-foreground">امتیاز:</span>
+                      {[1, 2, 3, 4, 5].map((value) => (
+                        <button
+                          key={value}
+                          type="button"
+                          onClick={() => setReviewRating(value)}
+                          className={cn(
+                            "size-9 rounded-full border text-xs font-extrabold",
+                            reviewRating === value ? "border-brand bg-gradient-to-r from-brand to-sale text-primary-foreground" : "border-white/80 bg-background",
+                          )}
+                        >
+                          {toFaDigits(value)}
+                        </button>
+                      ))}
+                    </div>
+                    <textarea
+                      value={reviewBody}
+                      onChange={(event) => setReviewBody(event.target.value)}
+                      rows={4}
+                      placeholder="تجربهٔ خود را بنویسید…"
+                      className="w-full rounded-[1.4rem] border border-white/80 bg-background px-4 py-3 text-xs outline-none focus:border-brand"
+                    />
+                    <button
+                      type="submit"
+                      disabled={sendReview.isPending}
+                      className="toy-button rounded-full bg-gradient-to-r from-brand to-sale px-5 py-3 text-xs font-extrabold text-primary-foreground disabled:opacity-60"
+                    >
+                      {sendReview.isPending ? "در حال ارسال…" : "ارسال دیدگاه"}
+                    </button>
+                  </div>
                 </form>
               </div>
             ) : null}
           </div>
         </div>
 
-        {/* محصولات مرتبط */}
         {(pageQuery.data?.related ?? []).length > 0 ? (
           <section className="mt-12">
-            <SectionHeading title="محصولات مرتبط" subtitle="کالاهایی که ممکن است دوست داشته باشید" />
+            <SectionHeading title="محصولات مرتبط" subtitle="کالاهایی که احتمالاً دوست خواهید داشت" />
             <ProductGrid products={(pageQuery.data?.related ?? []) as Array<ProductCard>} columns={4} />
           </section>
         ) : null}
