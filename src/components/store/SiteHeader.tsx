@@ -22,7 +22,7 @@ type SiteHeaderProps = {
   cartCount: number;
   cartTotal: number;
   userName: string | null;
-  userRole?: string | null;
+  userRole?: string | null | undefined;
   isAdmin?: boolean;
   announcement?: string | null;
 };

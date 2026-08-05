@@ -16,20 +16,17 @@ export function AdminFloatingButton() {
   const user = sessionQuery.data?.user;
   const isStaff = user?.role === "admin" || user?.role === "sales";
   
+  const isAdminPath = location.pathname.startsWith("/admin");
+
   // Only show floating button for staff
   if (!isStaff) return null;
 
-  // Don't show admin access button on the main site unless it's the "back to site" button when in admin
-  // Wait, the user said "dont bring the login to admin button to the main site"
-  // and "inside the panel there should be a button to enter the site"
-  // Let's hide the "Panel Modiriat" button from the main site and only show "Moshahede Site" inside Admin
-  
+  // Show "Moshahede Site" button only when inside Admin panel
   if (!isAdminPath) return null;
 
-  const isAdminPath = location.pathname.startsWith("/admin");
-  const targetPath = isAdminPath ? "/" : "/admin";
-  const label = isAdminPath ? "مشاهده سایت" : "پنل مدیریت";
-  const Icon = isAdminPath ? ShoppingBag : LayoutDashboard;
+  const targetPath = "/";
+  const label = "مشاهده سایت";
+  const Icon = ShoppingBag;
 
   return (
     <Link

@@ -10,6 +10,7 @@ import { StoreShell } from "@/components/store/StoreShell";
 import { ProductSection } from "@/components/site/ProductSection";
 import { SectionHeading } from "@/components/store/SectionHeading";
 import { BlogPreview } from "@/components/site/BlogPreview";
+import { useEffect } from "react";
 
 import { business } from "@/data/business";
 import { categoriesQuery, productsQuery } from "@/lib/api/catalog";
