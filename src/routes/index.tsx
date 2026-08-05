@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Flame, Sparkles } from "lucide-react";
+import { ArrowUpLeft, Flame, HeartHandshake, Sparkles, WandSparkles } from "lucide-react";
 import { toast } from "sonner";
 
 import { CategoryStrip } from "@/components/store/CategoryStrip";
@@ -69,21 +69,73 @@ function HomePage() {
     <StoreShell>
       <HeroSlider />
 
-      <div className="pt-8">
+      <div className="-mt-8 relative z-10 pt-8">
         <TrustBadges />
       </div>
 
       {categories.length > 0 ? <CategoryStrip categories={categories} /> : null}
 
+      <section className="container-page py-4">
+        <div className="grid gap-4 lg:grid-cols-[1.15fr_.85fr]">
+          <div className="storybook-panel candy-surface p-6 md:p-8">
+            <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-white px-3 py-1 text-[11px] font-extrabold text-brand shadow-soft">
+              <HeartHandshake className="size-3.5" aria-hidden />
+              تجربه‌ی خرید انسانی‌تر
+            </div>
+            <h2 className="max-w-xl text-2xl font-black leading-[1.35] text-foreground md:text-[2rem]">
+              فروشگاه خشک و بی‌روح نه؛ خریدی که حس یک فروشگاه واقعی، گرم و قابل‌اعتماد را بدهد.
+            </h2>
+            <p className="mt-3 max-w-2xl text-sm leading-8 text-muted-foreground">
+              از انتخاب سرویس خواب تا لباس، کالسکه و اسباب‌بازی، همه‌چیز را طوری چیده‌ایم که کاربر مسیر را گم نکند و راحت‌تر به خرید برسد.
+            </p>
+            <div className="mt-5 flex flex-wrap gap-3">
+              <Link to="/search" className="toy-button rounded-full bg-gradient-to-r from-brand to-sale px-6 py-3 text-sm font-extrabold text-primary-foreground">
+                شروع خرید
+              </Link>
+              <Link to="/about" className="rounded-full border border-white/70 bg-white/85 px-5 py-3 text-sm font-bold text-foreground shadow-soft">
+                داستان برند
+              </Link>
+            </div>
+          </div>
+
+          <div className="grid gap-4">
+            <div className="rounded-[2rem] border border-white/80 bg-gradient-to-br from-[#fff0d8] to-[#fffaf2] p-5 shadow-soft">
+              <div className="mb-3 inline-flex rounded-full bg-white px-3 py-1 text-[11px] font-extrabold text-sale shadow-soft">
+                حراج فعال
+              </div>
+              <h3 className="text-lg font-black text-foreground">تخفیف‌های واقعی، نه نمایشی</h3>
+              <p className="mt-2 text-xs leading-7 text-muted-foreground">محصولات تخفیف‌دار را جدا و واضح نشان می‌دهیم تا تصمیم خرید سریع‌تر و واقعی‌تر شود.</p>
+              <Link to="/offers" className="mt-4 inline-flex items-center gap-1 text-xs font-extrabold text-brand">
+                مشاهده تخفیف‌ها
+                <ArrowUpLeft className="size-3.5" aria-hidden />
+              </Link>
+            </div>
+            <div className="rounded-[2rem] border border-white/80 bg-gradient-to-br from-[#e8f4ff] to-[#f8fbff] p-5 shadow-soft">
+              <div className="mb-3 inline-flex rounded-full bg-white px-3 py-1 text-[11px] font-extrabold text-brand shadow-soft">
+                تولید کارگاه
+              </div>
+              <h3 className="text-lg font-black text-foreground">سفارشی‌سازی برای خانواده‌های دقیق‌تر</h3>
+              <p className="mt-2 text-xs leading-7 text-muted-foreground">رنگ، ابعاد و حال‌وهوای دکور را می‌توان با نیاز واقعی اتاق کودک هماهنگ کرد.</p>
+              <Link to="/contact" className="mt-4 inline-flex items-center gap-1 text-xs font-extrabold text-brand">
+                ثبت سفارش ساخت
+                <ArrowUpLeft className="size-3.5" aria-hidden />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {data && data.flashSale.length > 0 ? (
-        <section className="container-page py-6">
-          <div className="overflow-hidden rounded-[2rem] border border-sale/30 bg-sale/5 p-5">
+        <section className="container-page py-8">
+          <div className="relative overflow-hidden rounded-[2.3rem] border border-sale/20 bg-gradient-to-br from-[#fff0eb] via-[#fff8f5] to-white p-5 shadow-soft md:p-7">
+            <div className="absolute -left-8 top-6 size-28 rounded-full bg-sale/10 blur-2xl" />
+            <div className="absolute bottom-6 right-6 size-32 rounded-full bg-brand/10 blur-2xl" />
             <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-              <h2 className="flex items-center gap-2 text-lg font-extrabold text-sale">
+              <h2 className="flex items-center gap-2 text-xl font-black text-sale">
                 <Flame className="size-5" aria-hidden />
-                حراج شگفت‌انگیز
+                حراج شگفت‌انگیز امروز
               </h2>
-              <Link to="/offers" className="text-xs font-bold text-sale hover:underline">
+              <Link to="/offers" className="rounded-full border border-sale/20 bg-white px-4 py-2 text-xs font-extrabold text-sale shadow-soft">
                 همهٔ تخفیف‌ها
               </Link>
             </div>
@@ -93,54 +145,60 @@ function HomePage() {
       ) : null}
 
       <section className="container-page py-8">
-        <SectionHeading
-          title="محصولات تازه رسیده"
-          subtitle="جدیدترین کالاهایی که به فروشگاه اضافه شده‌اند"
-          moreHref="/search"
-        />
-        <ProductGrid products={data?.newest ?? []} columns={4} {...gridProps} emptyMessage="در حال بارگزاری محصولات…" />
-      </section>
-
-      <section className="container-page py-8">
-        <SectionHeading title="پرفروش‌ترین‌های ما" subtitle="انتخاب محبوب مشتریان در ماه‌های گذشته" moreHref="/search" />
-        <ProductGrid products={data?.bestSellers ?? []} columns={4} {...gridProps} emptyMessage="در حال بارگزاری…" />
-      </section>
-
-      {/* بنر کارگاه */}
-      <section ref={workshopRef} className="container-page py-8">
-        <div className="reveal grid items-center gap-6 overflow-hidden rounded-[2rem] border border-border bg-brand-soft/60 p-6 md:grid-cols-2 md:p-10">
-          <div className="space-y-3">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-background px-3 py-1 text-xs font-bold text-brand">
-              <Sparkles className="size-3.5" aria-hidden />
-              {toFaDigits(business.yearsInBusiness)} سال تجربه در {business.city}
-            </span>
-            <h2 className="text-xl font-extrabold text-foreground md:text-2xl">سرویس خواب سفارشی، ساخت کارگاه خودمان</h2>
-            <p className="text-sm leading-7 text-muted-foreground">
-              رنگ، اندازه و طرح دلخواهتان را بگویید تا در {business.customBuildDays} برایتان بسازیم؛ با{" "}
-              {toFaDigits(business.structureWarrantyMonths)} ماه ضمانت سازه و تحویل حضوری در فروشگاه.
-            </p>
-            <div className="flex flex-wrap gap-2">
-              <Link
-                to="/contact"
-                className="inline-flex items-center rounded-full bg-brand px-5 py-2.5 text-sm font-bold text-primary-foreground transition-transform hover:scale-[1.03]"
-              >
-                ثبت سفارش ساخت
-              </Link>
-              <Link
-                to="/about"
-                className="inline-flex items-center rounded-full border border-border bg-background px-5 py-2.5 text-sm font-bold text-foreground transition-colors hover:border-brand hover:text-brand"
-              >
-                دربارهٔ کارگاه
-              </Link>
-            </div>
-          </div>
-          <img src="/images/workshop.jpg" alt="کارگاه تولید سرویس خواب نوزاد" loading="lazy" className="aspect-[4/3] w-full rounded-3xl object-cover" />
+        <div className="section-shell p-5 md:p-7">
+          <SectionHeading
+            title="محصولات تازه رسیده"
+            subtitle="جدیدترین کالاهایی که با حساسیت و سلیقه به فروشگاه اضافه شده‌اند"
+            moreHref="/search"
+          />
+          <ProductGrid products={data?.newest ?? []} columns={4} {...gridProps} emptyMessage="در حال بارگزاری محصولات…" />
         </div>
       </section>
 
-      <section className="container-page pb-12">
-        <SectionHeading title="پیشنهاد ویژهٔ فروشگاه" subtitle="محصولات منتخب و تولیدات کارگاه" moreHref="/search" />
-        <ProductGrid products={data?.featured ?? []} columns={4} {...gridProps} emptyMessage="در حال بارگزاری…" />
+      <section className="container-page py-8">
+        <div className="section-shell bg-gradient-to-br from-[#fffaf3] to-white p-5 md:p-7">
+          <SectionHeading title="پرفروش‌ترین‌های ما" subtitle="محبوب‌ترین انتخاب خانواده‌ها در ماه‌های اخیر" moreHref="/search" />
+          <ProductGrid products={data?.bestSellers ?? []} columns={4} {...gridProps} emptyMessage="در حال بارگزاری…" />
+        </div>
+      </section>
+
+      <section ref={workshopRef} className="container-page py-8">
+        <div className="reveal storybook-panel overflow-hidden md:p-2">
+          <div className="grid items-center gap-6 p-6 md:grid-cols-[1.02fr_.98fr] md:p-10">
+            <div className="space-y-4">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-soft px-3 py-1 text-xs font-extrabold text-brand">
+                <WandSparkles className="size-3.5" aria-hidden />
+                {toFaDigits(business.yearsInBusiness)} سال تجربه در {business.city}
+              </span>
+              <h2 className="text-2xl font-black leading-[1.35] text-foreground md:text-[2rem]">
+                سرویس خواب سفارشی، رنگ‌های گرم، و دکوری که برای اتاق کودک جان داشته باشد
+              </h2>
+              <p className="text-sm leading-8 text-muted-foreground">
+                رنگ، اندازه و طرح دلخواهتان را بگویید تا در {business.customBuildDays} برایتان بسازیم؛ با {toFaDigits(business.structureWarrantyMonths)} ماه ضمانت سازه و تحویل حضوری در فروشگاه.
+              </p>
+              <div className="flex flex-wrap gap-3">
+                <Link to="/contact" className="toy-button rounded-full bg-gradient-to-r from-brand to-sale px-6 py-3 text-sm font-extrabold text-primary-foreground">
+                  ثبت سفارش ساخت
+                </Link>
+                <Link to="/about" className="rounded-full border border-white/70 bg-white px-5 py-3 text-sm font-bold text-foreground shadow-soft">
+                  دربارهٔ کارگاه
+                </Link>
+              </div>
+            </div>
+
+            <div className="grid gap-3 sm:grid-cols-2">
+              <img src="/images/workshop.jpg" alt="کارگاه تولید سرویس خواب نوزاد" loading="lazy" className="h-56 w-full rounded-[1.8rem] object-cover shadow-soft sm:h-full" />
+              <img src="/images/hero-nursery.jpg" alt="چیدمان اتاق نوزاد" loading="lazy" className="h-56 w-full rounded-[1.8rem] object-cover shadow-soft sm:h-full" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="container-page pb-14 pt-8">
+        <div className="section-shell bg-gradient-to-br from-[#fdf2ff] to-white p-5 md:p-7">
+          <SectionHeading title="پیشنهادهای منتخب فروشگاه" subtitle="محصولات ویژه، کاربردی و دوست‌داشتنی برای خرید مطمئن‌تر" moreHref="/search" />
+          <ProductGrid products={data?.featured ?? []} columns={4} {...gridProps} emptyMessage="در حال بارگزاری…" />
+        </div>
       </section>
     </StoreShell>
   );

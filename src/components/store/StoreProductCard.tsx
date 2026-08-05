@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Eye, Heart, ShoppingCart } from "lucide-react";
+import { Eye, Heart, ShoppingCart, Sparkles } from "lucide-react";
 
 import { Countdown } from "@/components/store/Countdown";
 import { Price } from "@/components/store/Price";
@@ -17,7 +17,6 @@ type StoreProductCardProps = {
   className?: string;
 };
 
-/** کارت محصول فروشگاه با هور نرم، دکمهٔ سریع خرید و برچسب‌ها. */
 export function StoreProductCard({
   product,
   onAddToCart,
@@ -30,74 +29,77 @@ export function StoreProductCard({
   const isClothing = product.categoryKind === "clothing";
 
   return (
-    <article
-      className={cn(
-        "card-hover group relative flex h-full flex-col overflow-hidden rounded-3xl border border-border bg-card",
-        className,
-      )}
-    >
-      <div className="absolute start-3 top-3 z-10 flex flex-col gap-1.5">
-        {product.badge ? (
-          <span className="rounded-full bg-brand px-2.5 py-1 text-[11px] font-bold text-primary-foreground shadow-soft">
-            {product.badge}
-          </span>
-        ) : null}
-        {product.madeInWorkshop ? (
-          <span className="rounded-full bg-installment px-2.5 py-1 text-[11px] font-bold text-installment-foreground">
-            تولید کارگاه خودمان
-          </span>
-        ) : null}
-        {soldOut ? (
-          <span className="rounded-full bg-charcoal px-2.5 py-1 text-[11px] font-bold text-white">ناموجود</span>
-        ) : null}
+    <article className={cn("card-hover group storybook-panel flex h-full flex-col p-2", className)}>
+      <div className="relative overflow-hidden rounded-[1.7rem] bg-[linear-gradient(180deg,#fff8f2_0%,#ffffff_100%)]">
+        <div className="absolute start-3 top-3 z-10 flex flex-col gap-1.5">
+          {product.badge ? (
+            <span className="rounded-full bg-gradient-to-r from-brand to-sale px-3 py-1 text-[11px] font-extrabold text-primary-foreground shadow-soft">
+              {product.badge}
+            </span>
+          ) : null}
+          {product.madeInWorkshop ? (
+            <span className="rounded-full bg-white/90 px-3 py-1 text-[11px] font-bold text-brand shadow-soft">
+              ساخت کارگاه
+            </span>
+          ) : null}
+          {soldOut ? (
+            <span className="rounded-full bg-charcoal px-3 py-1 text-[11px] font-bold text-white shadow-soft">ناموجود</span>
+          ) : null}
+        </div>
+
+        <button
+          type="button"
+          onClick={() => onToggleWishlist?.(product)}
+          aria-label={inWishlist ? "حذف از علاقه‌مندی‌ها" : "افزودن به علاقه‌مندی‌ها"}
+          className="absolute end-3 top-3 z-10 inline-flex size-10 items-center justify-center rounded-full border border-white/80 bg-white/88 text-muted-foreground shadow-soft transition-all hover:text-sale"
+        >
+          <Heart className={cn("size-4", inWishlist && "fill-sale text-sale")} aria-hidden />
+        </button>
+
+        <Link to="/product/$slug" params={{ slug: product.slug }} className="block overflow-hidden rounded-[1.7rem]">
+          <img
+            src={product.cover ?? "/images/cat-clothing.jpg"}
+            alt={product.title}
+            loading="lazy"
+            className="aspect-[1/1.02] w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+        </Link>
+
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-white to-transparent" />
       </div>
 
-      <button
-        type="button"
-        onClick={() => onToggleWishlist?.(product)}
-        aria-label={inWishlist ? "حذف از علاقه‌مندی‌ها" : "افزودن به علاقه‌مندی‌ها"}
-        className="absolute end-3 top-3 z-10 inline-flex size-9 items-center justify-center rounded-full bg-background/90 text-muted-foreground shadow-soft transition-all hover:text-sale"
-      >
-        <Heart className={cn("size-4", inWishlist && "fill-sale text-sale")} aria-hidden />
-      </button>
+      <div className="flex flex-1 flex-col gap-3 px-3 pb-3 pt-4">
+        <div className="flex items-center justify-between gap-2">
+          {product.categoryTitle ? (
+            <span className="inline-flex items-center gap-1 rounded-full bg-brand-soft px-2.5 py-1 text-[10px] font-extrabold text-brand">
+              <Sparkles className="size-3" aria-hidden />
+              {product.categoryTitle}
+            </span>
+          ) : <span />}
+          {product.soldCount > 0 ? <span className="text-[10px] text-muted-foreground">{formatCount(product.soldCount)} فروش</span> : null}
+        </div>
 
-      <Link to="/product/$slug" params={{ slug: product.slug }} className="block overflow-hidden bg-secondary/40">
-        <img
-          src={product.cover ?? "/images/cat-clothing.jpg"}
-          alt={product.title}
-          loading="lazy"
-          className="aspect-square w-full object-cover transition-transform duration-500 group-hover:scale-105"
-        />
-      </Link>
-
-      <div className="flex flex-1 flex-col gap-2 p-4">
-        {product.categoryTitle ? (
-          <span className="text-[11px] font-semibold text-brand">{product.categoryTitle}</span>
-        ) : null}
-
-        <h3 className="line-clamp-2 text-sm font-bold leading-6 text-foreground">
+        <h3 className="line-clamp-2 text-sm font-black leading-6 text-foreground">
           <Link to="/product/$slug" params={{ slug: product.slug }} className="transition-colors hover:text-brand">
             {product.title}
           </Link>
         </h3>
 
-        {product.subtitle ? (
-          <p className="line-clamp-1 text-xs text-muted-foreground">{product.subtitle}</p>
-        ) : null}
+        {product.subtitle ? <p className="line-clamp-2 text-xs leading-6 text-muted-foreground">{product.subtitle}</p> : null}
 
         <Rating value={product.ratingAverage} count={product.ratingCount} />
 
         {product.saleActive && product.saleEndsAt ? <Countdown endsAt={product.saleEndsAt} /> : null}
 
-        <div className="mt-auto space-y-3 pt-1">
+        <div className="mt-auto rounded-[1.5rem] border border-white/70 bg-white/80 p-3 shadow-soft">
           <Price price={product.price} effectivePrice={product.effectivePrice} discountPercent={product.discountPercent} />
 
-          <div className="flex items-center gap-2">
+          <div className="mt-3 flex items-center gap-2">
             {isClothing || !onAddToCart ? (
               <Link
                 to="/product/$slug"
                 params={{ slug: product.slug }}
-                className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-full bg-brand px-3 py-2.5 text-xs font-bold text-primary-foreground transition-transform hover:scale-[1.02]"
+                className="toy-button inline-flex flex-1 items-center justify-center gap-1.5 rounded-full bg-gradient-to-r from-brand to-sale px-3 py-3 text-xs font-extrabold text-primary-foreground transition-transform hover:scale-[1.02]"
               >
                 <Eye className="size-4" aria-hidden />
                 {isClothing ? "انتخاب سایز و خرید" : "مشاهدهٔ محصول"}
@@ -107,17 +109,13 @@ export function StoreProductCard({
                 type="button"
                 disabled={soldOut || busy}
                 onClick={() => onAddToCart(product)}
-                className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-full bg-brand px-3 py-2.5 text-xs font-bold text-primary-foreground transition-transform hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100"
+                className="toy-button inline-flex flex-1 items-center justify-center gap-1.5 rounded-full bg-gradient-to-r from-brand to-sale px-3 py-3 text-xs font-extrabold text-primary-foreground transition-transform hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100"
               >
                 <ShoppingCart className="size-4" aria-hidden />
                 {soldOut ? "ناموجود" : busy ? "در حال افزودن…" : "افزودن به سبد"}
               </button>
             )}
           </div>
-
-          {product.soldCount > 0 ? (
-            <p className="text-[11px] text-muted-foreground">{formatCount(product.soldCount)} فروش موفق</p>
-          ) : null}
         </div>
       </div>
     </article>
