@@ -1,7 +1,8 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useSuspenseQuery, useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { createFileRoute } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
+import { Suspense } from "react";
 
 import { SiteHeader } from "@/components/store/SiteHeader";
 import { HeroSlider } from "@/components/store/HeroSlider";
@@ -11,26 +12,26 @@ import { SectionHeading } from "@/components/store/SectionHeading";
 import { BlogPreview } from "@/components/site/BlogPreview";
 
 import { business } from "@/data/business";
-import { categoriesQuery } from "@/lib/api/catalog";
-import { getHomeProducts } from "@/server/functions/products";
+import { categoriesQuery, productsQuery } from "@/lib/api/catalog";
 import { queryOptions } from "@tanstack/react-query";
 import { toFaDigits } from "@/lib/format";
+import { cn } from "@/lib/utils";
 
 const homeProductsQuery = () => queryOptions({
   queryKey: ["home-products"],
-  queryFn: () => getHomeProducts(),
+  queryFn: () => Promise.resolve([]), // Fallback or remove if not needed
 });
 
 export const Route = createFileRoute("/")({
   loader: (opts) => Promise.all([
-    opts.context.queryClient.ensureQueryData(homeProductsQuery()),
     opts.context.queryClient.ensureQueryData(categoriesQuery()),
+    opts.context.queryClient.ensureQueryData(productsQuery({ tag: "new", limit: 4 })),
+    opts.context.queryClient.ensureQueryData(productsQuery({ tag: "best", limit: 8 })),
   ]),
   component: HomePage,
 });
 
 function HomePage() {
-  const { data: products } = useSuspenseQuery(homeProductsQuery());
   const { data: categories } = useSuspenseQuery(categoriesQuery());
 
   return (
@@ -128,7 +129,15 @@ function HomePage() {
             <span className="mb-4 block text-xs font-bold uppercase tracking-widest text-primary">مجله جهان کودک</span>
             <h2 className="text-3xl font-bold lg:text-5xl">راهنمای هوشمندانه برای والدین</h2>
           </div>
-          <BlogPreview />
+          <Suspense fallback={
+            <div className="grid gap-8 md:grid-cols-3 lg:gap-16 opacity-50">
+              {[1, 2, 3].map(i => (
+                <div key={i} className="aspect-[16/10] rounded-2xl skeleton" />
+              ))}
+            </div>
+          }>
+            <BlogPreview />
+          </Suspense>
           <div className="mt-16 text-center">
             <Link to="/blog" className="btn-secondary">مشاهده همه مقالات</Link>
           </div>
@@ -140,5 +149,4 @@ function HomePage() {
   );
 }
 
-import { cn } from "@/lib/utils";
 import { Headphones, Heart, ShieldCheck, Truck } from "lucide-react";

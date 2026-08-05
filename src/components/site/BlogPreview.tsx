@@ -20,10 +20,15 @@ export function BlogPreview() {
             params={{ slug: post.slug }}
             className="relative mb-6 block aspect-[16/10] overflow-hidden bg-secondary/40 rounded-2xl border border-accent/60 shadow-sm"
           >
+            <div className="absolute inset-0 skeleton" />
             <img 
               src={(post as any).cover ?? "/images/cat-clothing.jpg"} 
               alt={post.title} 
-              className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" 
+              loading="lazy"
+              onLoad={(e) => {
+                (e.currentTarget.previousElementSibling as HTMLElement).style.display = 'none';
+              }}
+              className="relative h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" 
             />
           </Link>
 

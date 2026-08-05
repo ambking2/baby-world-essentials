@@ -33,11 +33,16 @@ export function ProductCard({
       {/* Image Container - 4:5 Ratio */}
       <div className="relative aspect-[4/5] overflow-hidden rounded-t-[14px] bg-secondary/30">
         <Link to="/product/$slug" params={{ slug: product.slug }} className="block h-full w-full">
+          <div className="absolute inset-0 skeleton" />
           <img
             src={product.image || product.cover || "/assets/images/nursery-6.jpg"}
             alt={product.title}
+            loading="lazy"
+            onLoad={(e) => {
+              (e.currentTarget.previousElementSibling as HTMLElement).style.display = 'none';
+            }}
             className={cn(
-              "h-full w-full object-cover transition-transform duration-500 group-hover:scale-105",
+              "relative h-full w-full object-cover transition-transform duration-500 group-hover:scale-105",
               outOfStock && "opacity-60"
             )}
           />
