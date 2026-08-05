@@ -75,7 +75,7 @@ function SearchPage() {
   return (
     <StoreShell>
       <div className="container-page py-6">
-        <div className="mb-5 rounded-3xl border border-border bg-card p-5">
+        <div className="mb-5 rounded-2xl border border-border bg-secondary/30 p-8 shadow-sm">
           <h1 className="text-xl font-extrabold text-foreground">
             {q.trim().length > 0 ? `نتایج جستجو برای «${q}»` : "همهٔ محصولات فروشگاه"}
           </h1>
