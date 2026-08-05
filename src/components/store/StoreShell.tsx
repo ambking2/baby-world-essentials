@@ -49,9 +49,9 @@ export function StoreShell({ children }: { children: ReactNode }) {
   return (
     <div className="relative flex min-h-screen flex-col overflow-hidden bg-background">
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -left-24 top-24 size-72 rounded-full bg-brand/10 blur-3xl" />
-        <div className="absolute right-[-5rem] top-80 size-80 rounded-full bg-sale/10 blur-3xl" />
-        <div className="absolute left-1/3 top-[38rem] size-80 rounded-full bg-sky/20 blur-3xl" />
+        <div className="absolute -left-32 top-24 size-[500px] rounded-full bg-brand/15 blur-[120px]" />
+        <div className="absolute right-[-10rem] top-80 size-[600px] rounded-full bg-sale/12 blur-[140px]" />
+        <div className="absolute left-1/4 top-[45rem] size-[550px] rounded-full bg-sky/25 blur-[130px]" />
         <div className="absolute bottom-0 left-0 right-0 h-72 bg-gradient-to-t from-brand-soft/30 to-transparent" />
       </div>
 

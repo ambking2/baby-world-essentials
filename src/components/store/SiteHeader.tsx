@@ -101,7 +101,7 @@ export function SiteHeader({
           </div>
         </div>
 
-        <div className={cn("glass-panel rounded-[2.5rem] px-3 py-3 shadow-lift backdrop-blur-md transition-all duration-300", scrolled && "mx-auto max-w-[95%] shadow-[0_20px_60px_rgba(130,65,28,0.12)]")}>
+        <div className={cn("glass-panel rounded-[2.8rem] border-white/90 px-3 py-3 shadow-lift backdrop-blur-xl transition-all duration-500", scrolled && "mx-auto max-w-[96%] translate-y-2 border-brand/10 shadow-deep")}>
           <div className="flex items-center gap-3 md:gap-4">
             <button
               type="button"
@@ -128,7 +128,7 @@ export function SiteHeader({
             <div ref={searchRef} className="relative flex-1">
               <form
                 onSubmit={submitSearch}
-                className="flex items-center gap-2 rounded-full border border-white/70 bg-white/90 px-4 py-2.5 shadow-soft focus-within:border-brand"
+                className="flex items-center gap-2 rounded-full border border-white/80 bg-white/95 px-4 py-2.5 shadow-inner transition-all focus-within:border-brand focus-within:ring-4 focus-within:ring-brand/5"
               >
                 <Search className="size-4 shrink-0 text-muted-foreground" aria-hidden />
                 <input
@@ -252,7 +252,7 @@ export function SiteHeader({
               ) : null}
             </div>
 
-            <div className="hide-scrollbar flex flex-1 items-center gap-1 overflow-x-auto rounded-full bg-white/65 px-2 py-1">
+            <div className="hide-scrollbar flex flex-1 items-center gap-1 overflow-x-auto rounded-full bg-white/75 px-2 py-1 shadow-inner backdrop-blur-sm">
               {QUICK_LINKS.map((link) => (
                 <Link
                   key={link.href}

@@ -77,7 +77,7 @@ function HomePage() {
 
       <section className="container-page py-4">
         <div className="grid gap-4 lg:grid-cols-[1.15fr_.85fr]">
-          <div className="storybook-panel candy-surface rounded-[3rem] p-6 shadow-lift md:p-10">
+          <div className="storybook-panel candy-surface rounded-[3.5rem] p-6 shadow-deep md:p-12 ring-1 ring-white/40">
             <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-white px-3 py-1 text-[11px] font-extrabold text-brand shadow-soft">
               <HeartHandshake className="size-3.5" aria-hidden />
               تجربه‌ی خرید انسانی‌تر
@@ -99,7 +99,7 @@ function HomePage() {
           </div>
 
           <div className="grid gap-4">
-            <div className="rounded-[2.8rem] border border-white/80 bg-gradient-to-br from-[#fff0d8] to-[#fffaf2] p-6 shadow-soft transition-all duration-300 hover:scale-[1.02] hover:shadow-lift">
+            <div className="rounded-[3rem] border-2 border-white/90 bg-gradient-to-br from-[#fff2de] to-[#fffbf5] p-7 shadow-lift transition-all duration-500 hover:scale-[1.03] hover:shadow-deep">
               <div className="mb-3 inline-flex rounded-full bg-white px-3 py-1 text-[11px] font-extrabold text-sale shadow-soft">
                 حراج فعال
               </div>
@@ -110,7 +110,7 @@ function HomePage() {
                 <ArrowUpLeft className="size-3.5" aria-hidden />
               </Link>
             </div>
-            <div className="rounded-[2.8rem] border border-white/80 bg-gradient-to-br from-[#e8f4ff] to-[#f8fbff] p-6 shadow-soft transition-all duration-300 hover:scale-[1.02] hover:shadow-lift">
+            <div className="rounded-[3rem] border-2 border-white/90 bg-gradient-to-br from-[#ebf5ff] to-[#faffff] p-7 shadow-lift transition-all duration-500 hover:scale-[1.03] hover:shadow-deep">
               <div className="mb-3 inline-flex rounded-full bg-white px-3 py-1 text-[11px] font-extrabold text-brand shadow-soft">
                 تولید کارگاه
               </div>
