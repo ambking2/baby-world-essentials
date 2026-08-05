@@ -54,7 +54,7 @@ export function StoreShell({ children }: { children: ReactNode }) {
   void queryClient;
 
   return (
-    <div className="flex min-h-screen flex-col bg-background">
+    <div className="flex min-h-screen flex-col bg-white">
       <SiteHeader
         categories={categories}
         cartCount={cart?.itemCount ?? 0}
