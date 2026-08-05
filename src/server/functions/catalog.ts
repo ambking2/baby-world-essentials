@@ -16,9 +16,9 @@ const sortKeys = ["newest", "cheapest", "expensive", "popular", "rating", "disco
 
 /** درخت دسته‌بندی‌ها و تنطیمات عمومی — برای هدر و فوتر. */
 export const getCatalogShell = createServerFn({ method: "GET" }).handler(async () => {
-  const settings = allSettings();
+  const [settings, categories] = await Promise.all([allSettings(), categoryTree()]);
   return {
-    categories: categoryTree(),
+    categories,
     announcement: settings["announcement"] ?? "",
     settings,
   };
@@ -42,10 +42,15 @@ const categoryPageSchema = z.object({
 export const getCategoryPage = createServerFn({ method: "GET" })
   .validator((data: unknown) => categoryPageSchema.parse(data))
   .handler(async ({ data }) => {
-    const category = categoryBySlug(data.slug);
+    const category = await categoryBySlug(data.slug);
     if (!category) return { category: null, breadcrumb: [], children: [], products: null };
 
-    const tree = categoryTree();
+    const [tree, breadcrumb, categoryIds] = await Promise.all([
+      categoryTree(),
+      breadcrumbFor(category.slug),
+      categoryIdsWithChildren(category.id),
+    ]);
+
     const node = tree.find((root) => root.id === category.id);
     const children =
       node?.children ??
@@ -53,7 +58,7 @@ export const getCategoryPage = createServerFn({ method: "GET" })
       [];
 
     const filters: ProductFilters = {
-      categoryIds: categoryIdsWithChildren(category.id),
+      categoryIds,
       sort: (data.sort ?? "newest") as SortKey,
       page: data.page ?? 1,
       perPage: data.perPage ?? 12,
@@ -68,9 +73,9 @@ export const getCategoryPage = createServerFn({ method: "GET" })
 
     return {
       category,
-      breadcrumb: breadcrumbFor(category.slug),
+      breadcrumb,
       children,
-      products: listProducts(filters),
+      products: await listProducts(filters),
     };
   });
 
@@ -80,7 +85,7 @@ export const joinNewsletter = createServerFn({ method: "POST" })
     z.object({ email: z.string().email("ایمیل معتبر وارد کنید.").max(160) }).parse(data),
   )
   .handler(async ({ data }) => {
-    subscribeNewsletter(data.email);
+    await subscribeNewsletter(data.email);
     return { ok: true, message: "عضویت شما در خبرنامه ثبت شد." };
   });
 
@@ -98,7 +103,7 @@ export const sendContactMessage = createServerFn({ method: "POST" })
       .parse(data),
   )
   .handler(async ({ data }) => {
-    saveContactMessage({
+    await saveContactMessage({
       name: data.name.trim(),
       phone: data.phone ?? null,
       email: data.email ?? null,

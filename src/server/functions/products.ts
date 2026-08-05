@@ -37,14 +37,15 @@ const filtersSchema = z.object({
 
 /** دادهٔ مورد نیاز صفحهٔ اول در یک درخواست. */
 export const getHomeProducts = createServerFn({ method: "GET" }).handler(async () => {
-  return {
-    featured: featuredProducts(8),
-    newest: newestProducts(8),
-    bestSellers: bestSellers(8),
-    onSale: onSaleProducts(8),
-    flashSale: flashSaleProducts(6),
-    topRated: topRated(5),
-  };
+  const [featured, newest, best, onSale, flashSale, rated] = await Promise.all([
+    featuredProducts(8),
+    newestProducts(8),
+    bestSellers(8),
+    onSaleProducts(8),
+    flashSaleProducts(6),
+    topRated(5),
+  ]);
+  return { featured, newest, bestSellers: best, onSale, flashSale, topRated: rated };
 });
 
 /** فهرست محصولات با فیلتر، مرتب‌سازی و صفحه‌بندی. */
@@ -55,21 +56,25 @@ export const getProducts = createServerFn({ method: "GET" })
 /** پیشنهاد زندهٔ جستجو در هدر. */
 export const suggestProducts = createServerFn({ method: "GET" })
   .validator((data: unknown) => z.object({ term: z.string().min(2).max(60) }).parse(data))
-  .handler(async ({ data }) => ({ items: searchSuggest(data.term, 6) }));
+  .handler(async ({ data }) => ({ items: await searchSuggest(data.term, 6) }));
 
 /** صفحهٔ محصول: جزئیات و محصولات مرتبط. */
 export const getProductPage = createServerFn({ method: "GET" })
   .validator((data: unknown) => z.object({ slug: z.string().min(1).max(160) }).parse(data))
   .handler(async ({ data }) => {
-    const product = productBySlug(data.slug);
+    const product = await productBySlug(data.slug);
     if (!product) return { product: null, related: [] };
 
-    incrementProductView(product.id);
-
-    const categoryRow = one<{ category_id: number | null }>("SELECT category_id FROM products WHERE id = ?", product.id);
+    const [, categoryRow] = await Promise.all([
+      incrementProductView(product.id),
+      one<{ category_id: number | null }>(
+        "SELECT category_id FROM products WHERE id = ?",
+        product.id,
+      ),
+    ]);
     const categoryId = categoryRow?.category_id ?? null;
 
-    return { product, related: relatedProducts(product.id, categoryId, 4) };
+    return { product, related: await relatedProducts(product.id, categoryId, 4) };
   });
 
 /** ثبت دیدگاه کاربر — پس از تأیید مدیر نمایش داده می‌شود. */
@@ -86,7 +91,7 @@ export const submitReview = createServerFn({ method: "POST" })
   )
   .handler(async ({ data }) => {
     const user = await currentUser();
-    addReview({
+    await addReview({
       productId: data.productId,
       userId: user?.id ?? null,
       name: data.name.trim(),

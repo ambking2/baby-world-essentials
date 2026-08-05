@@ -30,29 +30,34 @@ export const getBlogIndex = createServerFn({ method: "GET" })
     if (data.tag !== undefined) filters.tag = data.tag;
     if (data.q !== undefined) filters.q = data.q;
 
-    return {
-      posts: listPosts(filters),
-      recent: recentPosts(5),
-      tags: blogTags(),
-    };
+    const [posts, recent, tags] = await Promise.all([
+      listPosts(filters),
+      recentPosts(5),
+      blogTags(),
+    ]);
+    return { posts, recent, tags };
   });
 
-/** یک مقاله با نظرات تودرتو و مقالهٔ قبل/بعد. */
+/** یک مقاله با نطرات تودرتو و مقالهٔ قبل/بعد. */
 export const getBlogPost = createServerFn({ method: "GET" })
   .validator((data: unknown) => z.object({ slug: z.string().min(1).max(160) }).parse(data))
   .handler(async ({ data }) => {
-    const post = postBySlug(data.slug);
-    if (!post) return { post: null, previous: null, next: null, recent: recentPosts(5), tags: blogTags() };
+    const [post, recent, tags] = await Promise.all([
+      postBySlug(data.slug),
+      recentPosts(5),
+      blogTags(),
+    ]);
 
-    incrementPostView(post.id);
-    const around = adjacentPosts(post);
+    if (!post) return { post: null, previous: null, next: null, recent, tags };
+
+    const [, around] = await Promise.all([incrementPostView(post.id), adjacentPosts(post)]);
 
     return {
       post,
       previous: around.previous,
       next: around.next,
-      recent: recentPosts(5),
-      tags: blogTags(),
+      recent,
+      tags,
     };
   });
 
@@ -70,7 +75,7 @@ export const submitBlogComment = createServerFn({ method: "POST" })
       .parse(data),
   )
   .handler(async ({ data }) => {
-    addComment({
+    await addComment({
       postId: data.postId,
       parentId: data.parentId ?? null,
       name: data.name.trim(),
