@@ -393,7 +393,12 @@ export const markAdminMessageRead = createServerFn({ method: "POST" })
 
 export const updateUserRole = createServerFn({ method: "POST" })
   .validator((data: unknown) =>
-    z.object({ userId: z.number().int().positive(), role: z.enum(["customer", "admin", "sales"]) }).parse(data),
+    z
+      .object({
+        userId: z.number().int().positive(),
+        role: z.enum(["customer", "admin", "sales"]),
+      })
+      .parse(data),
   )
   .handler(async ({ data }) => {
     await requireAdmin();
