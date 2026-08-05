@@ -34,16 +34,16 @@ export function ProductSection({
     <section id={id} className="container-page scroll-mt-28 py-12 md:py-16">
       <SectionHeading 
         title={title} 
-        subtitle={subtitle} 
+        subtitle={subtitle ?? undefined} 
         moreHref={moreTo} 
         moreLabel={linkLabel}
-        tone={tone === "sale" ? "default" : "default"}
+        align="center"
       />
 
-      <div className={rail ? "hide-scrollbar -mx-4 flex gap-4 overflow-x-auto px-4 pb-4 md:mx-0 md:grid md:grid-cols-4 md:px-0" : "grid gap-6 sm:grid-cols-2 lg:grid-cols-4"}>
+      <div className={rail ? "hide-scrollbar -mx-4 flex gap-6 overflow-x-auto px-4 pb-8 md:mx-0 md:grid md:grid-cols-4 md:px-0" : "grid gap-8 sm:grid-cols-2 lg:grid-cols-4"}>
         {products.map((product) => (
-          <div key={product.id} className={rail ? "w-[260px] shrink-0 md:w-auto" : ""}>
-            <StoreProductCard product={product} />
+          <div key={product.id} className={rail ? "w-[300px] shrink-0 md:w-auto" : ""}>
+            <StoreProductCard product={product as any} />
           </div>
         ))}
       </div>
