@@ -162,49 +162,85 @@ export function SiteHeader({
         </div>
       </nav>
 
-      {/* Mobile Menu */}
-      {mobileOpen && (
-        <div className="fixed inset-0 z-[100] flex">
-          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" onClick={() => setMobileOpen(false)} />
-          <div className="relative flex w-[300px] flex-col bg-white p-8 shadow-deep animate-fade-in-right h-full">
-            <div className="mb-10 flex items-center justify-between">
-              <span className="text-2xl font-bold tracking-tight">{business.name}</span>
-              <button onClick={() => setMobileOpen(false)} className="rounded-full bg-muted/50 p-2 hover:bg-muted transition-colors">
-                <X className="size-6 text-gray-900" />
-              </button>
-            </div>
-            
-            <div className="mb-8">
-              <form onSubmit={submitSearch} className="relative">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-                <input 
-                  value={term}
-                  onChange={(e) => setTerm(e.target.value)}
-                  placeholder="جستجوی محصول..." 
-                  className="w-full bg-[#F9F9F9] border border-border rounded-xl py-3.5 pl-10 pr-4 text-sm outline-none focus:border-primary/30 focus:bg-white transition-all shadow-subtle"
-                />
-              </form>
-            </div>
+      {/* Mobile Menu Overlay */}
+      <div className={cn(
+        "fixed inset-0 z-[100] lg:hidden",
+        mobileOpen ? "visible" : "invisible"
+      )}>
+        <div 
+          className={cn(
+            "absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-500",
+            mobileOpen ? "opacity-100" : "opacity-0"
+          )} 
+          onClick={() => setMobileOpen(false)} 
+        />
+        <div className={cn(
+          "absolute inset-y-0 right-0 flex w-[85%] max-w-[340px] flex-col bg-white shadow-2xl transition-transform duration-500 ease-out",
+          mobileOpen ? "translate-x-0" : "translate-x-full"
+        )}>
+          {/* Header */}
+          <div className="flex items-center justify-between border-b border-border/50 p-6">
+            <span className="text-xl font-bold tracking-tight text-gray-900">{business.name}</span>
+            <button 
+              onClick={() => setMobileOpen(false)} 
+              className="flex size-10 items-center justify-center rounded-full bg-muted/50 text-gray-900 transition-transform active:scale-90"
+            >
+              <X className="size-5" />
+            </button>
+          </div>
+          
+          {/* Search Area */}
+          <div className="p-6">
+            <form onSubmit={submitSearch} className="relative group">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+              <input 
+                value={term}
+                onChange={(e) => setTerm(e.target.value)}
+                placeholder="جستجوی محصول..." 
+                className="w-full bg-[#F9F9F9] border border-border rounded-xl py-3.5 pl-10 pr-4 text-[13px] outline-none focus:border-primary/30 focus:bg-white transition-all shadow-subtle"
+              />
+            </form>
+          </div>
 
-            <nav className="flex-1 overflow-y-auto hide-scrollbar">
-              <ul className="flex flex-col gap-2">
-                <li><Link to="/" onClick={() => setMobileOpen(false)} className="block py-4 text-[15px] font-bold border-b border-border/30 hover:text-primary">خانه</Link></li>
-                <li><Link to="/search" onClick={() => setMobileOpen(false)} className="block py-4 text-[15px] font-bold border-b border-border/30 hover:text-primary">فروشگاه</Link></li>
-                <li><Link to="/categories" onClick={() => setMobileOpen(false)} className="block py-4 text-[15px] font-bold border-b border-border/30 hover:text-primary">دسته‌بندی‌ها</Link></li>
-                <li><Link to="/blog" onClick={() => setMobileOpen(false)} className="block py-4 text-[15px] font-bold border-b border-border/30 hover:text-primary">مجله جهان کودک</Link></li>
-                <li><Link to="/contact" onClick={() => setMobileOpen(false)} className="block py-4 text-[15px] font-bold border-b border-border/30 hover:text-primary">تماس با ما</Link></li>
-              </ul>
-            </nav>
-            
-            <div className="mt-auto pt-8 border-t border-border space-y-4">
-              <Link to="/auth/login" className="btn-primary w-full text-center">ورود / ثبت‌نام</Link>
-              <div className="flex justify-center gap-6">
-                 {/* Social links could go here */}
+          {/* Navigation */}
+          <nav className="flex-1 overflow-y-auto px-6 pb-8 hide-scrollbar">
+            <div className="space-y-8">
+              <div>
+                <span className="block text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-4 pr-2">منوی اصلی</span>
+                <ul className="space-y-1">
+                  <li><Link to="/" onClick={() => setMobileOpen(false)} className="flex items-center rounded-xl px-4 py-3.5 text-[14px] font-bold text-gray-900 hover:bg-secondary/50 active:bg-secondary transition-colors">خانه</Link></li>
+                  <li><Link to="/search" onClick={() => setMobileOpen(false)} className="flex items-center rounded-xl px-4 py-3.5 text-[14px] font-bold text-gray-900 hover:bg-secondary/50 active:bg-secondary transition-colors">فروشگاه</Link></li>
+                  <li><Link to="/categories" onClick={() => setMobileOpen(false)} className="flex items-center rounded-xl px-4 py-3.5 text-[14px] font-bold text-gray-900 hover:bg-secondary/50 active:bg-secondary transition-colors">دسته‌بندی‌ها</Link></li>
+                  <li><Link to="/blog" onClick={() => setMobileOpen(false)} className="flex items-center rounded-xl px-4 py-3.5 text-[14px] font-bold text-gray-900 hover:bg-secondary/50 active:bg-secondary transition-colors">مجله جهان کودک</Link></li>
+                </ul>
               </div>
+
+              <div>
+                <span className="block text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-4 pr-2">دسترسی سریع</span>
+                <ul className="space-y-1">
+                  <li><Link to="/offers" onClick={() => setMobileOpen(false)} className="flex items-center rounded-xl px-4 py-3.5 text-[14px] font-bold text-destructive hover:bg-destructive/5 active:bg-destructive/10 transition-colors">تخفیف‌های ویژه</Link></li>
+                  <li><Link to="/contact" onClick={() => setMobileOpen(false)} className="flex items-center rounded-xl px-4 py-3.5 text-[14px] font-bold text-gray-900 hover:bg-secondary/50 active:bg-secondary transition-colors">تماس با ما</Link></li>
+                  <li><Link to="/about" onClick={() => setMobileOpen(false)} className="flex items-center rounded-xl px-4 py-3.5 text-[14px] font-bold text-gray-900 hover:bg-secondary/50 active:bg-secondary transition-colors">درباره ما</Link></li>
+                </ul>
+              </div>
+            </div>
+          </nav>
+          
+          {/* Footer Actions */}
+          <div className="border-t border-border/50 p-6 space-y-4">
+            <Link to="/auth/login" onClick={() => setMobileOpen(false)} className="btn-primary w-full flex items-center justify-center gap-3 py-4">
+              <User className="size-4" />
+              <span>ورود / ثبت‌نام</span>
+            </Link>
+            <div className="flex justify-center gap-8 py-2">
+               <div className="flex flex-col items-center gap-1">
+                 <span className="text-[10px] text-muted-foreground uppercase tracking-widest">پشتیبانی</span>
+                 <a href={business.phoneHref} className="text-[12px] font-bold text-gray-900">{toFaDigits(business.phoneDisplay)}</a>
+               </div>
             </div>
           </div>
         </div>
-      )}
+      </div>
     </header>
   );
 }

@@ -42,9 +42,9 @@ export function ProductSection({
         align="start"
       />
 
-      <div className={rail ? "hide-scrollbar -mx-4 flex gap-4 overflow-x-auto px-4 pb-8 md:mx-0 md:grid-products md:px-0" : "grid-products"}>
+      <div className={rail ? "hide-scrollbar -mx-4 flex gap-3 overflow-x-auto px-4 pb-8 md:mx-0 md:grid-products md:px-0 md:gap-6 lg:gap-8" : "grid-products"}>
         {products.map((product) => (
-          <div key={product.id} className={rail ? "w-[300px] shrink-0 md:w-auto" : ""}>
+          <div key={product.id} className={rail ? "w-[220px] shrink-0 md:w-auto" : ""}>
             <ProductCard 
               product={product as any} 
             />
