@@ -72,8 +72,8 @@ function AboutPage() {
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2">
-            <img src="/images/hero-nursery.jpg" alt="اتاق نوزاد" className="h-40 w-full rounded-2xl object-cover sm:h-full" />
-            <img src="/images/workshop.jpg" alt="کارگاه تولید" className="h-40 w-full rounded-2xl object-cover sm:h-full" />
+            <img src="https://images.unsplash.com/photo-1544124499-58912cbddaad?q=80&w=1974&auto=format&fit=crop" alt="اتاق نوزاد" className="h-40 w-full rounded-2xl object-cover sm:h-full" />
+            <img src="https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?q=80&w=2071&auto=format&fit=crop" alt="کارگاه تولید" className="h-40 w-full rounded-2xl object-cover sm:h-full" />
           </div>
         </section>
 
