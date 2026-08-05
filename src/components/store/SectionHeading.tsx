@@ -8,7 +8,7 @@ export type SectionHeadingProps = {
   eyebrow?: string;
   subtitle?: string | null | undefined;
   moreHref?: string;
-  moreLabel?: string | undefined;
+  moreLabel?: string | null | undefined;
   align?: "start" | "center";
   className?: string;
   tone?: "default" | "onDark";
