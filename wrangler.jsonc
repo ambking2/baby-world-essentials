@@ -6,6 +6,8 @@
   //
   // سپس مایگریشن‌ها را اعمال کنید:
   //   npx wrangler d1 migrations apply jahankoodak --remote
+  //
+  // آپلودها نیز روی همین D1 نگه‌داری می‌شوند تا نیازی به R2 و Billing نباشد.
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "baby-world-essentials2",
   "main": ".output/server/index.mjs",
