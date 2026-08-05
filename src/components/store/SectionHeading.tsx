@@ -34,12 +34,12 @@ export function SectionHeading({
     >
       <div className={cn("max-w-2xl space-y-3", align === "center" && "mx-auto")}>
         {eyebrow && (
-          <span className="mb-4 block text-xs font-bold uppercase tracking-widest text-primary">
+          <span className="mb-2 block text-xs font-bold uppercase tracking-widest text-primary/80">
             {eyebrow}
           </span>
         )}
         <h2 className={cn(
-          "text-3xl font-bold lg:text-5xl",
+          "text-3xl font-bold lg:text-4xl tracking-tight",
           tone === "onDark" ? "text-white" : "text-foreground"
         )}>
           {title}
@@ -56,7 +56,7 @@ export function SectionHeading({
       {moreHref && (
         <Link
           to={moreHref as any}
-          className="group flex items-center gap-2 text-sm font-bold transition-premium text-primary hover:opacity-80 border-b border-primary/20 pb-0.5"
+          className="group flex items-center gap-2 text-sm font-bold transition-premium text-primary hover:opacity-80 border-b-2 border-primary/20 pb-0.5"
         >
           {moreLabel}
           <ChevronLeft className="size-4 shrink-0 transition-transform group-hover:-translate-x-1" aria-hidden />
