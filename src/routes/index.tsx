@@ -168,7 +168,7 @@ function HomePage() {
             <div className="space-y-4">
               <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-soft px-3 py-1 text-xs font-extrabold text-brand">
                 <WandSparkles className="size-3.5" aria-hidden />
-                {toFaDigits(business.yearsInBusiness)} سال تجربه در {business.city}
+                {toFaDigits(15)} سال تجربه در {business.city}
               </span>
               <h2 className="text-2xl font-black leading-[1.35] text-foreground md:text-[2rem]">
                 سرویس خواب سفارشی، رنگ‌های گرم، و دکوری که برای اتاق کودک جان داشته باشد
