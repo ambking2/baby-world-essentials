@@ -165,11 +165,6 @@ export function SiteHeader({
               <li>
                 <Link to="/search" search={{ q: "" }} className="relative block py-4 text-[11px] font-bold uppercase tracking-[0.15em] text-gray-900 hover:text-primary transition-colors after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all hover:after:w-full">محصولات</Link>
               </li>
-              {userRole === 'admin' && (
-                <li>
-                  <Link to="/admin" className="relative block py-4 text-[11px] font-bold uppercase tracking-[0.15em] text-primary hover:opacity-80 transition-colors">ورود به پنل</Link>
-                </li>
-              )}
               <li>
                 <Link to="/offers" className="relative block py-4 text-[11px] font-bold uppercase tracking-[0.15em] text-destructive hover:opacity-80 transition-colors">تخفیف‌های ویژه</Link>
               </li>
