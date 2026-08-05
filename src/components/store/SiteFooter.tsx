@@ -46,27 +46,27 @@ export function SiteFooter({ onSubscribe, subscribing = false }: SiteFooterProps
   ];
 
   return (
-    <footer className="border-t border-border bg-white pt-20">
+    <footer className="border-t border-border bg-white pt-16 lg:pt-24">
       <div className="container-page">
         {/* Newsletter & Brand Intro */}
-        <div className="mb-20 grid gap-16 lg:grid-cols-[1fr_450px]">
+        <div className="mb-16 grid gap-16 lg:grid-cols-[1fr_450px]">
           <div className="max-w-xl">
             <Link to="/">
-              <h2 className="text-2xl font-bold tracking-tight text-foreground lg:text-3xl">{business.name}</h2>
+              <h2 className="text-xl font-bold tracking-tight text-gray-900 lg:text-2xl">{business.name}</h2>
             </Link>
-            <p className="mt-6 text-base leading-relaxed text-muted-foreground">
+            <p className="mt-4 text-sm leading-relaxed text-gray-500">
               تولیدکننده اختصاصی سرویس خواب نوزاد و ارائه‌دهنده برترین برندهای جهانی سیسمونی با بیش از ۱۵ سال تجربه در خدمت خانواده‌های ایرانی. ما معتقدیم کیفیت در جزئیات است.
             </p>
             <div className="mt-8 flex gap-5">
-              <a href="#" className="flex size-10 items-center justify-center rounded-full border border-border text-muted-foreground transition-all hover:border-primary hover:bg-primary hover:text-white"><Instagram className="size-5" /></a>
-              <a href="#" className="flex size-10 items-center justify-center rounded-full border border-border text-muted-foreground transition-all hover:border-primary hover:bg-primary hover:text-white"><Facebook className="size-5" /></a>
-              <a href="#" className="flex size-10 items-center justify-center rounded-full border border-border text-muted-foreground transition-all hover:border-primary hover:bg-primary hover:text-white"><Twitter className="size-5" /></a>
+              <a href="#" className="flex size-9 items-center justify-center rounded-full border border-border text-gray-400 transition-all hover:border-gray-900 hover:text-gray-900"><Instagram className="size-4" /></a>
+              <a href="#" className="flex size-9 items-center justify-center rounded-full border border-border text-gray-400 transition-all hover:border-gray-900 hover:text-gray-900"><Facebook className="size-4" /></a>
+              <a href="#" className="flex size-9 items-center justify-center rounded-full border border-border text-gray-400 transition-all hover:border-gray-900 hover:text-gray-900"><Twitter className="size-4" /></a>
             </div>
           </div>
 
-          <div className="rounded-2xl border border-border bg-muted/20 p-8 lg:p-10">
-            <h3 className="mb-4 text-lg font-bold">به خبرنامه ما بپیوندید</h3>
-            <p className="mb-8 text-sm text-muted-foreground">از جدیدترین محصولات و تخفیف‌های ویژه ما زودتر از بقیه باخبر شوید.</p>
+          <div className="rounded-xl border border-border bg-gray-50 p-8 lg:p-10">
+            <h3 className="mb-2 text-base font-bold text-gray-900">به خبرنامه ما بپیوندید</h3>
+            <p className="mb-6 text-[13px] text-gray-500">از جدیدترین محصولات و تخفیف‌های ویژه ما زودتر از بقیه باخبر شوید.</p>
             <form
               onSubmit={(event) => {
                 event.preventDefault();
@@ -81,7 +81,7 @@ export function SiteFooter({ onSubscribe, subscribing = false }: SiteFooterProps
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="آدرس ایمیل شما"
-                className="w-full rounded-full border border-border bg-white px-6 py-4 text-sm outline-none transition-all focus:border-primary pr-12"
+                className="w-full rounded-sm border border-border bg-white px-6 py-4 text-sm outline-none transition-all focus:border-gray-900 pr-12"
                 dir="ltr"
               />
               <button
@@ -99,13 +99,13 @@ export function SiteFooter({ onSubscribe, subscribing = false }: SiteFooterProps
         <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-4">
           {footerGroups.map((group) => (
             <div key={group.title}>
-              <h3 className="mb-8 text-xs font-bold uppercase tracking-[0.2em] text-foreground">
+              <h3 className="mb-6 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-900">
                 {group.title}
               </h3>
               <ul className="space-y-4">
                 {group.links.map((link) => (
                   <li key={link.label}>
-                    <Link to={link.href as any} className="text-sm text-muted-foreground transition-colors hover:text-primary">
+                    <Link to={link.href as any} className="text-[13px] text-gray-500 transition-colors hover:text-gray-900">
                       {link.label}
                     </Link>
                   </li>
@@ -115,19 +115,19 @@ export function SiteFooter({ onSubscribe, subscribing = false }: SiteFooterProps
           ))}
 
           <div>
-            <h3 className="mb-8 text-xs font-bold uppercase tracking-[0.2em] text-foreground">ارتباط با ما</h3>
+            <h3 className="mb-6 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-900">ارتباط با ما</h3>
             <ul className="space-y-5">
               <li className="flex items-start gap-3">
                 <MapPin className="mt-0.5 size-4 shrink-0 text-primary" />
-                <span className="text-sm leading-relaxed text-muted-foreground">{business.addressLine}</span>
+                <span className="text-[13px] leading-relaxed text-gray-500">{business.addressLine}</span>
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="size-4 shrink-0 text-primary" />
-                <span className="text-sm text-muted-foreground" dir="ltr">{toFaDigits(business.phoneDisplay)}</span>
+                <span className="text-[13px] text-gray-500" dir="ltr">{toFaDigits(business.phoneDisplay)}</span>
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="size-4 shrink-0 text-primary" />
-                <span className="text-sm text-muted-foreground">{business.supportEmail}</span>
+                <span className="text-[13px] text-gray-500">{business.supportEmail}</span>
               </li>
             </ul>
           </div>
@@ -139,7 +139,7 @@ export function SiteFooter({ onSubscribe, subscribing = false }: SiteFooterProps
             <div className="flex items-center gap-6">
               <div className="flex items-center gap-2 rounded-lg border border-border/50 px-3 py-1.5 grayscale transition-all hover:grayscale-0">
                 <ShieldCheck className="size-4 text-primary" />
-                <span className="text-[10px] font-bold text-foreground">عضو رسمی اتحادیه</span>
+                <span className="text-[9px] font-bold text-gray-900 uppercase tracking-widest">عضو رسمی اتحادیه</span>
               </div>
               <div className="h-6 w-10 bg-muted/40 rounded grayscale" />
               <div className="h-6 w-10 bg-muted/40 rounded grayscale" />
