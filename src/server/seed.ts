@@ -2,11 +2,8 @@
  * پرکردن دیتابیس با دادهٔ اولیه.
  *
  * محلی (node:sqlite):   npm run seed
- * روی Cloudflare D1:
- *   1) npx wrangler d1 migrations apply jahankoodak --remote
- *   2) npx wrangler d1 execute jahankoodak --remote --file=./migrations/0002_seed.sql
- *      (یا موقتاً DATABASE_PATH را خالی کنید و همین اسکریپت را محلی بگیرید و فایل sqlite را با
- *      wrangler d1 execute منتقل کنید)
+ * روی Cloudflare: با اولین درخواستِ ورکر نیز به‌صورت خودکار اجرا می‌شود،
+ * اگر دیتابیس هنوز خالی باشد.
  */
 import { business } from "../data/business";
 import { hashPassword } from "./auth";
@@ -192,13 +189,12 @@ async function seedAdmin(): Promise<string> {
   return email;
 }
 
-async function seed(): Promise<void> {
+export async function seedIfEmpty(): Promise<boolean> {
   await ensureSchema();
 
   const existing = await one<{ c: number }>("SELECT COUNT(*) AS c FROM products");
   if (existing && Number(existing.c) > 0) {
-    console.log("دیتابیس از قبل داده دارد؛ برای پرکردن مجدد، فایل data/store.db را حذف کنید.");
-    return;
+    return false;
   }
 
   const adminEmail = await seedAdmin();
@@ -211,6 +207,17 @@ async function seed(): Promise<void> {
   console.log("دادهٔ اولیه با موفقیت وارد شد.");
   console.log(`تعداد محصولات: ${PRODUCTS.length} — تعداد مقالات: ${POSTS.length}`);
   console.log(`ورود مدیر: ${adminEmail}`);
+  return true;
 }
 
-await seed();
+const isDirectRun =
+  typeof process !== "undefined" &&
+  typeof process.argv?.[1] === "string" &&
+  process.argv[1].includes("seed");
+
+if (isDirectRun) {
+  void seedIfEmpty().catch((error) => {
+    console.error(error);
+    process.exitCode = 1;
+  });
+}

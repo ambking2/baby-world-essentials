@@ -2,7 +2,7 @@ import "./lib/error-capture";
 
 import { consumeLastCapturedError } from "./lib/error-capture";
 import { renderErrorPage } from "./lib/error-page";
-import { ensureSchema } from "./server/db";
+import { seedIfEmpty } from "./server/seed";
 import { uploadResponse } from "./server/uploads";
 
 type ServerEntry = {
@@ -10,7 +10,7 @@ type ServerEntry = {
 };
 
 let serverEntryPromise: Promise<ServerEntry> | undefined;
-let schemaReadyPromise: Promise<void> | undefined;
+let bootstrapPromise: Promise<void> | undefined;
 
 async function getServerEntry(): Promise<ServerEntry> {
   if (!serverEntryPromise) {
@@ -21,15 +21,13 @@ async function getServerEntry(): Promise<ServerEntry> {
   return serverEntryPromise;
 }
 
-async function ensureAppSchema(): Promise<void> {
-  if (!schemaReadyPromise) {
-    schemaReadyPromise = ensureSchema();
+async function ensureAppReady(): Promise<void> {
+  if (!bootstrapPromise) {
+    bootstrapPromise = seedIfEmpty().then(() => undefined);
   }
-  await schemaReadyPromise;
+  await bootstrapPromise;
 }
 
-// h3 swallows in-handler throws into a normal 500 Response with body
-// {"unhandled":true,"message":"HTTPError"} — try/catch alone never fires for those.
 async function normalizeCatastrophicSsrResponse(response: Response): Promise<Response> {
   if (response.status < 500) return response;
   const contentType = response.headers.get("content-type") ?? "";
@@ -54,10 +52,6 @@ function isH3SwallowedErrorBody(body: string): boolean {
   }
 }
 
-/**
- * تصاویر بارگزاری‌شده روی Cloudflare داخل D1/R2 هستند، نه در پوشه‌ی public.
- * پس درخواست‌های /uploads/* را پیش از رسیدن به روتر اپ، مستقیم پاسخ می‌دهیم.
- */
 async function serveUpload(request: Request): Promise<Response | null> {
   if (request.method !== "GET" && request.method !== "HEAD") return null;
 
@@ -65,7 +59,6 @@ async function serveUpload(request: Request): Promise<Response | null> {
   if (!pathname.startsWith("/uploads/")) return null;
 
   const key = decodeURIComponent(pathname.slice("/uploads/".length));
-  // از خروج از مسیر جلوگیری می‌کند.
   if (key.length === 0 || key.includes("..") || key.includes("/")) return null;
 
   try {
@@ -82,7 +75,7 @@ export default {
       const upload = await serveUpload(request);
       if (upload) return upload;
 
-      await ensureAppSchema();
+      await ensureAppReady();
 
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
