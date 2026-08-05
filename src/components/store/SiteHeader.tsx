@@ -7,6 +7,8 @@ import {
   Menu,
   X,
   ChevronDown,
+  LogOut,
+  ChevronLeft,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -20,6 +22,7 @@ type SiteHeaderProps = {
   cartCount: number;
   cartTotal: number;
   userName: string | null;
+  userRole?: string | null;
   isAdmin?: boolean;
   announcement?: string | null;
 };
@@ -29,6 +32,7 @@ export function SiteHeader({
   cartCount,
   cartTotal,
   userName,
+  userRole,
 }: SiteHeaderProps) {
   const navigate = useNavigate();
   const [term, setTerm] = useState("");
@@ -87,10 +91,15 @@ export function SiteHeader({
           </form>
 
           {/* Actions */}
-          <div className="flex items-center gap-3 sm:gap-8">
-            <Link to={userName ? "/account" : "/auth/login"} className="hidden items-center gap-2.5 text-[13px] font-bold text-gray-900 hover:text-primary transition-colors lg:flex uppercase tracking-wide">
-              <User className="size-5" />
-              <span>{userName ?? "حساب کاربری"}</span>
+          <div className="flex items-center gap-3 sm:gap-6">
+            <Link to={userName ? "/account" : "/auth/login"} className="hidden items-center gap-2.5 text-[13px] font-bold text-gray-900 hover:text-primary transition-colors lg:flex uppercase tracking-wide group">
+              <User className="size-5 transition-transform group-hover:scale-110" />
+              <div className="flex flex-col items-start leading-none">
+                <span className="text-[10px] text-muted-foreground font-medium mb-1 group-hover:text-primary/70 transition-colors uppercase tracking-widest">
+                  {userName ? "خوش آمدید" : "ورود"}
+                </span>
+                <span className="font-bold">{userName ?? "حساب کاربری"}</span>
+              </div>
             </Link>
             <Link to="/account/wishlist" className="hidden text-gray-900 hover:text-primary transition-colors lg:block">
               <Heart className="size-5" />
@@ -121,10 +130,10 @@ export function SiteHeader({
         isScrolled ? "fixed top-[57px] w-full" : "relative"
       )}>
         <div className="container-page flex items-center justify-between">
-          <div className="flex-1 flex justify-center">
+          <div className="flex-1 flex justify-start pr-8">
             <ul className="flex gap-12">
               <li>
-                <Link to="/" className="relative block py-4 text-[11px] font-bold uppercase tracking-[0.15em] text-gray-900 hover:text-primary transition-colors after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all hover:after:w-full">خانه</Link>
+                <Link to="/" className="relative block py-4 text-[11px] font-bold uppercase tracking-[0.15em] text-gray-900 hover:text-primary transition-colors after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all hover:after:w-full active:scale-95">خانه</Link>
               </li>
               <li className="group relative">
                 <button className="flex items-center gap-2 py-4 text-[11px] font-bold uppercase tracking-[0.15em] text-gray-900 group-hover:text-primary transition-colors">
@@ -154,8 +163,13 @@ export function SiteHeader({
                 </div>
               </li>
               <li>
-                <Link to="/search" search={{ q: "" }} className="relative block py-4 text-[11px] font-bold uppercase tracking-[0.15em] text-gray-900 hover:text-primary transition-colors after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all hover:after:w-full">فروشگاه</Link>
+                <Link to="/search" search={{ q: "" }} className="relative block py-4 text-[11px] font-bold uppercase tracking-[0.15em] text-gray-900 hover:text-primary transition-colors after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all hover:after:w-full">محصولات</Link>
               </li>
+              {userRole === 'admin' && (
+                <li>
+                  <Link to="/admin" className="relative block py-4 text-[11px] font-bold uppercase tracking-[0.15em] text-primary hover:opacity-80 transition-colors">ورود به پنل</Link>
+                </li>
+              )}
               <li>
                 <Link to="/offers" className="relative block py-4 text-[11px] font-bold uppercase tracking-[0.15em] text-destructive hover:opacity-80 transition-colors">تخفیف‌های ویژه</Link>
               </li>
@@ -166,25 +180,25 @@ export function SiteHeader({
           </div>
           
           <div className="hidden xl:block text-[9px] text-muted-foreground max-w-[150px] leading-tight text-left">
-            پیاده‌سازی استایل‌های ریسپانسیو برای هدر سایت من در حالت موبایل را انجام بده تا به هم نریزد.
+            منوی موبایل را به صورت آفلاین‌کَنواس/Offcanvas پیاده‌سازی کنم تا آیتم‌های ناوبری روی هم نیفتند.
           </div>
         </div>
       </nav>
 
       {/* Mobile Menu Overlay */}
       <div className={cn(
-        "fixed inset-0 z-[100] lg:hidden",
+        "fixed inset-0 z-[100] lg:hidden transition-all duration-500",
         mobileOpen ? "visible" : "invisible"
       )}>
         <div 
           className={cn(
-            "absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-500",
+            "absolute inset-0 bg-black/60 backdrop-blur-md transition-opacity duration-500 ease-in-out",
             mobileOpen ? "opacity-100" : "opacity-0"
           )} 
           onClick={() => setMobileOpen(false)} 
         />
         <div className={cn(
-          "absolute inset-y-0 right-0 flex w-[85%] max-w-[340px] flex-col bg-white shadow-2xl transition-transform duration-500 ease-out",
+          "absolute inset-y-0 right-0 flex w-[85%] max-w-[340px] flex-col bg-white shadow-2xl transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]",
           mobileOpen ? "translate-x-0" : "translate-x-full"
         )}>
           {/* Header */}
@@ -213,14 +227,14 @@ export function SiteHeader({
 
           {/* Navigation */}
           <nav className="flex-1 overflow-y-auto px-6 pb-8 hide-scrollbar">
-            <div className="space-y-8">
+            <div className="space-y-8 py-4">
               <div>
                 <span className="block text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-4 pr-2">منوی اصلی</span>
                 <ul className="space-y-1">
-                  <li><Link to="/" onClick={() => setMobileOpen(false)} className="flex items-center rounded-xl px-4 py-3.5 text-[14px] font-bold text-gray-900 hover:bg-secondary/50 active:bg-secondary transition-colors">خانه</Link></li>
-                  <li><Link to="/search" search={{ q: "" }} onClick={() => setMobileOpen(false)} className="flex items-center rounded-xl px-4 py-3.5 text-[14px] font-bold text-gray-900 hover:bg-secondary/50 active:bg-secondary transition-colors">فروشگاه</Link></li>
-                  <li><Link to="/categories" onClick={() => setMobileOpen(false)} className="flex items-center rounded-xl px-4 py-3.5 text-[14px] font-bold text-gray-900 hover:bg-secondary/50 active:bg-secondary transition-colors">دسته‌بندی‌ها</Link></li>
-                  <li><Link to="/blog" onClick={() => setMobileOpen(false)} className="flex items-center rounded-xl px-4 py-3.5 text-[14px] font-bold text-gray-900 hover:bg-secondary/50 active:bg-secondary transition-colors">مجله جهان کودک</Link></li>
+                  <li><Link to="/" onClick={() => setMobileOpen(false)} className="flex items-center justify-between rounded-xl px-4 py-3.5 text-[14px] font-bold text-gray-900 hover:bg-secondary/50 active:bg-secondary transition-all"><span>خانه</span><ChevronLeft className="size-4 text-muted-foreground/50" /></Link></li>
+                  <li><Link to="/search" search={{ q: "" }} onClick={() => setMobileOpen(false)} className="flex items-center justify-between rounded-xl px-4 py-3.5 text-[14px] font-bold text-gray-900 hover:bg-secondary/50 active:bg-secondary transition-all"><span>فروشگاه</span><ChevronLeft className="size-4 text-muted-foreground/50" /></Link></li>
+                  <li><Link to="/categories" onClick={() => setMobileOpen(false)} className="flex items-center justify-between rounded-xl px-4 py-3.5 text-[14px] font-bold text-gray-900 hover:bg-secondary/50 active:bg-secondary transition-all"><span>دسته‌بندی‌ها</span><ChevronLeft className="size-4 text-muted-foreground/50" /></Link></li>
+                  <li><Link to="/blog" onClick={() => setMobileOpen(false)} className="flex items-center justify-between rounded-xl px-4 py-3.5 text-[14px] font-bold text-gray-900 hover:bg-secondary/50 active:bg-secondary transition-all"><span>مجله جهان کودک</span><ChevronLeft className="size-4 text-muted-foreground/50" /></Link></li>
                 </ul>
               </div>
 
@@ -236,11 +250,28 @@ export function SiteHeader({
           </nav>
           
           {/* Footer Actions */}
-          <div className="border-t border-border/50 p-6 space-y-4">
-            <Link to="/auth/login" onClick={() => setMobileOpen(false)} className="btn-primary w-full flex items-center justify-center gap-3 py-4">
-              <User className="size-4" />
-              <span>ورود / ثبت‌نام</span>
-            </Link>
+          <div className="border-t border-border/50 p-6 space-y-4 bg-gray-50/50">
+            {userName ? (
+              <div className="space-y-3">
+                <div className="flex items-center gap-3 px-2 py-1">
+                  <div className="flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+                    <User className="size-5" />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-sm font-bold text-gray-900">{userName}</span>
+                    <span className="text-[10px] text-muted-foreground">{userRole === 'admin' ? 'مدیر سیستم' : 'مشتری'}</span>
+                  </div>
+                </div>
+                <Link to="/account" onClick={() => setMobileOpen(false)} className="btn-secondary w-full flex items-center justify-center gap-3 py-3.5">
+                  <span>پنل کاربری</span>
+                </Link>
+              </div>
+            ) : (
+              <Link to="/auth/login" onClick={() => setMobileOpen(false)} className="btn-primary w-full flex items-center justify-center gap-3 py-4">
+                <User className="size-4" />
+                <span>ورود / ثبت‌نام</span>
+              </Link>
+            )}
             <div className="flex justify-center gap-8 py-2">
                <div className="flex flex-col items-center gap-1">
                  <span className="text-[10px] text-muted-foreground uppercase tracking-widest">پشتیبانی</span>

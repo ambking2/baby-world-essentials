@@ -61,6 +61,7 @@ export function StoreShell({ children }: { children: ReactNode }) {
         cartCount={cart?.itemCount ?? 0}
         cartTotal={cart?.grandTotal ?? 0}
         userName={user ? (user.name ?? user.email) : null}
+        userRole={user?.role}
         isAdmin={user?.role === "admin"}
         announcement={shellQuery.data?.announcement ?? null}
       />
