@@ -15,7 +15,7 @@ import { AboutCompany } from "@/components/site/AboutCompany";
 import { business } from "@/data/business";
 import { categoriesQuery, productsQuery } from "@/lib/api/catalog";
 import { getHomeProducts } from "@/server/functions/products";
-import { useAddToCart } from "@/hooks/use-cart";
+
 import { toFaDigits } from "@/lib/format";
 import type { ProductCard } from "@/server/repo/products";
 import { queryOptions } from "@tanstack/react-query";
@@ -36,7 +36,6 @@ export const Route = createFileRoute("/")({
 function HomePage() {
   const { data: products } = useSuspenseQuery(homeProductsQuery());
   const { data: categories } = useSuspenseQuery(categoriesQuery());
-  const addToCart = { isPending: false, variables: null, mutate: () => {} }; // Fallback if hook missing
   const workshopRef = useRef<HTMLElement | null>(null);
 
   return (
