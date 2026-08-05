@@ -6,110 +6,113 @@ import { formatToman, toFaDigits } from "@/lib/format";
 import { discountPercent, type Product } from "@/types/catalog";
 import { cn } from "@/lib/utils";
 
-function Stars({ rating }: { rating: number }) {
-  return (
-    <div className="flex items-center justify-center gap-0.5" aria-label={`امتیاز ${rating} از ۵`}>
-      {[1, 2, 3, 4, 5].map((i) => (
-        <Star
-          key={i}
-          aria-hidden="true"
-          className={cn(
-            "size-3.5",
-            i <= Math.round(rating) ? "fill-sun text-sun" : "fill-border text-border",
-          )}
-        />
-      ))}
-    </div>
-  );
-}
+export function ProductCard({ 
+  product, 
+  className,
+  inWishlist,
+  busy,
+  onAddToCart,
+  onToggleWishlist
+}: { 
+  product: any; 
+  className?: string;
+  inWishlist?: boolean;
+  busy?: boolean;
+  onAddToCart?: (product: any) => void;
+  onToggleWishlist?: (product: any) => void;
+}) {
 
-export function ProductCard({ product }: { product: Product }) {
   const off = discountPercent(product);
   const outOfStock = product.stock <= 0;
-  const isNew = product.tags.includes("new");
 
   return (
-    <article className="group flex h-full flex-col text-center p-3 rounded-[3rem] bg-white shadow-soft hover:shadow-deep transition-all duration-500 hover:-translate-y-2 border-2 border-transparent hover:border-brand/10">
-      <div className="relative overflow-hidden rounded-[2.5rem] bg-secondary shadow-inner">
-        <Link to="/product/$slug" params={{ slug: product.slug }} className="block">
+    <div className={cn("group flex h-full flex-col bg-white border border-transparent hover:border-border transition-premium", className)}>
+      {/* Image Container */}
+      <div className="relative aspect-[3/4] overflow-hidden bg-secondary">
+        <Link to="/product/$slug" params={{ slug: product.slug }} className="block h-full w-full">
           <img
-            src={product.image}
+            src={product.image || product.cover || "/images/cat-toys.jpg"}
             alt={product.title}
-            width={600}
-            height={600}
-            loading="lazy"
             className={cn(
-              "aspect-square w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]",
-              outOfStock && "opacity-60 grayscale",
+              "h-full w-full object-cover transition-transform duration-700 group-hover:scale-105",
+              outOfStock && "opacity-60"
             )}
           />
         </Link>
-
-        {/* badges */}
-        <div className="pointer-events-none absolute top-2 start-2 flex flex-col gap-1">
-          {off > 0 && !outOfStock ? (
-            <span className="grid size-11 place-items-center rounded-full bg-fresh text-[11px] font-black leading-none text-primary-foreground shadow-soft">
-              ٪{toFaDigits(off)}
+        
+        {/* Badges */}
+        <div className="absolute right-4 top-4 flex flex-col gap-2">
+          {off > 0 && !outOfStock && (
+            <span className="bg-destructive px-2 py-1 text-[10px] font-bold text-white uppercase tracking-tight">
+              ٪{toFaDigits(off || 0)} تخفیف
             </span>
-          ) : null}
-          {isNew ? (
-            <span className="grid size-11 place-items-center rounded-full bg-sky text-[11px] font-black leading-none text-foreground shadow-soft">
+          )}
+          {product.tags.includes("new") && (
+            <span className="bg-primary px-2 py-1 text-[10px] font-bold text-white uppercase tracking-tight">
               جدید
             </span>
-          ) : null}
-          {outOfStock ? (
-            <span className="grid size-11 place-items-center rounded-full bg-muted-foreground/90 text-[10px] font-bold leading-none text-background">
-              ناموجود
-            </span>
-          ) : null}
+          )}
         </div>
 
-
-        {/* hover action overlay (KidsPlay style) */}
-        {!outOfStock ? (
-          <div className="pointer-events-none absolute inset-0 flex items-center justify-center gap-3 bg-primary/90 opacity-0 transition-opacity duration-200 group-hover:pointer-events-auto group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:opacity-100">
-            <button
-              type="button"
-              aria-label={`افزودن ${product.title} به سبد خرید`}
-              onClick={() => toast.success("کالا به سبد خرید اضافه شد")}
-              className="grid size-12 place-items-center rounded-full border-2 border-primary-foreground/80 text-primary-foreground transition-colors hover:bg-primary-foreground hover:text-primary"
-            >
-              <ShoppingCart className="size-5" aria-hidden="true" />
-            </button>
-            <button
-              type="button"
-              aria-label={`افزودن ${product.title} به علاقه‌مندی‌ها`}
-              onClick={() => toast.success("به علاقه‌مندی‌ها اضافه شد")}
-              className="grid size-12 place-items-center rounded-full border-2 border-primary-foreground/80 text-primary-foreground transition-colors hover:bg-primary-foreground hover:text-primary"
-            >
-              <Heart className="size-5" aria-hidden="true" />
-            </button>
-          </div>
-        ) : null}
+        {/* Quick Actions Overlay */}
+        <div className="absolute inset-x-0 bottom-0 flex translate-y-full flex-col gap-2 p-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+          <button
+            onClick={() => onAddToCart ? onAddToCart(product) : toast.success("به سبد خرید اضافه شد")}
+            disabled={outOfStock}
+            className="flex w-full items-center justify-center gap-2 bg-white py-2.5 text-xs font-bold text-foreground shadow-sm transition-premium hover:bg-foreground hover:text-white disabled:opacity-50"
+          >
+            <ShoppingCart className="size-4" />
+            {busy ? "در حال افزودن..." : "افزودن به سبد"}
+          </button>
+        </div>
+        
+        {/* Wishlist Button */}
+        <button 
+          onClick={() => onToggleWishlist ? onToggleWishlist(product) : toast.success("به علاقه‌مندی‌ها اضافه شد")}
+          className="absolute left-4 top-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+        >
+          <Heart className={cn("size-5 text-foreground hover:fill-foreground", inWishlist && "fill-foreground")} />
+        </button>
       </div>
 
-      <div className="flex flex-1 flex-col items-center gap-1.5 px-1 pt-3">
-        <p className="text-[11px] text-muted-foreground">{product.brand}</p>
-        <h3 className="line-clamp-2 min-h-10 text-[13px] font-bold leading-5 text-foreground">
-          <Link to="/product/$slug" params={{ slug: product.slug }} className="hover:text-primary">
+      {/* Info Container */}
+      <div className="flex flex-1 flex-col pt-4">
+        <div className="mb-1 flex items-center justify-between text-[11px] font-medium text-muted-foreground uppercase tracking-widest">
+          <span>{product.brand}</span>
+          <div className="flex items-center gap-0.5">
+            <Star className="size-3 fill-primary text-primary" />
+            <span>{toFaDigits(product.rating)}</span>
+          </div>
+        </div>
+        
+        <Link to="/product/$slug" params={{ slug: product.slug }}>
+          <h3 className="mb-2 text-sm font-medium leading-tight text-foreground transition-colors hover:text-primary">
             {product.title}
-          </Link>
-        </h3>
+          </h3>
+        </Link>
 
-        <div className="mt-auto flex flex-wrap items-baseline justify-center gap-2 pt-1">
-          {product.oldPrice ? (
+        <div className="mt-auto flex items-baseline gap-2">
+          <span className="text-base font-bold text-foreground">
+            {formatToman(product.price || product.effectivePrice)}
+          </span>
+          {product.oldPrice && (
             <span className="text-xs text-muted-foreground line-through">
               {formatToman(product.oldPrice)}
             </span>
-          ) : null}
-          <span className="text-xl font-black text-brand md:text-2xl">
-            {formatToman(product.price)}
-          </span>
-          <span className="text-[11px] text-muted-foreground">تومان</span>
+          )}
         </div>
 
-        <Stars rating={product.rating} />
+        {product.ratingAverage > 0 && (
+          <div className="mt-2 flex items-center gap-0.5">
+            <Star className="size-3 fill-primary text-primary" />
+            <span className="text-[10px] text-muted-foreground">{toFaDigits(product.ratingAverage.toFixed(1))}</span>
+          </div>
+        )}
+
+        {outOfStock && (
+          <p className="mt-2 text-[11px] font-bold text-destructive">ناموجود در انبار</p>
+        )}
       </div>
-    </article>
+    </div>
   );
 }

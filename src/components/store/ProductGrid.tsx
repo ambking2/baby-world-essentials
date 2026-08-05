@@ -1,4 +1,4 @@
-import { StoreProductCard } from "@/components/store/StoreProductCard";
+import { ProductCard } from "@/components/site/ProductCard";
 import { useReveal } from "@/hooks/use-reveal";
 import { cn } from "@/lib/utils";
 import type { ProductCard as ProductCardData } from "@/server/repo/products";
@@ -44,7 +44,7 @@ export function ProductGrid({
   return (
     <div ref={containerRef} className={cn("grid grid-cols-2 gap-3 sm:gap-5", columnClass[columns], className)}>
       {products.map((product) => (
-        <StoreProductCard
+        <ProductCard
           key={product.id}
           product={product}
           className="reveal"

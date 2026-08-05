@@ -47,43 +47,25 @@ export function StoreShell({ children }: { children: ReactNode }) {
   void queryClient;
 
   return (
-    <div className="relative flex min-h-screen flex-col overflow-hidden bg-background">
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -left-32 top-24 size-[500px] rounded-full bg-brand/15 blur-[120px]" />
-        <div className="absolute right-[-10rem] top-80 size-[600px] rounded-full bg-sale/12 blur-[140px]" />
-        <div className="absolute left-1/4 top-[45rem] size-[550px] rounded-full bg-sky/25 blur-[130px]" />
-        <div className="absolute bottom-0 left-0 right-0 h-72 bg-gradient-to-t from-brand-soft/30 to-transparent" />
-      </div>
+    <div className="flex min-h-screen flex-col bg-background">
+      <SiteHeader
+        categories={categories}
+        cartCount={cart?.itemCount ?? 0}
+        cartTotal={cart?.grandTotal ?? 0}
+        userName={user ? (user.name ?? user.email) : null}
+        isAdmin={user?.role === "admin"}
+        announcement={shellQuery.data?.announcement ?? null}
+      />
 
-      <a
-        href="#main"
-        className="sr-only focus:not-sr-only focus:absolute focus:z-[70] focus:m-2 focus:rounded-lg focus:bg-brand focus:px-3 focus:py-2 focus:text-sm focus:text-primary-foreground"
-      >
-        رفتن به محتوای اصلی
-      </a>
-
-      <div className="relative z-10">
-        <SiteHeader
-          categories={categories}
-          cartCount={cart?.itemCount ?? 0}
-          cartTotal={cart?.grandTotal ?? 0}
-          userName={user ? (user.name ?? user.email) : null}
-          isAdmin={user?.role === "admin"}
-          announcement={shellQuery.data?.announcement ?? null}
-        />
-      </div>
-
-      <main id="main" className="relative z-10 flex-1 pb-8">
+      <main id="main" className="flex-1">
         {children}
       </main>
 
-      <div className="relative z-10">
-        <SiteFooter
-          categories={categories}
-          onSubscribe={(email) => subscribe.mutate(email)}
-          subscribing={subscribe.isPending}
-        />
-      </div>
+      <SiteFooter
+        categories={categories}
+        onSubscribe={(email) => subscribe.mutate(email)}
+        subscribing={subscribe.isPending}
+      />
     </div>
   );
 }
