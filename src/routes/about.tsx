@@ -59,7 +59,7 @@ function AboutPage() {
               ساعات کاری: {business.hoursFull}
             </p>
             <div className="flex flex-wrap gap-4 pt-6">
-              <Link to="/search" className="btn-primary">
+              <Link to="/search" search={{ q: "" }} className="btn-primary">
                 مشاهده محصولات
               </Link>
               <Link
