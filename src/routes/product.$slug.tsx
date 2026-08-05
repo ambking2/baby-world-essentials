@@ -195,7 +195,7 @@ function ProductPage() {
               )}
 
               <div className="flex flex-wrap gap-4">
-                <div className="flex items-center border border-border px-4 py-2">
+                <div className="flex items-center border border-border px-4 py-2 rounded-md bg-white shadow-sm">
                   <button onClick={() => setQty(q => Math.max(1, q - 1))} className="p-2"><Minus className="size-4" /></button>
                   <span className="w-12 text-center text-sm font-bold">{toFaDigits(qty)}</span>
                   <button onClick={() => setQty(q => Math.min(20, q + 1))} className="p-2"><Plus className="size-4" /></button>
