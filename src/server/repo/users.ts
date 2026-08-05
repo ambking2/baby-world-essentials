@@ -312,3 +312,11 @@ export async function adminListMessages(): Promise<Array<AdminMessage>> {
 export async function adminMarkMessageRead(id: number, isRead = true): Promise<void> {
   await run("UPDATE contact_messages SET is_read = ? WHERE id = ?", isRead ? 1 : 0, id);
 }
+
+export async function adminDeleteMessage(id: number): Promise<void> {
+  await run("DELETE FROM contact_messages WHERE id = ?", id);
+}
+
+export async function adminDeleteNewsletter(email: string): Promise<void> {
+  await run("DELETE FROM newsletter WHERE email = ?", email);
+}

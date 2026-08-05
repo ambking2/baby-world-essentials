@@ -1,12 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { ExternalLink, Search } from "lucide-react";
+import { ExternalLink, Search, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
 import { Pagination } from "@/components/store/Pagination";
 import { formatJalaliTime, formatToman, toFaDigits } from "@/lib/format";
-import { getAdminOrder, getAdminOrders, reviewAdminPayment, setAdminOrderStatus } from "@/lib/admin.functions";
+import { getAdminOrder, getAdminOrders, reviewAdminPayment, setAdminOrderStatus, removeAdminOrder } from "@/lib/admin.functions";
 
 type OrdersSearch = { status?: string; q?: string };
 
@@ -92,6 +92,14 @@ function AdminOrders() {
     },
   });
 
+  const removeOrder = useMutation({
+    mutationFn: (code: string) => removeAdminOrder({ data: { code } }),
+    onSuccess: (result) => {
+      toast.success(result.message);
+      refresh();
+    },
+  });
+
   const items = ordersQuery.data?.items ?? [];
   const statuses = ordersQuery.data?.statuses ?? [];
   const order = detailQuery.data?.order ?? null;
@@ -147,6 +155,7 @@ function AdminOrders() {
               <th className="p-2 text-start font-bold">پرداخت</th>
               <th className="p-2 text-start font-bold">وضعیت</th>
               <th className="p-2 text-start font-bold">تاریخ</th>
+              <th className="p-2 text-center font-bold">عملیات</th>
             </tr>
           </thead>
           <tbody>
@@ -176,6 +185,19 @@ function AdminOrders() {
                   </select>
                 </td>
                 <td className="p-2 text-muted-foreground">{formatJalaliTime(row.createdAt)}</td>
+                <td className="p-2 text-center">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (confirm("آیا از حذف این سفارش مطمئن هستید؟ این عمل غیرقابل بازگشت است.")) {
+                        removeOrder.mutate(row.code);
+                      }
+                    }}
+                    className="rounded-lg p-2 text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors"
+                  >
+                    <Trash2 className="size-4" />
+                  </button>
+                </td>
               </tr>
             ))}
             {items.length === 0 && !ordersQuery.isLoading ? (
