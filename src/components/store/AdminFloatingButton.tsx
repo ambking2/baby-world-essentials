@@ -21,6 +21,12 @@ export function AdminFloatingButton() {
   // Only show floating button for staff
   if (!isStaff) return null;
 
+  // Logic: 
+  // 1. If we are in Admin, show "Enter Site" button (both mobile and desktop)
+  // 2. If we are in Site, show "Enter Panel" button (both mobile and desktop)
+  // The user says: "Enter Panel" should be a floating button (already is).
+  // "Enter Site" should only show in admin (already logic handled by targetPath).
+
   const targetPath = isAdminPath ? "/" : "/admin";
   const label = isAdminPath ? "مشاهده سایت" : "پنل مدیریت";
   const Icon = isAdminPath ? ShoppingBag : LayoutDashboard;
