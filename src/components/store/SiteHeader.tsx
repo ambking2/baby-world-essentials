@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
+import brandLogo from "@/assets/logo/brand-logo.png.asset.json";
 import { business } from "@/data/business";
 import { formatToman, toFaDigits } from "@/lib/format";
 import { cn } from "@/lib/utils";
