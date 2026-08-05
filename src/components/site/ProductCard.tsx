@@ -6,12 +6,27 @@ import { formatToman, toFaDigits } from "@/lib/format";
 import { discountPercent, type Product } from "@/types/catalog";
 import { cn } from "@/lib/utils";
 
-export function ProductCard({ product, className }: { product: any; className?: string }) {
+export function ProductCard({ 
+  product, 
+  className,
+  inWishlist,
+  busy,
+  onAddToCart,
+  onToggleWishlist
+}: { 
+  product: any; 
+  className?: string;
+  inWishlist?: boolean;
+  busy?: boolean;
+  onAddToCart?: (product: any) => void;
+  onToggleWishlist?: (product: any) => void;
+}) {
+
   const off = discountPercent(product);
   const outOfStock = product.stock <= 0;
 
   return (
-    <div className="group flex h-full flex-col bg-white border border-transparent hover:border-border transition-premium">
+    <div className={cn("group flex h-full flex-col bg-white border border-transparent hover:border-border transition-premium", className)}>
       {/* Image Container */}
       <div className="relative aspect-[3/4] overflow-hidden bg-secondary">
         <Link to="/product/$slug" params={{ slug: product.slug }} className="block h-full w-full">
@@ -42,21 +57,21 @@ export function ProductCard({ product, className }: { product: any; className?: 
         {/* Quick Actions Overlay */}
         <div className="absolute inset-x-0 bottom-0 flex translate-y-full flex-col gap-2 p-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
           <button
-            onClick={() => toast.success("به سبد خرید اضافه شد")}
+            onClick={() => onAddToCart ? onAddToCart(product) : toast.success("به سبد خرید اضافه شد")}
             disabled={outOfStock}
             className="flex w-full items-center justify-center gap-2 bg-white py-2.5 text-xs font-bold text-foreground shadow-sm transition-premium hover:bg-foreground hover:text-white"
           >
             <ShoppingCart className="size-4" />
-            افزودن به سبد
+            {busy ? "در حال افزودن..." : "افزودن به سبد"}
           </button>
         </div>
         
         {/* Wishlist Button */}
         <button 
-          onClick={() => toast.success("به علاقه‌مندی‌ها اضافه شد")}
+          onClick={() => onToggleWishlist ? onToggleWishlist(product) : toast.success("به علاقه‌مندی‌ها اضافه شد")}
           className="absolute left-4 top-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
         >
-          <Heart className="size-5 text-foreground hover:fill-foreground" />
+          <Heart className={cn("size-5 text-foreground hover:fill-foreground", inWishlist && "fill-foreground")} />
         </button>
       </div>
 
