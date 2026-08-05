@@ -27,7 +27,7 @@ export function SectionHeading({
   return (
     <div
       className={cn(
-        "mb-10 flex flex-wrap items-end gap-6",
+        "mb-12 lg:mb-20 flex flex-wrap items-end gap-6",
         align === "center" ? "flex-col items-center text-center" : "justify-between",
         className,
       )}
@@ -59,7 +59,7 @@ export function SectionHeading({
           className="group flex items-center gap-2 text-sm font-bold transition-premium hover:text-primary"
         >
           {moreLabel}
-          <ChevronLeft className="size-4 transition-transform group-hover:-translate-x-1" aria-hidden />
+          <ChevronLeft className="size-4 shrink-0 transition-transform group-hover:-translate-x-1" aria-hidden />
         </Link>
       )}
     </div>
