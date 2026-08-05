@@ -60,7 +60,7 @@ function HomePage() {
               )}
             >
               <img 
-                src={cat.cover ?? "/images/cat-toys.jpg"} 
+                src={cat.image ?? "/images/cat-toys.jpg"} 
                 alt={cat.title}
                 className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
               />

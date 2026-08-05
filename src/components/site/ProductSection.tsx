@@ -10,7 +10,8 @@ type Props = {
   title: string;
   subtitle?: string;
   query?: ProductQuery;
-  moreTo?: "/shop" | "/offers" | "/categories";
+  moreTo?: "/search" | "/offers" | "/categories";
+
   linkLabel?: string;
   rail?: boolean;
   tone?: "default" | "sale" | "best";

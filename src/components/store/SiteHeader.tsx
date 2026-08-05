@@ -21,6 +21,7 @@ type SiteHeaderProps = {
   cartTotal: number;
   userName: string | null;
   isAdmin?: boolean;
+  announcement?: string | null;
 };
 
 export function SiteHeader({

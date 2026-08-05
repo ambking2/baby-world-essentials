@@ -27,40 +27,41 @@ export function SectionHeading({
   return (
     <div
       className={cn(
-        "mb-7 flex flex-wrap items-end gap-4",
+        "mb-10 flex flex-wrap items-end gap-6",
         align === "center" ? "flex-col items-center text-center" : "justify-between",
         className,
       )}
     >
-      <div className="space-y-2">
-        {eyebrow ? (
-          <div className={cn("mb-3 flex items-center gap-2", align === "center" && "justify-center")}>
-            <span className="h-px w-6 bg-brand/40" />
-            <span className="text-[11px] font-black uppercase tracking-widest text-brand">{eyebrow}</span>
-            <span className="h-px w-6 bg-brand/40" />
-          </div>
-        ) : null}
-        <div className={cn("flex items-center gap-3", align === "center" && "justify-center")}>
-          <span className="grid size-12 place-items-center rounded-[1.3rem] bg-gradient-to-br from-brand to-sale text-white shadow-lift ring-4 ring-brand/10">
-            <span className="size-3 rounded-full bg-white/40 blur-[1px] shadow-[0_0_8px_rgba(255,255,255,0.8)]" aria-hidden />
+      <div className={cn("max-w-2xl space-y-3", align === "center" && "mx-auto")}>
+        {eyebrow && (
+          <span className="mb-4 block text-xs font-bold uppercase tracking-widest text-primary">
+            {eyebrow}
           </span>
-          <div>
-            <h2 className={cn("text-xl font-black sm:text-[1.65rem]", tone === "onDark" ? "text-white" : "text-foreground")}>
-              {title}
-            </h2>
-            {subtitle ? <p className={cn("mt-1 text-sm leading-7", tone === "onDark" ? "text-white/60" : "text-muted-foreground")}>{subtitle}</p> : null}
-          </div>
-        </div>
+        )}
+        <h2 className={cn(
+          "text-3xl font-bold lg:text-5xl",
+          tone === "onDark" ? "text-white" : "text-foreground"
+        )}>
+          {title}
+        </h2>
+        {subtitle && (
+          <p className={cn(
+            "text-base leading-relaxed lg:text-lg",
+            tone === "onDark" ? "text-white/70" : "text-muted-foreground"
+          )}>
+            {subtitle}
+          </p>
+        )}
       </div>
-      {moreHref ? (
+      {moreHref && (
         <Link
-          to={moreHref}
-          className="group inline-flex items-center gap-1.5 rounded-full border border-white/80 bg-white/80 px-4 py-2 text-xs font-extrabold text-foreground shadow-soft transition-colors hover:border-brand hover:text-brand"
+          to={moreHref as any}
+          className="group flex items-center gap-2 text-sm font-bold transition-premium hover:text-primary"
         >
           {moreLabel}
-          <ChevronLeft className="size-3.5 transition-transform group-hover:-translate-x-0.5" aria-hidden />
+          <ChevronLeft className="size-4 transition-transform group-hover:-translate-x-1" aria-hidden />
         </Link>
-      ) : null}
+      )}
     </div>
   );
 }
