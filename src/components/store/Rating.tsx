@@ -1,7 +1,7 @@
 import { Star } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import { formatCount, formatRating } from "@/lib/format";
+import { formatCount, toFaDigits } from "@/lib/format";
 
 type RatingProps = {
   value: number;
