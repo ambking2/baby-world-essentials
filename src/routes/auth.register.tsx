@@ -11,7 +11,7 @@ export const Route = createFileRoute("/auth/register")({
 });
 
 const inputClass =
-  "w-full rounded-xl border border-border bg-background px-3 py-2.5 text-xs outline-none transition-colors focus:border-brand";
+  "w-full rounded-xl border border-border bg-white px-3 py-2.5 text-xs outline-none transition-colors focus:border-primary shadow-sm";
 
 function RegisterPage() {
   const navigate = useNavigate();
@@ -48,7 +48,7 @@ function RegisterPage() {
             event.preventDefault();
             register.mutate();
           }}
-          className="w-full max-w-sm space-y-4 rounded-3xl border border-border bg-card p-6"
+          className="w-full max-w-sm space-y-6 rounded-2xl border border-border bg-white p-8 shadow-sm"
         >
           <div>
             <h1 className="text-lg font-extrabold text-foreground">ساخت حساب کاربری</h1>
@@ -84,14 +84,14 @@ function RegisterPage() {
           <button
             type="submit"
             disabled={register.isPending}
-            className="w-full rounded-full bg-brand px-5 py-3 text-sm font-bold text-primary-foreground disabled:opacity-60"
+            className="w-full rounded-full bg-primary px-5 py-3 text-sm font-bold text-white shadow-md transition-premium hover:bg-primary/90 disabled:opacity-60"
           >
             {register.isPending ? "در حال ثبت‌نام…" : "ثبت‌نام"}
           </button>
 
           <p className="text-[11px] text-muted-foreground">
             قبلاً حساب ساخته‌اید؟{" "}
-            <Link to="/auth/login" className="font-bold text-brand hover:underline">
+            <Link to="/auth/login" className="font-bold text-primary hover:underline">
               ورود به حساب
             </Link>
           </p>

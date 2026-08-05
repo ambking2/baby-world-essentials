@@ -132,7 +132,7 @@ export function FilterSidebar({
                   onClick={() => onChange({ ...state, sizes: toggleValue(state.sizes, size) })}
                   className={cn(
                     "rounded-xl border px-2.5 py-1.5 text-[11px] font-semibold transition-colors",
-                    active ? "border-primary bg-primary text-primary-foreground" : "border-border text-muted-foreground hover:border-primary",
+                    active ? "border-primary bg-primary text-primary-foreground shadow-sm" : "border-border bg-white text-muted-foreground hover:border-primary shadow-sm",
                   )}
                 >
                   {size}
@@ -144,7 +144,7 @@ export function FilterSidebar({
       ) : null}
 
       {availableColors.length > 0 ? (
-        <div className="rounded-2xl border border-border bg-secondary/20 p-4 shadow-sm">
+        <div className="rounded-2xl border border-border bg-white p-4 shadow-sm">
           <h3 className="mb-3 text-xs font-extrabold text-foreground">رنگ</h3>
           <div className="flex flex-wrap gap-2">
             {availableColors.map((item) => {
@@ -157,7 +157,7 @@ export function FilterSidebar({
                   onClick={() => onChange({ ...state, colors: toggleValue(state.colors, item.color) })}
                   className={cn(
                     "flex items-center gap-1.5 rounded-xl border px-2 py-1.5 text-[11px] font-semibold transition-colors",
-                    active ? "border-primary text-primary" : "border-border text-muted-foreground hover:border-primary",
+                    active ? "border-primary text-primary bg-primary/5 shadow-sm" : "border-border bg-white text-muted-foreground hover:border-primary shadow-sm",
                   )}
                 >
                   <span
@@ -174,7 +174,7 @@ export function FilterSidebar({
         </div>
       ) : null}
 
-      <div className="space-y-2 rounded-2xl border border-border bg-secondary/20 p-4 shadow-sm">
+      <div className="space-y-2 rounded-2xl border border-border bg-white p-4 shadow-sm">
         <label className="flex cursor-pointer items-center gap-2 text-xs text-foreground">
           <input
             type="checkbox"

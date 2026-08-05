@@ -57,14 +57,14 @@ function CartPage() {
             <div className="skeleton h-24 rounded-3xl" />
           </div>
         ) : lines.length === 0 ? (
-          <div className="rounded-3xl border border-border bg-card p-10 text-center">
-            <ShoppingBag className="mx-auto mb-3 size-10 text-brand" aria-hidden />
-            <p className="text-sm font-extrabold">سبد خرید شما خالی است</p>
+          <div className="rounded-2xl border border-border bg-white p-10 text-center shadow-sm">
+            <ShoppingBag className="mx-auto mb-3 size-10 text-primary" aria-hidden />
+            <p className="text-sm font-bold">سبد خرید شما خالی است</p>
             <p className="mt-2 text-xs text-muted-foreground">از میان دسته‌بندی‌های فروشگاه کالای مورد نیازتان را انتخاب کنید.</p>
             <Link
               to="/search"
               search={{ q: "" }}
-              className="mt-4 inline-flex rounded-full bg-brand px-5 py-2.5 text-xs font-bold text-primary-foreground"
+              className="mt-4 inline-flex rounded-full bg-primary px-6 py-2.5 text-xs font-bold text-white shadow-md hover:bg-primary/90 transition-premium"
             >
               شروع خرید
             </Link>
@@ -73,7 +73,7 @@ function CartPage() {
           <div className="grid gap-5 lg:grid-cols-[1fr_320px]">
             <div className="space-y-3">
               {lines.map((line) => (
-                <div key={line.itemId} className="flex gap-3 rounded-3xl border border-border bg-card p-3">
+                <div key={line.itemId} className="flex gap-3 rounded-2xl border border-border bg-white p-3 shadow-sm">
                   <Link to="/product/$slug" params={{ slug: line.slug }} className="shrink-0">
                     <img
                       src={line.image ?? "/images/cat-toys.jpg"}
@@ -86,7 +86,7 @@ function CartPage() {
                     <Link
                       to="/product/$slug"
                       params={{ slug: line.slug }}
-                      className="line-clamp-2 text-sm font-extrabold text-foreground hover:text-brand"
+                      className="line-clamp-2 text-sm font-bold text-foreground hover:text-primary transition-colors"
                     >
                       {line.title}
                     </Link>
@@ -97,7 +97,7 @@ function CartPage() {
                     </p>
 
                     <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
-                      <div className="flex items-center gap-2 rounded-xl border border-border p-1">
+                      <div className="flex items-center gap-2 rounded-xl border border-border p-1 bg-muted/20">
                         <button
                           type="button"
                           onClick={() => setQty.mutate({ itemId: line.itemId, qty: line.qty + 1 })}
@@ -123,7 +123,7 @@ function CartPage() {
                         <button
                           type="button"
                           onClick={() => removeItem.mutate(line.itemId)}
-                          className="text-muted-foreground transition-colors hover:text-sale"
+                          className="text-muted-foreground transition-colors hover:text-destructive"
                           aria-label="حذف کالا"
                         >
                           <Trash2 className="size-4" aria-hidden />
@@ -137,13 +137,13 @@ function CartPage() {
               <button
                 type="button"
                 onClick={() => clearAll.mutate()}
-                className="text-xs text-muted-foreground hover:text-sale"
+                className="text-xs text-muted-foreground hover:text-destructive transition-colors"
               >
                 خالی کردن سبد خرید
               </button>
             </div>
 
-            <aside className="h-fit space-y-3 rounded-3xl border border-border bg-card p-5 lg:sticky lg:top-24">
+            <aside className="h-fit space-y-4 rounded-2xl border border-border bg-white p-6 shadow-sm lg:sticky lg:top-24">
               <h2 className="text-sm font-extrabold">خلاصهٔ سفارش</h2>
               <div className="space-y-2 text-xs">
                 <div className="flex items-center justify-between">
@@ -151,7 +151,7 @@ function CartPage() {
                   <span className="font-bold">{formatToman(cart?.itemsTotal ?? 0)}</span>
                 </div>
                 {cart && cart.savingsTotal > 0 ? (
-                  <div className="flex items-center justify-between text-sale">
+                  <div className="flex items-center justify-between text-primary font-bold">
                     <span>سود شما از تخفیف</span>
                     <span className="font-bold">{formatToman(cart.savingsTotal)}</span>
                   </div>
@@ -165,19 +165,19 @@ function CartPage() {
               </div>
 
               {cart && cart.remainingForFreeShipping > 0 ? (
-                <p className="rounded-2xl bg-brand-soft p-3 text-[11px] leading-5 text-brand">
+                <p className="rounded-2xl bg-primary/10 p-4 text-[11px] leading-5 text-primary border border-primary/20">
                   با {formatToman(cart.remainingForFreeShipping)} خرید بیشتر، ارسال رایگان می‌شود.
                 </p>
               ) : null}
 
               <div className="flex items-center justify-between border-t border-border pt-3">
                 <span className="text-xs font-extrabold">مبلغ قابل پرداخت</span>
-                <span className="text-base font-extrabold text-brand">{formatToman(cart?.grandTotal ?? 0)}</span>
+                <span className="text-base font-bold text-primary">{formatToman(cart?.grandTotal ?? 0)}</span>
               </div>
 
               <Link
                 to="/checkout"
-                className="flex items-center justify-center rounded-full bg-brand px-5 py-3 text-sm font-bold text-primary-foreground transition-transform hover:scale-[1.02]"
+                className="flex items-center justify-center rounded-full bg-primary px-5 py-3.5 text-sm font-bold text-white shadow-md hover:bg-primary/90 transition-premium"
               >
                 ادامهٔ ثبت سفارش
               </Link>

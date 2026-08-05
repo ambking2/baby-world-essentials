@@ -11,7 +11,7 @@ export const Route = createFileRoute("/auth/login")({
 });
 
 const inputClass =
-  "w-full rounded-xl border border-border bg-background px-3 py-2.5 text-xs outline-none transition-colors focus:border-brand";
+  "w-full rounded-xl border border-border bg-white px-3 py-2.5 text-xs outline-none transition-colors focus:border-primary shadow-sm";
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -46,7 +46,7 @@ function LoginPage() {
             event.preventDefault();
             login.mutate();
           }}
-          className="w-full max-w-sm space-y-4 rounded-3xl border border-border bg-card p-6"
+          className="w-full max-w-sm space-y-6 rounded-2xl border border-border bg-white p-8 shadow-sm"
         >
           <div>
             <h1 className="text-lg font-extrabold text-foreground">ورود به حساب کاربری</h1>
@@ -74,16 +74,16 @@ function LoginPage() {
           <button
             type="submit"
             disabled={login.isPending}
-            className="w-full rounded-full bg-brand px-5 py-3 text-sm font-bold text-primary-foreground disabled:opacity-60"
+            className="w-full rounded-full bg-primary px-5 py-3 text-sm font-bold text-white shadow-md transition-premium hover:bg-primary/90 disabled:opacity-60"
           >
             {login.isPending ? "در حال ورود…" : "ورود"}
           </button>
 
           <div className="flex items-center justify-between text-[11px]">
-            <Link to="/auth/register" className="font-bold text-brand hover:underline">
+            <Link to="/auth/register" className="font-bold text-primary hover:underline">
               ساخت حساب جدید
             </Link>
-            <Link to="/auth/forgot" className="text-muted-foreground hover:text-brand">
+            <Link to="/auth/forgot" className="text-muted-foreground hover:text-primary transition-colors">
               رمز عبور را فراموش کرده‌اید؟
             </Link>
           </div>
