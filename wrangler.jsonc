@@ -1,14 +1,13 @@
 {
-  // پیکربندی استقرار روی Cloudflare Workers.
+  // پیکربندی استقرار روی Cloudflare Workers (نسخهٔ رایگان، بدون R2).
   //
-  // پیش از نخستین استقرار این دو منبع را بسازید و مقادیر را جایگزین کنید:
+  // پیش از نخستین استقرار این منبع را بسازید و مقدارش را جایگزین کنید:
   //   npx wrangler d1 create jahankoodak
-  //   npx wrangler r2 bucket create jahankoodak-uploads
   //
-  // سپس اسکیمای دیتابیس را اعمال کنید:
+  // سپس مایگریشن‌ها را اعمال کنید:
   //   npx wrangler d1 migrations apply jahankoodak --remote
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "baby-world-essentials",
+  "name": "baby-world-essentials2",
   "main": ".output/server/index.mjs",
   "compatibility_date": "2025-06-01",
   "compatibility_flags": ["nodejs_compat"],
@@ -23,7 +22,7 @@
     "enabled": true
   },
 
-  // دیتابیس اصلی فروشگاه
+  // دیتابیس اصلی فروشگاه + فایل‌های آپلودشده
   "d1_databases": [
     {
       "binding": "DB",
@@ -33,18 +32,10 @@
     }
   ],
 
-  // فضای ذخیره‌سازی تصاویر محصول و رسید پرداخت
-  "r2_buckets": [
-    {
-      "binding": "UPLOADS",
-      "bucket_name": "jahankoodak-uploads"
-    }
-  ],
-
   "vars": {
     "SITE_URL": "https://jahankoodak.ir",
-    // اگر دامنه‌ی عمومی R2 را وصل کردید اینجا بگذارید تا لینک تصاویر مستقیم سرو شود.
-    // در غیر این صورت تصاویر از مسیر /uploads/* خود ورکر سرو می‌شوند.
+    // اگر خواستید تصاویر از دامنه‌ای جدا سرو شوند، آدرس پایه را اینجا بگذارید.
+    // در حالت عادی از مسیر /uploads/* همین ورکر سرو می‌شوند.
     "UPLOADS_PUBLIC_URL": ""
   }
 

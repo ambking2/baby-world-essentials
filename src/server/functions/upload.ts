@@ -7,13 +7,13 @@ import { saveImage } from "../uploads";
 /**
  * بارگزاری تصویر.
  *
- * محل ذخیره‌سازی در src/server/uploads.ts مدیریت می‌شود: R2 روی Cloudflare و
+ * محل ذخیره‌سازی در src/server/uploads.ts مدیریت می‌شود: D1/R2 روی Cloudflare و
  * دیسک در اجرای محلی.
  */
 
 const uploadSchema = z.object({
   /** محتوای base64 بدون پیشوند data:. */
-  base64: z.string().min(16).max(8_000_000),
+  base64: z.string().min(16).max(2_700_000),
   mimeType: z.string().min(3).max(60),
   purpose: z.enum(["product", "category", "blog", "receipt"]).optional(),
 });
