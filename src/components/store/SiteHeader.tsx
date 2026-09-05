@@ -192,7 +192,7 @@ export function SiteHeader({
 
       {/* Mobile Menu Overlay */}
       <div className={cn(
-        "fixed inset-0 z-[100] lg:hidden transition-all duration-500",
+        "fixed inset-0 z-[100] lg:hidden",
         mobileOpen ? "visible" : "invisible"
       )}>
         <div 
@@ -203,8 +203,8 @@ export function SiteHeader({
           onClick={() => setMobileOpen(false)} 
         />
         <div className={cn(
-          "absolute inset-y-0 right-0 flex w-[85%] max-w-[340px] flex-col bg-white shadow-2xl transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]",
-          mobileOpen ? "translate-x-0" : "translate-x-full"
+          "absolute inset-y-0 right-0 flex w-[85%] max-w-[340px] flex-col bg-white shadow-2xl transition-all duration-500",
+          mobileOpen ? "right-0" : "right-[-100%]"
         )}>
           {/* Header */}
           <div className="flex items-center justify-between border-b border-border/50 p-6">

@@ -27,10 +27,10 @@ export function SortBar({
   const activeLabel = OPTIONS.find(o => o.key === sort)?.label;
 
   return (
-    <div className={cn("mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border pb-6", className)}>
-      <div className="flex items-center gap-6 overflow-x-auto hide-scrollbar">
-        <span className="hidden md:inline text-[10px] font-bold uppercase tracking-widest text-muted-foreground shrink-0">مرتب‌سازی براساس:</span>
-        <div className="flex items-center gap-6">
+    <div className={cn("mb-8 flex min-w-0 flex-col gap-4 border-b border-border pb-6 sm:flex-row sm:items-center sm:justify-between", className)}>
+      <div className="flex min-w-0 items-center gap-6 overflow-x-auto hide-scrollbar">
+        <span className="hidden shrink-0 text-[10px] font-bold uppercase tracking-widest text-muted-foreground md:inline">مرتب‌سازی براساس:</span>
+        <div className="flex shrink-0 items-center gap-6">
           {OPTIONS.map((option) => (
             <button
               key={option.key}
@@ -49,7 +49,7 @@ export function SortBar({
         </div>
       </div>
       
-      <div className="flex items-center justify-between sm:justify-end gap-4 shrink-0">
+      <div className="flex shrink-0 items-center justify-between gap-4 sm:justify-end">
         <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">نمایش {toFaDigits(total)} کالا</span>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import { schemaStatements } from "./schema";
+import { schemaStatements } from "./schema.ts";
 
 import type { CloudflareEnv, D1Database } from "@/types/cloudflare";
 

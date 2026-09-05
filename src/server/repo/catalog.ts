@@ -1,4 +1,4 @@
-import { all, one, run } from "../db";
+import { all, one, run } from "../db.ts";
 
 /** نوع دسته: لباس صفحه‌ی محصول متفاوت و انتخاب سایز دارد. */
 export type CategoryKind = "general" | "clothing";

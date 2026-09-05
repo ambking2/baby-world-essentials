@@ -5,11 +5,11 @@
  * روی Cloudflare: با اولین درخواستِ ورکر نیز به‌صورت خودکار اجرا می‌شود،
  * اگر دیتابیس هنوز خالی باشد.
  */
-import { business } from "../data/business";
-import { hashPassword } from "./auth";
-import { ensureSchema, nowIso, one, run } from "./db";
-import { setSetting } from "./repo/catalog";
-import { CATEGORIES, POSTS, PRODUCTS, type SeedCategory } from "./seed-data";
+import { business } from "../data/business.ts";
+import { hashPassword } from "./auth.ts";
+import { ensureSchema, nowIso, one, run } from "./db.ts";
+import { setSetting } from "./repo/catalog.ts";
+import { CATEGORIES, POSTS, PRODUCTS, type SeedCategory } from "./seed-data.ts";
 
 function daysFromNow(days: number): string {
   return new Date(Date.now() + days * 86_400_000).toISOString();

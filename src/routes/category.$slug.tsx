@@ -114,7 +114,7 @@ function CategoryPage() {
             className="hidden lg:block"
           />
 
-          <div>
+          <div className="min-w-0">
             <SortBar
               sort={sort}
               total={products?.total ?? 0}

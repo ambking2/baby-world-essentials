@@ -77,7 +77,7 @@ export function ProductCard({
   return (
     <div
       className={cn(
-        "group relative flex h-full flex-col bg-white border border-accent/60 rounded-[14px] transition-all duration-300 hover:-translate-y-1 hover:shadow-premium",
+        "group relative flex h-full min-w-0 flex-col bg-white border border-accent/60 rounded-[14px] transition-all duration-300 hover:-translate-y-1 hover:shadow-premium",
         className,
       )}
     >
@@ -183,7 +183,7 @@ export function ProductCard({
           </div>
 
           <div className="flex flex-col gap-1">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-2 flex-wrap">
               <div className="flex items-baseline gap-2 flex-wrap">
                 <span className="text-base font-bold text-gray-900">{formatToman(current)}</span>
                 {original && original > current ? (

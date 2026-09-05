@@ -1,4 +1,4 @@
-import { all, envVar, nowIso, one, run } from "./db";
+import { all, envVar, nowIso, one, run } from "./db.ts";
 
 /**
  * احراز هویت — سازگار با Cloudflare Workers.
