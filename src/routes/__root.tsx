@@ -53,7 +53,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
-        <h1 className="text-xl font-bold tracking-tight text-foreground">خطایی رخ داد</h1>
+        <h1 className="text-xl font-bold text-foreground">خطایی رخ داد</h1>
         <p className="mt-2 text-sm text-muted-foreground whitespace-pre-line">
           متأسفانه مشکلی در بارگذاری پیش آمد. لطفاً دوباره تلاش کنید.
         </p>
@@ -89,7 +89,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         name: "description",
         content: `خرید اینترنتی سیسمونی نوزاد: تخت و سرویس خواب، لباس، کالسکه، اسباب‌بازی و لوازم شیردهی. ارسال به سراسر ایران و تحویل حضوری در ${business.city}.`,
       },
-      { name: "theme-color", content: "#f6efe9" },
+      { name: "theme-color", content: "#FFFFFF" },
       { property: "og:type", content: "website" },
       { property: "og:site_name", content: business.name },
       { property: "og:locale", content: "fa_IR" },
@@ -97,11 +97,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
-      { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      { rel: "preconnect", href: "https://cdn.jsdelivr.net", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap",
+        href: "https://cdn.jsdelivr.net/npm/vazirmatn@33.0.3/Vazirmatn-font-face.css",
       },
       { rel: "stylesheet", href: appCss },
       { rel: "stylesheet", href: storeCss },
