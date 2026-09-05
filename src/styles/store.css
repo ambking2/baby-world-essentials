@@ -3,59 +3,6 @@
  * بدون هیچ کتابخانهٔ انیمیشن اضافه، فقط CSS خالص تا سرعت بالا بماند.
  */
 
-@keyframes jk-reveal-up {
-  from {
-    opacity: 0;
-    transform: translate3d(0, 22px, 0);
-  }
-  to {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-  }
-}
-
-@keyframes jk-float {
-  0%,
-  100% {
-    transform: translate3d(0, 0, 0);
-  }
-  50% {
-    transform: translate3d(0, -10px, 0);
-  }
-}
-
-@keyframes jk-marquee {
-  from {
-    transform: translate3d(0, 0, 0);
-  }
-  to {
-    transform: translate3d(-50%, 0, 0);
-  }
-}
-
-@keyframes jk-shimmer {
-  from {
-    background-position: 200% 0;
-  }
-  to {
-    background-position: -200% 0;
-  }
-}
-
-@keyframes jk-pop {
-  0% {
-    transform: scale(0.86);
-    opacity: 0;
-  }
-  60% {
-    transform: scale(1.04);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
 @utility reveal {
   opacity: 0;
   transform: translate3d(0, 22px, 0);

@@ -10,7 +10,6 @@ import { SectionHeading } from "@/components/store/SectionHeading";
 import { BlogPreview } from "@/components/site/BlogPreview";
 
 import { categoriesQuery, productsQuery } from "@/lib/api/catalog";
-import { toFaDigits } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/")({
@@ -57,7 +56,6 @@ function HomePage() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60 transition-opacity group-hover:opacity-80" />
               <div className="absolute inset-x-0 bottom-0 p-6 text-white">
                 <h3 className="text-xl font-bold">{cat.title}</h3>
-                <p className="mt-1 text-xs opacity-80">{toFaDigits(Math.floor(Math.random() * 50) + 10)} محصول</p>
               </div>
             </Link>
           ))}
@@ -86,18 +84,18 @@ function HomePage() {
             />
           </div>
           <div className="max-w-lg">
-            <span className="mb-6 block text-xs font-bold uppercase tracking-widest text-primary">ماموریت ما</span>
+            <span className="mb-6 block text-xs font-bold text-primary">ماموریت ما</span>
             <h2 className="mb-8 text-3xl font-bold leading-tight lg:text-5xl">همراه شما در زیباترین مسیر زندگی</h2>
             <p className="mb-10 text-base leading-relaxed text-muted-foreground lg:text-lg">
               در جهان کودک، ما معتقدیم هر نوزاد شایسته بهترین‌هاست. تمامی محصولات ما با دقت فراوان و با در نظر گرفتن سلامت و راحتی نوزاد انتخاب یا تولید می‌شوند؛ از کارگاه چوب اختصاصی تا برندهای معتبر جهانی.
             </p>
             <div className="flex flex-col gap-8 sm:flex-row">
               <div className="flex-1">
-                <h4 className="mb-2 text-sm font-bold uppercase tracking-wide">تولید اختصاصی</h4>
+                <h4 className="mb-2 text-sm font-bold">تولید اختصاصی</h4>
                 <p className="text-xs text-muted-foreground">ساخت سرویس خواب کودک در کارگاه مجهز ما با استانداردهای روز دنیا.</p>
               </div>
               <div className="flex-1">
-                <h4 className="mb-2 text-sm font-bold uppercase tracking-wide">ارسال امن</h4>
+                <h4 className="mb-2 text-sm font-bold">ارسال امن</h4>
                 <p className="text-xs text-muted-foreground">بسته‌بندی تخصصی و ارسال سریع به سراسر ایران با ضمانت سلامت کالا.</p>
               </div>
             </div>
@@ -118,7 +116,7 @@ function HomePage() {
       <section className="bg-secondary/50 section-spacing">
         <div className="container-page">
           <div className="mb-12 text-center lg:mb-20">
-            <span className="mb-4 block text-xs font-bold uppercase tracking-widest text-primary">مجله جهان کودک</span>
+            <span className="mb-4 block text-xs font-bold text-primary">مجله جهان کودک</span>
             <h2 className="text-3xl font-bold lg:text-5xl">راهنمای هوشمندانه برای والدین</h2>
           </div>
           <Suspense fallback={
