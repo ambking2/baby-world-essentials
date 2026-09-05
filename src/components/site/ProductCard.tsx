@@ -11,6 +11,7 @@ export function ProductCard({
   className,
   inWishlist,
   busy,
+  eager,
   onAddToCart,
   onToggleWishlist
 }: { 
@@ -18,6 +19,7 @@ export function ProductCard({
   className?: string;
   inWishlist?: boolean;
   busy?: boolean;
+  eager?: boolean;
   onAddToCart?: (product: any) => void;
   onToggleWishlist?: (product: any) => void;
 }) {
@@ -37,9 +39,12 @@ export function ProductCard({
           <img
             src={product.image || product.cover || "/assets/images/nursery-6.jpg"}
             alt={product.title}
-            loading="lazy"
+            loading={eager ? "eager" : "lazy"}
+            decoding="async"
+            fetchPriority={eager ? "high" : "low"}
             onLoad={(e) => {
-              (e.currentTarget.previousElementSibling as HTMLElement).style.display = 'none';
+              const skeleton = e.currentTarget.previousElementSibling as HTMLElement | null;
+              if (skeleton) skeleton.style.display = "none";
             }}
             className={cn(
               "relative h-full w-full object-cover transition-transform duration-500 group-hover:scale-105",

@@ -15,6 +15,17 @@ import { addCartItem } from "@/server/functions/cart";
 import type { ProductCard } from "@/server/repo/products";
 
 export const Route = createFileRoute("/category/$slug")({
+  loader: ({ context, params }) =>
+    context.queryClient.ensureQueryData({
+      queryKey: [
+        "category",
+        params.slug,
+        1,
+        "newest",
+        { sizes: [], colors: [], onlyAvailable: false, onlyDiscounted: false },
+      ],
+      queryFn: () => getCategoryPage({ data: { slug: params.slug, page: 1, sort: "newest" } }),
+    }),
   component: CategoryPage,
 });
 
@@ -53,6 +64,8 @@ function CategoryPage() {
           ...(filters.onlyDiscounted ? { onlyDiscounted: true } : {}),
         },
       }),
+    staleTime: 60_000,
+    placeholderData: (previous) => previous,
   });
 
   const addToCart = useMutation({

@@ -8,7 +8,7 @@ import { toFaDigits } from "@/lib/format";
 import type { Category } from "@/server/repo/catalog";
 
 export function CategoryStrip({ categories }: { categories: any[] }) {
-  const containerRef = useReveal<HTMLDivElement>({ stagger: 60 });
+  const containerRef = useReveal<HTMLDivElement>({ stagger: 60, watch: categories.length });
 
   return (
     <section className="container-page py-10">

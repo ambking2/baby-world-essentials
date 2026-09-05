@@ -59,6 +59,8 @@ function SearchPage() {
           ...(filters.onlyDiscounted ? { onlyDiscounted: true } : {}),
         },
       }),
+    staleTime: 60_000,
+    placeholderData: (previous) => previous,
   });
 
   const addToCart = useMutation({

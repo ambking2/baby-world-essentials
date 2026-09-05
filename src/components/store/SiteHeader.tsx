@@ -176,7 +176,7 @@ export function SiteHeader({
                 </div>
               </li>
               <li>
-                <Link to="/search" search={{ q: "" }} className="relative block py-4 text-[11px] font-bold uppercase tracking-[0.15em] text-gray-900 hover:text-primary transition-colors after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all hover:after:w-full">محصولات</Link>
+                <Link to="/shop" className="relative block py-4 text-[11px] font-bold uppercase tracking-[0.15em] text-gray-900 hover:text-primary transition-colors after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all hover:after:w-full">فروشگاه</Link>
               </li>
               <li>
                 <Link to="/offers" className="relative block py-4 text-[11px] font-bold uppercase tracking-[0.15em] text-destructive hover:opacity-80 transition-colors">تخفیف‌های ویژه</Link>
@@ -240,7 +240,7 @@ export function SiteHeader({
                 <span className="block text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-4 pr-2">منوی اصلی</span>
                 <ul className="space-y-1">
                   <li><Link to="/" onClick={() => setMobileOpen(false)} className="flex items-center justify-between rounded-xl px-4 py-3.5 text-[14px] font-bold text-gray-900 hover:bg-secondary/50 active:bg-secondary transition-all"><span>خانه</span><ChevronLeft className="size-4 text-muted-foreground/50" /></Link></li>
-                  <li><Link to="/search" search={{ q: "" }} onClick={() => setMobileOpen(false)} className="flex items-center justify-between rounded-xl px-4 py-3.5 text-[14px] font-bold text-gray-900 hover:bg-secondary/50 active:bg-secondary transition-all"><span>فروشگاه</span><ChevronLeft className="size-4 text-muted-foreground/50" /></Link></li>
+                  <li><Link to="/shop" onClick={() => setMobileOpen(false)} className="flex items-center justify-between rounded-xl px-4 py-3.5 text-[14px] font-bold text-gray-900 hover:bg-secondary/50 active:bg-secondary transition-all"><span>فروشگاه</span><ChevronLeft className="size-4 text-muted-foreground/50" /></Link></li>
                   <li><Link to="/categories" onClick={() => setMobileOpen(false)} className="flex items-center justify-between rounded-xl px-4 py-3.5 text-[14px] font-bold text-gray-900 hover:bg-secondary/50 active:bg-secondary transition-all"><span>دسته‌بندی‌ها</span><ChevronLeft className="size-4 text-muted-foreground/50" /></Link></li>
                   <li><Link to="/blog" onClick={() => setMobileOpen(false)} className="flex items-center justify-between rounded-xl px-4 py-3.5 text-[14px] font-bold text-gray-900 hover:bg-secondary/50 active:bg-secondary transition-all"><span>مجله جهان کودک</span><ChevronLeft className="size-4 text-muted-foreground/50" /></Link></li>
                 </ul>

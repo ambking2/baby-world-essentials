@@ -36,10 +36,14 @@ export async function fetchProducts(query: ProductQuery = {}): Promise<Product[]
 }
 
 export const categoriesQuery = () =>
-  queryOptions({ queryKey: ["categories"], queryFn: () => fetchCategories() });
+  queryOptions({ queryKey: ["categories"], queryFn: () => fetchCategories(), staleTime: 60_000 });
 
 export const productsQuery = (query: ProductQuery = {}) =>
-  queryOptions({ queryKey: ["products", query], queryFn: () => fetchProducts(query) });
+  queryOptions({
+    queryKey: ["products", query],
+    queryFn: () => fetchProducts(query),
+    staleTime: 60_000,
+  });
 
 export async function fetchProduct(slug: string): Promise<ProductWithDetail | null> {
   const { productDetails } = await import("@/data/product-details");

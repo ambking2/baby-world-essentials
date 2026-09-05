@@ -1,5 +1,4 @@
 import { ProductCard } from "@/components/site/ProductCard";
-import { useReveal } from "@/hooks/use-reveal";
 import { cn } from "@/lib/utils";
 import type { ProductCard as ProductCardData } from "@/server/repo/products";
 
@@ -25,8 +24,6 @@ export function ProductGrid({
   emptyMessage = "محصولی با این فیلترها پیدا نشد.",
   className,
 }: ProductGridProps) {
-  const containerRef = useReveal<HTMLDivElement>({ stagger: 70 });
-
   if (products.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center rounded-[32px] border border-border bg-[#F9F9F9] p-16 md:p-24 text-center shadow-sm">
@@ -50,14 +47,14 @@ export function ProductGrid({
   } as const;
 
   return (
-    <div ref={containerRef} className={cn("grid grid-cols-2 gap-4 lg:gap-8", columnClass[columns], className)}>
-      {products.map((product) => (
+    <div className={cn("grid grid-cols-2 gap-4 lg:gap-8", columnClass[columns], className)}>
+      {products.map((product, index) => (
         <ProductCard
           key={product.id}
           product={product}
-          className="reveal"
           inWishlist={wishlistIds.includes(product.id)}
           busy={busyId === product.id}
+          eager={index < 4}
           {...(onAddToCart ? { onAddToCart } : {})}
           {...(onToggleWishlist ? { onToggleWishlist } : {})}
         />

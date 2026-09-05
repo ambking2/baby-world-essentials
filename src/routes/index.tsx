@@ -1,46 +1,30 @@
-import { useSuspenseQuery, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { createFileRoute } from "@tanstack/react-router";
-import { ArrowLeft } from "lucide-react";
 import { Suspense } from "react";
 
-import { SiteHeader } from "@/components/store/SiteHeader";
 import { HeroSlider } from "@/components/store/HeroSlider";
 import { StoreShell } from "@/components/store/StoreShell";
 import { ProductSection } from "@/components/site/ProductSection";
 import { SectionHeading } from "@/components/store/SectionHeading";
 import { BlogPreview } from "@/components/site/BlogPreview";
-import { useEffect } from "react";
 
-import { business } from "@/data/business";
 import { categoriesQuery, productsQuery } from "@/lib/api/catalog";
-import { queryOptions } from "@tanstack/react-query";
 import { toFaDigits } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
-const homeProductsQuery = () => queryOptions({
-  queryKey: ["home-products"],
-  queryFn: () => Promise.resolve([]), // Fallback or remove if not needed
-});
-
 export const Route = createFileRoute("/")({
-  loader: (opts) => Promise.all([
-    opts.context.queryClient.ensureQueryData(categoriesQuery()),
-    opts.context.queryClient.ensureQueryData(productsQuery({ tag: "new", limit: 4 })),
-    opts.context.queryClient.ensureQueryData(productsQuery({ tag: "best", limit: 8 })),
-  ]),
+  loader: (opts) =>
+    Promise.all([
+      opts.context.queryClient.ensureQueryData(categoriesQuery()),
+      opts.context.queryClient.ensureQueryData(productsQuery({ tag: "new", limit: 4 })),
+      opts.context.queryClient.ensureQueryData(productsQuery({ tag: "best", limit: 8 })),
+    ]),
   component: HomePage,
 });
 
 function HomePage() {
   const { data: categories } = useSuspenseQuery(categoriesQuery());
-  const queryClient = useQueryClient();
-
-  // Reset category/tag specific queries on home mount to ensure fresh data
-  useEffect(() => {
-    queryClient.invalidateQueries({ queryKey: ["products"] });
-    queryClient.invalidateQueries({ queryKey: ["posts"] });
-  }, [queryClient]);
 
   return (
     <StoreShell>
@@ -156,5 +140,3 @@ function HomePage() {
     </StoreShell>
   );
 }
-
-import { Headphones, Heart, ShieldCheck, Truck } from "lucide-react";

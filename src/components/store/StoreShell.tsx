@@ -34,6 +34,7 @@ export function StoreShell({ children }: { children: ReactNode }) {
   const cartQuery = useQuery({
     queryKey: storeKeys.cart,
     queryFn: () => getCart(),
+    staleTime: 30_000,
   });
 
   const sessionQuery = useQuery({

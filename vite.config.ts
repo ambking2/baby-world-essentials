@@ -11,6 +11,9 @@ const rpcDir = fileURLToPath(new URL("./src/rpc", import.meta.url));
 
 export default defineConfig({
   vite: {
+    server: {
+      allowedHosts: [".monkeycode-ai.live"],
+    },
     resolve: {
       alias: [{ find: "@/server/functions", replacement: rpcDir }],
     },

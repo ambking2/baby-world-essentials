@@ -13,6 +13,11 @@ import { toFaDigits } from "@/lib/format";
 import { getBlogIndex } from "@/server/functions/blog";
 
 export const Route = createFileRoute("/blog/")({
+  loader: ({ context }) =>
+    context.queryClient.ensureQueryData({
+      queryKey: ["blog", 1, "", ""],
+      queryFn: () => getBlogIndex({ data: { page: 1, perPage: 12 } }),
+    }),
   component: BlogIndexPage,
 });
 
@@ -33,13 +38,14 @@ function BlogIndexPage() {
           ...(appliedSearch.trim().length > 0 ? { q: appliedSearch.trim() } : {}),
         },
       }),
+    staleTime: 60_000,
+    placeholderData: (previous) => previous,
   });
-
-  const containerRef = useReveal<HTMLDivElement>();
 
   const posts = blogQuery.data?.posts.items ?? [];
   const total = blogQuery.data?.posts.total ?? 0;
   const pageCount = blogQuery.data?.posts.pageCount ?? 1;
+  const containerRef = useReveal<HTMLDivElement>({ watch: posts.length });
 
   return (
     <StoreShell>
