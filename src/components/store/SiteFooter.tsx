@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Instagram, Mail, MapPin, Phone, Send, Facebook, Twitter, ShieldCheck } from "lucide-react";
+import { Banknote, CreditCard, Instagram, Mail, MapPin, Phone, Send, ShieldCheck } from "lucide-react";
 import { useState } from "react";
 
 const brandLogoUrl = "/assets/logo/brand-logo.png";
@@ -54,15 +54,13 @@ export function SiteFooter({ onSubscribe, subscribing = false }: SiteFooterProps
           <div className="max-w-xl">
             <Link to="/" className="flex items-center gap-3 group">
               <img src={brandLogoUrl} alt={business.name} className="h-12 w-auto transition-transform group-hover:scale-105" />
-              <h2 className="text-xl font-bold tracking-tight text-gray-900 lg:text-2xl">{business.name}</h2>
+              <h2 className="text-xl font-bold text-gray-900 lg:text-2xl">{business.name}</h2>
             </Link>
             <p className="mt-4 text-sm leading-relaxed text-gray-500">
               تولیدکننده اختصاصی سرویس خواب نوزاد و ارائه‌دهنده برترین برندهای جهانی سیسمونی با بیش از ۱۵ سال تجربه در خدمت خانواده‌های ایرانی. ما معتقدیم کیفیت در جزئیات است.
             </p>
             <div className="mt-8 flex gap-5">
-              <a href="#" className="flex size-9 items-center justify-center rounded-full border border-border text-gray-400 transition-all hover:border-gray-900 hover:text-gray-900"><Instagram className="size-4" /></a>
-              <a href="#" className="flex size-9 items-center justify-center rounded-full border border-border text-gray-400 transition-all hover:border-gray-900 hover:text-gray-900"><Facebook className="size-4" /></a>
-              <a href="#" className="flex size-9 items-center justify-center rounded-full border border-border text-gray-400 transition-all hover:border-gray-900 hover:text-gray-900"><Twitter className="size-4" /></a>
+              <a href={business.instagramHref} target="_blank" rel="noopener noreferrer" className="flex size-9 items-center justify-center rounded-full border border-border text-gray-400 transition-all hover:border-gray-900 hover:text-gray-900"><Instagram className="size-4" /></a>
             </div>
           </div>
 
@@ -101,7 +99,7 @@ export function SiteFooter({ onSubscribe, subscribing = false }: SiteFooterProps
         <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-4">
           {footerGroups.map((group) => (
             <div key={group.title}>
-              <h3 className="mb-6 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-900">
+              <h3 className="mb-6 text-[10px] font-bold text-gray-900">
                 {group.title}
               </h3>
               <ul className="space-y-4">
@@ -117,7 +115,7 @@ export function SiteFooter({ onSubscribe, subscribing = false }: SiteFooterProps
           ))}
 
           <div>
-            <h3 className="mb-6 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-900">ارتباط با ما</h3>
+            <h3 className="mb-6 text-[10px] font-bold text-gray-900">ارتباط با ما</h3>
             <ul className="space-y-5">
               <li className="flex items-start gap-3">
                 <MapPin className="mt-0.5 size-4 shrink-0 text-primary" />
@@ -141,20 +139,26 @@ export function SiteFooter({ onSubscribe, subscribing = false }: SiteFooterProps
             <div className="flex items-center gap-6">
               <div className="flex items-center gap-2 rounded-lg border border-border/50 px-3 py-1.5 grayscale transition-all hover:grayscale-0">
                 <ShieldCheck className="size-4 text-primary" />
-                <span className="text-[9px] font-bold text-gray-900 uppercase tracking-widest">عضو رسمی اتحادیه</span>
+                <span className="text-[9px] font-bold text-gray-900">عضو رسمی اتحادیه</span>
               </div>
-              <div className="h-6 w-10 bg-muted/40 rounded grayscale" />
-              <div className="h-6 w-10 bg-muted/40 rounded grayscale" />
+              <div className="flex items-center gap-2 rounded-lg border border-border/50 px-3 py-1.5 grayscale transition-all hover:grayscale-0">
+                <CreditCard className="size-4 text-primary" />
+                <span className="text-[9px] font-bold text-gray-900">کارت‌به‌کارت</span>
+              </div>
+              <div className="flex items-center gap-2 rounded-lg border border-border/50 px-3 py-1.5 grayscale transition-all hover:grayscale-0">
+                <Banknote className="size-4 text-primary" />
+                <span className="text-[9px] font-bold text-gray-900">پرداخت در محل</span>
+              </div>
             </div>
 
-            <p className="text-[11px] font-medium tracking-wide text-muted-foreground">
+            <p className="text-[11px] font-medium text-muted-foreground">
               © {toFaDigits(new Date().getFullYear())} {business.name}. تمامی حقوق محفوظ است.
             </p>
 
-            <div className="flex gap-6 grayscale opacity-60">
-              <div className="h-5 w-8 bg-muted rounded" />
-              <div className="h-5 w-8 bg-muted rounded" />
-              <div className="h-5 w-8 bg-muted rounded" />
+            <div className="flex items-center gap-5 text-[10px] font-bold text-muted-foreground">
+              <span>کارت‌به‌کارت</span>
+              <span>پرداخت در محل</span>
+              <span>ضمانت اصالت کالا</span>
             </div>
           </div>
         </div>

@@ -57,7 +57,7 @@ export function HeroSlider() {
         <div ref={emblaRef} className="h-full">
           <div className="flex h-full">
             {SLIDES.map((slide, idx) => (
-              <div key={idx} className="relative h-full min-w-0 flex-[0_0_100%] overflow-hidden">
+              <div key={idx} className="group relative h-full min-w-0 flex-[0_0_100%] overflow-hidden">
                 <div className="absolute inset-0">
                   <img
                     src={slide.image}
@@ -70,7 +70,7 @@ export function HeroSlider() {
                 <div className="container-page relative flex h-full items-center">
                   <div className="max-w-2xl px-4 lg:px-0">
                     <div className="inline-flex items-center gap-2 mb-4">
-                      <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary sm:text-[11px]">
+                      <span className="text-[10px] font-bold text-primary sm:text-[11px]">
                         {slide.subtitle}
                       </span>
                     </div>
@@ -164,7 +164,7 @@ export function HeroSlider() {
             </div>
             <div>
               <h4 className="text-[13px] font-bold text-foreground">پرداخت امن</h4>
-              <p className="mt-1 text-[11px] text-muted-foreground">درگاه‌های معتبر بانکی</p>
+              <p className="mt-1 text-[11px] text-muted-foreground">کارت‌به‌کارت و پرداخت در محل</p>
             </div>
           </div>
         </div>

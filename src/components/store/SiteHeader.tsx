@@ -55,7 +55,7 @@ export function SiteHeader({
   return (
     <header className="relative w-full">
       {/* Announcement Bar */}
-      <div className="bg-primary py-2.5 text-center text-[9px] font-bold tracking-[0.15em] text-white uppercase sm:text-[10px]">
+      <div className="bg-primary py-2.5 text-center text-[9px] font-bold text-white sm:text-[10px]">
         ارسال رایگان برای تمام سفارش‌های بالای {formatToman(business.freeShippingThreshold)}
       </div>
 
@@ -79,7 +79,7 @@ export function SiteHeader({
                 className="h-10 w-auto sm:h-12 md:h-14 transition-transform group-hover:scale-105" 
               />
               <div className="flex flex-col leading-tight">
-                <span className="text-xl font-black tracking-tight text-gray-900 sm:text-2xl">
+                <span className="text-xl font-black text-gray-900 sm:text-2xl">
                   {business.name}
                 </span>
                 <span className="hidden sm:block text-[10px] font-medium text-muted-foreground uppercase tracking-[0.2em]">
@@ -105,10 +105,10 @@ export function SiteHeader({
 
           {/* Actions */}
           <div className="flex items-center gap-3 sm:gap-6">
-            <Link to={userName ? "/account" : "/auth/login"} className="hidden items-center gap-2.5 text-[13px] font-bold text-gray-900 hover:text-primary transition-colors lg:flex uppercase tracking-wide group">
+            <Link to={userName ? "/account" : "/auth/login"} className="hidden items-center gap-2.5 text-[13px] font-bold text-gray-900 hover:text-primary transition-colors lg:flex group">
               <User className="size-5 transition-transform group-hover:scale-110" />
               <div className="flex flex-col items-start leading-none">
-                <span className="text-[10px] text-muted-foreground font-medium mb-1 group-hover:text-primary/70 transition-colors uppercase tracking-widest">
+                <span className="text-[10px] text-muted-foreground font-medium mb-1 group-hover:text-primary/70 transition-colors">
                   {userName ? "خوش آمدید" : "ورود"}
                 </span>
                 <span className="font-bold">{userName ?? "حساب کاربری"}</span>
@@ -127,7 +127,7 @@ export function SiteHeader({
                 )}
               </div>
               <div className="hidden sm:flex flex-col items-start leading-none">
-                <span className="text-[10px] text-muted-foreground font-medium mb-1 group-hover:text-primary/70 transition-colors uppercase tracking-widest">سبد خرید</span>
+                <span className="text-[10px] text-muted-foreground font-medium mb-1 group-hover:text-primary/70 transition-colors">سبد خرید</span>
                 <span className="font-bold">
                   {cartCount > 0 ? formatToman(cartTotal) : "۰ تومان"}
                 </span>
@@ -146,10 +146,10 @@ export function SiteHeader({
           <div className="flex-1 flex justify-start pr-8">
             <ul className="flex gap-12">
               <li>
-                <Link to="/" className="relative block py-4 text-[11px] font-bold uppercase tracking-[0.15em] text-gray-900 hover:text-primary transition-colors after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all hover:after:w-full active:scale-95">خانه</Link>
+                <Link to="/" className="relative block py-4 text-[11px] font-bold text-gray-900 hover:text-primary transition-colors after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all hover:after:w-full active:scale-95">خانه</Link>
               </li>
               <li className="group relative">
-                <button className="flex items-center gap-2 py-4 text-[11px] font-bold uppercase tracking-[0.15em] text-gray-900 group-hover:text-primary transition-colors">
+                <button className="flex items-center gap-2 py-4 text-[11px] font-bold text-gray-900 group-hover:text-primary transition-colors">
                   دسته‌بندی‌ها
                   <ChevronDown className="size-3.5 transition-transform group-hover:rotate-180" />
                 </button>
@@ -158,7 +158,7 @@ export function SiteHeader({
                   <div className="grid grid-cols-4 gap-12">
                     {categories.map((cat) => (
                       <div key={cat.slug} className="space-y-6">
-                        <Link to="/category/$slug" params={{ slug: cat.slug }} className="block text-[13px] font-bold text-gray-900 hover:text-primary transition-colors uppercase tracking-wide">
+                        <Link to="/category/$slug" params={{ slug: cat.slug }} className="block text-[13px] font-bold text-gray-900 hover:text-primary transition-colors">
                           {cat.title}
                         </Link>
                         <ul className="space-y-3.5 border-r border-border/40 pr-5">
@@ -176,13 +176,13 @@ export function SiteHeader({
                 </div>
               </li>
               <li>
-                <Link to="/shop" className="relative block py-4 text-[11px] font-bold uppercase tracking-[0.15em] text-gray-900 hover:text-primary transition-colors after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all hover:after:w-full">فروشگاه</Link>
+                <Link to="/shop" className="relative block py-4 text-[11px] font-bold text-gray-900 hover:text-primary transition-colors after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all hover:after:w-full">فروشگاه</Link>
               </li>
               <li>
-                <Link to="/offers" className="relative block py-4 text-[11px] font-bold uppercase tracking-[0.15em] text-destructive hover:opacity-80 transition-colors">تخفیف‌های ویژه</Link>
+                <Link to="/offers" className="relative block py-4 text-[11px] font-bold text-destructive hover:opacity-80 transition-colors">تخفیف‌های ویژه</Link>
               </li>
               <li>
-                <Link to="/blog" className="relative block py-4 text-[11px] font-bold uppercase tracking-[0.15em] text-gray-900 hover:text-primary transition-colors after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all hover:after:w-full">مجله آموزشی</Link>
+                <Link to="/blog" className="relative block py-4 text-[11px] font-bold text-gray-900 hover:text-primary transition-colors after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all hover:after:w-full">مجله آموزشی</Link>
               </li>
             </ul>
           </div>
@@ -210,7 +210,7 @@ export function SiteHeader({
           <div className="flex items-center justify-between border-b border-border/50 p-6">
             <Link to="/" onClick={() => setMobileOpen(false)} className="flex items-center gap-3">
               <img src={brandLogoUrl} alt={business.name} className="h-10 w-auto" />
-              <span className="text-lg font-bold tracking-tight text-gray-900">{business.name}</span>
+              <span className="text-lg font-bold text-gray-900">{business.name}</span>
             </Link>
             <button 
               onClick={() => setMobileOpen(false)} 
@@ -237,7 +237,7 @@ export function SiteHeader({
           <nav className="flex-1 overflow-y-auto px-6 pb-8 hide-scrollbar">
             <div className="space-y-8 py-4">
               <div>
-                <span className="block text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-4 pr-2">منوی اصلی</span>
+                <span className="block text-[10px] font-bold text-muted-foreground mb-4 pr-2">منوی اصلی</span>
                 <ul className="space-y-1">
                   <li><Link to="/" onClick={() => setMobileOpen(false)} className="flex items-center justify-between rounded-xl px-4 py-3.5 text-[14px] font-bold text-gray-900 hover:bg-secondary/50 active:bg-secondary transition-all"><span>خانه</span><ChevronLeft className="size-4 text-muted-foreground/50" /></Link></li>
                   <li><Link to="/shop" onClick={() => setMobileOpen(false)} className="flex items-center justify-between rounded-xl px-4 py-3.5 text-[14px] font-bold text-gray-900 hover:bg-secondary/50 active:bg-secondary transition-all"><span>فروشگاه</span><ChevronLeft className="size-4 text-muted-foreground/50" /></Link></li>
@@ -247,7 +247,7 @@ export function SiteHeader({
               </div>
 
               <div>
-                <span className="block text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-4 pr-2">دسترسی سریع</span>
+                <span className="block text-[10px] font-bold text-muted-foreground mb-4 pr-2">دسترسی سریع</span>
                 <ul className="space-y-1">
                   <li><Link to="/offers" onClick={() => setMobileOpen(false)} className="flex items-center rounded-xl px-4 py-3.5 text-[14px] font-bold text-destructive hover:bg-destructive/5 active:bg-destructive/10 transition-colors">تخفیف‌های ویژه</Link></li>
                   <li><Link to="/contact" onClick={() => setMobileOpen(false)} className="flex items-center rounded-xl px-4 py-3.5 text-[14px] font-bold text-gray-900 hover:bg-secondary/50 active:bg-secondary transition-colors">تماس با ما</Link></li>
@@ -282,7 +282,7 @@ export function SiteHeader({
             )}
             <div className="flex justify-center gap-8 py-2">
                <div className="flex flex-col items-center gap-1">
-                 <span className="text-[10px] text-muted-foreground uppercase tracking-widest">پشتیبانی</span>
+                 <span className="text-[10px] text-muted-foreground">پشتیبانی</span>
                  <a href={business.phoneHref} className="text-[12px] font-bold text-gray-900">{toFaDigits(business.phoneDisplay)}</a>
                </div>
             </div>
