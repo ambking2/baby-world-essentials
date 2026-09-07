@@ -89,7 +89,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         name: "description",
         content: `خرید اینترنتی سیسمونی نوزاد: تخت و سرویس خواب، لباس، کالسکه، اسباب‌بازی و لوازم شیردهی. ارسال به سراسر ایران و تحویل حضوری در ${business.city}.`,
       },
-      { name: "theme-color", content: "#FFFFFF" },
+      { name: "theme-color", content: "#004BD1" },
       { property: "og:type", content: "website" },
       { property: "og:site_name", content: business.name },
       { property: "og:locale", content: "fa_IR" },
@@ -101,6 +101,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         rel: "stylesheet",
         href: "https://cdn.jsdelivr.net/npm/vazirmatn@33.0.3/Vazirmatn-font-face.css",
+      },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@600;700;800&display=swap",
       },
       { rel: "stylesheet", href: appCss },
       { rel: "stylesheet", href: storeCss },

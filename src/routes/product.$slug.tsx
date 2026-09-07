@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { BadgeCheck, Minus, Plus, ShoppingCart, Truck, Undo2, Star, Heart, ChevronDown, ShieldCheck, HelpCircle } from "lucide-react";
+import { BadgeCheck, Minus, Plus, ShoppingCart, Truck, Undo2, Star, Heart, ChevronDown, ShieldCheck, HelpCircle, RefreshCcw, CreditCard } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 
@@ -140,7 +140,7 @@ function ProductPage() {
           {/* Left Column: Gallery */}
           <div className="lg:col-span-7">
             <div className="sticky top-24 space-y-6">
-              <div className="relative aspect-square overflow-hidden bg-[#F9F9F9] border border-border rounded-2xl">
+              <div className="relative aspect-square overflow-hidden bg-[#F9F9F9] border border-border rounded-[24px]">
                 <img
                   src={images[activeImage]?.url ?? images[0]?.url}
                   alt={images[activeImage]?.alt ?? product.title}
@@ -155,11 +155,11 @@ function ProductPage() {
                       key={idx}
                       onClick={() => setActiveImage(idx)}
                       className={cn(
-                        "size-24 shrink-0 border border-border bg-white rounded-xl p-1 transition-all duration-200 overflow-hidden",
+                        "size-24 shrink-0 border border-border bg-white rounded-2xl p-1 transition-all duration-200 overflow-hidden",
                         idx === activeImage ? "border-primary ring-2 ring-primary/20 scale-[1.02]" : "opacity-70 hover:opacity-100 hover:scale-[1.02]"
                       )}
                     >
-                      <img src={image.url} alt="" className="h-full w-full object-cover rounded-lg" />
+                      <img src={image.url} alt="" className="h-full w-full object-cover rounded-xl" />
                     </button>
                   ))}
                 </div>
@@ -171,7 +171,7 @@ function ProductPage() {
           <div className="lg:col-span-5">
             <div className="flex flex-col">
               <div className="mb-4 flex items-center justify-between">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-primary bg-primary/5 px-2 py-1 rounded-md">{product.categoryTitle}</span>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-primary bg-primary/5 px-3 py-1.5 rounded-full">{product.categoryTitle}</span>
                 <div className="flex items-center gap-1.5">
                   <div className="flex items-center gap-0.5">
                     {[1,2,3,4,5].map(i => (
@@ -192,7 +192,7 @@ function ProductPage() {
                   <span className="text-lg text-muted-foreground line-through opacity-50">{formatToman(product.price)}</span>
                 )}
                 {product.price > unitPrice && (
-                  <span className="bg-destructive text-white text-[11px] font-bold px-2 py-1 rounded-md">
+                  <span className="ribbon-sale text-white text-[11px] font-bold px-3 py-1.5 rounded-full">
                     ٪{toFaDigits(Math.round((1 - unitPrice / product.price) * 100))} تخفیف
                   </span>
                 )}
@@ -249,7 +249,7 @@ function ProductPage() {
                 )}
 
                 <div className="flex flex-col gap-4 sm:flex-row">
-                  <div className="flex items-center justify-between border border-border bg-[#F9F9F9] rounded-xl px-2 h-14">
+                  <div className="flex items-center justify-between border border-border bg-[#F9F9F9] rounded-full px-2 h-14">
                     <button onClick={() => setQty(q => Math.max(1, q - 1))} className="p-3 text-muted-foreground hover:text-foreground transition-colors"><Minus className="size-4" /></button>
                     <span className="min-w-10 text-center text-sm font-bold text-gray-900">{toFaDigits(qty)}</span>
                     <button onClick={() => setQty(q => Math.min(20, q + 1))} className="p-3 text-muted-foreground hover:text-foreground transition-colors"><Plus className="size-4" /></button>
@@ -264,9 +264,29 @@ function ProductPage() {
                     <span>{stock <= 0 ? "ناموجود" : needsSelection ? "انتخاب مشخصات" : "افزودن به سبد خرید"}</span>
                   </button>
                   
-                  <button className="hidden sm:flex size-14 items-center justify-center border border-border rounded-xl transition-all duration-300 hover:border-foreground/20 hover:bg-muted/30 active:scale-95">
+                  <button className="hidden sm:flex size-14 items-center justify-center border border-border rounded-full transition-all duration-300 hover:border-foreground/20 hover:bg-muted/30 active:scale-95">
                     <Heart className="size-5" />
                   </button>
+                </div>
+
+                {/* Trust badges */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="flex items-center gap-3 rounded-2xl bg-surface-container-low px-4 py-3">
+                    <Truck className="size-4 shrink-0 text-primary" />
+                    <span className="text-[11px] font-bold">ارسال سریع</span>
+                  </div>
+                  <div className="flex items-center gap-3 rounded-2xl bg-surface-container-low px-4 py-3">
+                    <RefreshCcw className="size-4 shrink-0 text-primary" />
+                    <span className="text-[11px] font-bold">۷ روز ضمانت بازگشت</span>
+                  </div>
+                  <div className="flex items-center gap-3 rounded-2xl bg-surface-container-low px-4 py-3">
+                    <ShieldCheck className="size-4 shrink-0 text-primary" />
+                    <span className="text-[11px] font-bold">ضمانت اصالت کالا</span>
+                  </div>
+                  <div className="flex items-center gap-3 rounded-2xl bg-surface-container-low px-4 py-3">
+                    <CreditCard className="size-4 shrink-0 text-primary" />
+                    <span className="text-[11px] font-bold">پرداخت امن</span>
+                  </div>
                 </div>
               </div>
 
@@ -339,6 +359,7 @@ function ProductPage() {
           </button>
         </div>
       </div>
+      <div className="h-20 lg:hidden" />
     </StoreShell>
   );
 }

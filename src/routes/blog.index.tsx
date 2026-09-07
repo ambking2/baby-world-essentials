@@ -63,7 +63,7 @@ function BlogIndexPage() {
                 راهنمای خرید سیسمونی، مراقبت از نوزاد و تجربهٔ واقعی فروشگاه در برخورد با خانواده‌ها — با {toFaDigits(total)} مقاله.
               </p>
             </div>
-            <div className="rounded-[2rem] border border-white/70 bg-gradient-to-br from-[#ffe0cf] to-[#fff6ef] p-5 shadow-soft">
+            <div className="rounded-[2rem] border border-white/70 bg-gradient-to-br from-[#DDE9FF] to-[#F0F5FF] p-5 shadow-soft">
               <div className="flex items-center gap-3">
                 <span className="grid size-12 place-items-center rounded-[1.2rem] bg-white text-brand shadow-soft">
                   <BookOpenText className="size-5" aria-hidden />

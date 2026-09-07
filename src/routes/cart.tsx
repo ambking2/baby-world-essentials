@@ -134,12 +134,12 @@ function CartPage() {
                       </div>
 
                       <div className="mt-4 flex items-center justify-between">
-                        <div className="flex items-center bg-muted/50 rounded-lg p-1 border border-border">
+                        <div className="flex items-center bg-muted/50 rounded-full p-1 border border-border">
                           <button
                             type="button"
                             onClick={() => setQty.mutate({ itemId: line.itemId, qty: line.qty + 1 })}
                             disabled={line.qty >= line.stock}
-                            className="size-8 flex items-center justify-center rounded-md hover:bg-white hover:shadow-sm disabled:opacity-30 transition-all"
+                            className="size-8 flex items-center justify-center rounded-full hover:bg-white hover:shadow-sm disabled:opacity-30 transition-all"
                           >
                             <Plus className="size-3.5" />
                           </button>
@@ -147,7 +147,7 @@ function CartPage() {
                           <button
                             type="button"
                             onClick={() => setQty.mutate({ itemId: line.itemId, qty: Math.max(line.qty - 1, 1) })}
-                            className="size-8 flex items-center justify-center rounded-md hover:bg-white hover:shadow-sm transition-all"
+                            className="size-8 flex items-center justify-center rounded-full hover:bg-white hover:shadow-sm transition-all"
                           >
                             <Minus className="size-3.5" />
                           </button>

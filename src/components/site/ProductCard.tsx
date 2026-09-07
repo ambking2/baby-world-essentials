@@ -77,11 +77,11 @@ export function ProductCard({
   return (
     <div
       className={cn(
-        "group relative flex h-full min-w-0 flex-col bg-white border border-accent/60 rounded-[14px] transition-all duration-300 hover:-translate-y-1 hover:shadow-premium",
+        "group relative flex h-full min-w-0 flex-col bg-white border border-accent/60 rounded-2xl transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lift overflow-hidden",
         className,
       )}
     >
-      <div className="relative aspect-[4/5] overflow-hidden rounded-t-[14px] bg-secondary/30">
+      <div className="relative aspect-[4/5] overflow-hidden rounded-t-2xl bg-secondary/30">
         <Link to="/product/$slug" params={{ slug: product.slug }} className="block h-full w-full">
           <div className="absolute inset-0 skeleton" />
           <img
@@ -203,8 +203,7 @@ export function ProductCard({
               >
                 <ShoppingCart className="size-3" />
                 <span>افزودن</span>
-              </button>
-            </div>
+              </button>            </div>
 
             {outOfStock ? (
               <span className="text-[11px] text-destructive font-bold mt-1">ناموجود در انبار</span>

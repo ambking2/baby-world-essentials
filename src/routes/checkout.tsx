@@ -77,7 +77,7 @@ function CheckoutPage() {
   const payable = Math.max((cart?.grandTotal ?? 0) - discount, 0);
 
   const inputClass =
-    "w-full rounded-sm border border-border bg-white px-3 py-3 text-[11px] font-medium text-gray-900 outline-none transition-all focus:border-gray-900";
+    "w-full rounded-xl border border-border bg-white px-3 py-3 text-[11px] font-medium text-gray-900 outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/10";
 
   return (
     <StoreShell>
@@ -97,7 +97,7 @@ function CheckoutPage() {
             className="grid gap-5 lg:grid-cols-[1fr_340px]"
           >
             <div className="space-y-5">
-              <section className="space-y-6 rounded-xl border border-border bg-white p-6">
+              <section className="space-y-6 rounded-[24px] border border-border bg-white p-6">
                 <h2 className="text-[11px] font-bold uppercase tracking-widest text-gray-900 border-b border-border pb-3">اطلاعات تحویل‌گیرنده</h2>
                 <div className="grid gap-3 sm:grid-cols-2">
                   <input
@@ -154,18 +154,18 @@ function CheckoutPage() {
                 />
               </section>
 
-              <section className="space-y-6 rounded-xl border border-border bg-white p-6">
+              <section className="space-y-6 rounded-[24px] border border-border bg-white p-6">
                 <h2 className="text-[11px] font-bold uppercase tracking-widest text-gray-900 border-b border-border pb-3">روش پرداخت</h2>
                 <div className="grid gap-3 sm:grid-cols-2">
                   <button
                     type="button"
                     onClick={() => setPaymentMethod("card_transfer")}
                     className={cn(
-                      "flex items-start gap-3 rounded-sm border p-4 text-start transition-all duration-300",
-                      paymentMethod === "card_transfer" ? "border-gray-900 bg-gray-50" : "border-border hover:border-gray-900",
+                      "flex items-start gap-3 rounded-2xl border p-4 text-start transition-all duration-300",
+                      paymentMethod === "card_transfer" ? "border-primary bg-primary/5 ring-2 ring-primary/10" : "border-border hover:border-primary/40",
                     )}
                   >
-                    <CreditCard className="mt-0.5 size-4 text-gray-900" aria-hidden />
+                    <CreditCard className="mt-0.5 size-4 text-primary" aria-hidden />
                     <span>
                       <span className="block text-xs font-extrabold">کارت‌به‌کارت</span>
                       <span className="mt-1 block text-[11px] leading-5 text-muted-foreground">
@@ -178,11 +178,11 @@ function CheckoutPage() {
                     type="button"
                     onClick={() => setPaymentMethod("cash_on_delivery")}
                     className={cn(
-                      "flex items-start gap-3 rounded-sm border p-4 text-start transition-all duration-300",
-                      paymentMethod === "cash_on_delivery" ? "border-gray-900 bg-gray-50" : "border-border hover:border-gray-900",
+                      "flex items-start gap-3 rounded-2xl border p-4 text-start transition-all duration-300",
+                      paymentMethod === "cash_on_delivery" ? "border-primary bg-primary/5 ring-2 ring-primary/10" : "border-border hover:border-primary/40",
                     )}
                   >
-                    <BanknoteArrowUp className="mt-0.5 size-4 text-gray-900" aria-hidden />
+                    <BanknoteArrowUp className="mt-0.5 size-4 text-primary" aria-hidden />
                     <span>
                       <span className="block text-xs font-extrabold">پرداخت در محل</span>
                       <span className="mt-1 block text-[11px] leading-5 text-muted-foreground">
@@ -193,7 +193,7 @@ function CheckoutPage() {
                 </div>
 
                 {paymentMethod === "card_transfer" && card ? (
-                  <div className="rounded-xl bg-secondary/30 p-4 text-[11px] leading-6 border border-border/50">
+                  <div className="rounded-2xl bg-secondary/30 p-4 text-[11px] leading-6 border border-border/50">
                     <p className="font-extrabold text-foreground">شمارهٔ کارت: {toFaDigits(card.number)}</p>
                     <p className="text-muted-foreground">به نام {card.holder} · {card.bank}</p>
                   </div>
@@ -201,7 +201,7 @@ function CheckoutPage() {
               </section>
             </div>
 
-            <aside className="h-fit space-y-6 rounded-xl border border-border bg-white p-6 lg:sticky lg:top-24">
+            <aside className="h-fit space-y-6 rounded-[24px] border border-border bg-white p-6 lg:sticky lg:top-24 shadow-soft">
               <h2 className="text-[11px] font-bold uppercase tracking-widest text-gray-900 border-b border-border pb-3">خلاصهٔ پرداخت</h2>
 
               <div className="space-y-2 text-xs">
@@ -234,7 +234,7 @@ function CheckoutPage() {
                   type="button"
                   onClick={() => tryCoupon.mutate()}
                   disabled={couponInput.trim().length < 2 || tryCoupon.isPending}
-                  className="shrink-0 rounded-sm border border-gray-900 px-3 text-[10px] font-bold uppercase transition-all duration-300 hover:bg-gray-900 hover:text-white disabled:opacity-50"
+                  className="shrink-0 rounded-full border border-gray-900 px-4 text-[10px] font-bold uppercase transition-all duration-300 hover:bg-gray-900 hover:text-white disabled:opacity-50"
                 >
                   اعمال
                 </button>

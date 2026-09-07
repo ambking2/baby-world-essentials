@@ -73,39 +73,100 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
 
+  /* Design System extras */
+  --color-primary-container: var(--primary-container);
+  --color-on-primary-container: var(--on-primary-container);
+  --color-secondary-container: var(--secondary-container);
+  --color-on-secondary-container: var(--on-secondary-container);
+  --color-tertiary: var(--tertiary);
+  --color-on-tertiary: var(--on-tertiary);
+  --color-tertiary-container: var(--tertiary-container);
+  --color-on-tertiary-container: var(--on-tertiary-container);
+  --color-surface: var(--surface);
+  --color-surface-dim: var(--surface-dim);
+  --color-surface-bright: var(--surface-bright);
+  --color-surface-container: var(--surface-container);
+  --color-surface-container-low: var(--surface-container-low);
+  --color-surface-container-lowest: var(--surface-container-lowest);
+  --color-surface-container-high: var(--surface-container-high);
+  --color-surface-container-highest: var(--surface-container-highest);
+  --color-on-surface: var(--on-surface);
+  --color-on-surface-variant: var(--on-surface-variant);
+  --color-outline: var(--outline);
+  --color-outline-variant: var(--outline-variant);
+  --color-sale: var(--sale);
+  --color-sale-foreground: var(--sale-foreground);
+  --color-sun: var(--sun);
+  --color-sky: var(--sky);
+  --color-charcoal: var(--charcoal);
+
   --font-sans: "Vazirmatn", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Vazirmatn", "Be Vietnam Pro", ui-sans-serif, system-ui, sans-serif;
+  --font-price: "Be Vietnam Pro", "Vazirmatn", ui-sans-serif, system-ui, sans-serif;
   
   --shadow-subtle: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-premium: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-  --shadow-soft: 0 10px 15px -3px rgba(0, 0, 0, 0.04), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
-  --shadow-deep: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+  --shadow-premium: 0 4px 20px 0 rgba(0, 81, 225, 0.08), 0 1px 3px 0 rgba(0, 0, 0, 0.04);
+  --shadow-soft: 0 10px 15px -3px rgba(0, 81, 225, 0.06), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+  --shadow-deep: 0 20px 25px -5px rgba(0, 81, 225, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.03);
+  --shadow-lift: 0 12px 32px 0 rgba(0, 81, 225, 0.12), 0 2px 6px 0 rgba(0, 0, 0, 0.04);
 }
 
 :root {
-  --background: #FFFFFF;
-  --foreground: #1A1A1A;
+  --background: #FBF8FF;
+  --foreground: #191B25;
   --card: #FFFFFF;
-  --card-foreground: #1A1A1A;
+  --card-foreground: #191B25;
   --popover: #FFFFFF;
-  --popover-foreground: #1A1A1A;
-  --primary: #3D5A40; /* Darker Sage Green for better contrast */
+  --popover-foreground: #191B25;
+  --primary: #004BD1; /* Vibrant Blue */
   --primary-foreground: #FFFFFF;
-  --secondary: #F4F1EA; /* Slightly more saturated beige */
-  --secondary-foreground: #1A1A1A;
-  --muted: #F3F4F6; /* Standard Gray 100 */
-  --muted-foreground: #4B5563; /* Gray 600 for better readability */
-  --accent: #E5E7EB; /* Gray 200 for borders */
-  --accent-foreground: #1A1A1A;
-  --destructive: #B91C1C; /* Stronger Red */
+  --primary-container: #1C62FD;
+  --on-primary-container: #F4F3FF;
+  --secondary: #455B9F; /* Slate Blue */
+  --secondary-foreground: #FFFFFF;
+  --secondary-container: #9DB3FE;
+  --on-secondary-container: #2C4386;
+  --tertiary: #9C3500; /* Burnt Orange */
+  --on-tertiary: #FFFFFF;
+  --tertiary-container: #C54500;
+  --on-tertiary-container: #FFF2EE;
+  --muted: #F3F2FF;
+  --muted-foreground: #434656;
+  --accent: #E7E7F5;
+  --accent-foreground: #191B25;
+  --destructive: #BA1A1A;
   --destructive-foreground: #FFFFFF;
-  --border: #E5E7EB; /* Gray 200 */
-  --input: #E5E7EB;
-  --ring: #3D5A40;
+  --error-container: #FFDAD6;
+  --on-error-container: #93000A;
+  --border: #C3C5D8;
+  --input: #E1E1EF;
+  --ring: #004BD1;
   --radius: 0.875rem;
+
+  /* Surface scale */
+  --surface: #FBF8FF;
+  --surface-dim: #D9D9E6;
+  --surface-bright: #FBF8FF;
+  --surface-container: #EDEDFB;
+  --surface-container-low: #F3F2FF;
+  --surface-container-lowest: #FFFFFF;
+  --surface-container-high: #E7E7F5;
+  --surface-container-highest: #E1E1EF;
+  --on-surface: #191B25;
+  --on-surface-variant: #434656;
+  --outline: #737687;
+  --outline-variant: #C3C5D8;
 
   /* Custom Design Tokens for consistency */
   --color-brand: var(--primary);
-  --color-brand-soft: var(--secondary);
+  --color-brand-soft: var(--secondary-container);
+
+  /* Accent extras used across the app */
+  --sale: #D4004E;
+  --sale-foreground: #FFFFFF;
+  --sun: #F59E0B;
+  --sky: #0EA5E9;
+  --charcoal: #1F2937;
 }
 
 @layer base {
@@ -312,19 +373,50 @@
   animation: fade-in 0.4s ease-out forwards;
 }
 
-/* Redefine buttons to be elegant */
+/* Buttons — Modern Tactile (Design System) */
 .btn-primary {
-  @apply bg-primary text-primary-foreground px-8 py-3.5 rounded-lg font-bold text-[13px] tracking-wide hover:bg-primary/95 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none shadow-sm;
+  @apply bg-primary text-primary-foreground px-8 py-3.5 rounded-full font-bold text-[13px] tracking-wide hover:bg-primary/95 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none;
+  background-image: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-container) 100%);
+  box-shadow: 0 8px 24px color-mix(in oklab, var(--color-primary) 25%, transparent);
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .btn-secondary {
-  @apply bg-white border border-border text-foreground px-8 py-3.5 rounded-lg font-bold text-[13px] tracking-wide hover:bg-muted hover:border-foreground/20 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none;
+  @apply bg-white border-2 border-primary text-primary px-8 py-3.5 rounded-full font-bold text-[13px] tracking-wide hover:bg-primary/5 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .btn-outline {
-  @apply bg-transparent border border-border text-foreground px-6 py-2.5 rounded-md font-medium text-[12px] hover:border-foreground/40 hover:bg-muted/30 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none transition-all duration-200;
+  @apply bg-transparent border border-border text-foreground px-6 py-2.5 rounded-full font-medium text-[12px] hover:border-foreground/40 hover:bg-muted/30 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none transition-all duration-200;
+}
+
+/* Design System: soft cloud shadow */
+@utility cloud-shadow {
+  box-shadow: 0 4px 24px 0 rgba(107, 56, 212, 0.06), 0 1px 3px 0 rgba(0, 0, 0, 0.03);
+}
+
+@utility card-hover-shadow {
+  transition: transform 0.28s cubic-bezier(0.22, 0.61, 0.36, 1), box-shadow 0.28s cubic-bezier(0.22, 0.61, 0.36, 1);
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 32px 0 rgba(107, 56, 212, 0.12), 0 2px 6px 0 rgba(0, 0, 0, 0.04);
+  }
+}
+
+/* Design System: scalloped cloud divider */
+@utility cloud-divider {
+  position: relative;
+  &::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 24px;
+    background-image: radial-gradient(circle at 12px -6px, transparent 14px, var(--color-background) 15px);
+    background-size: 24px 24px;
+    background-position: 0 0;
+  }
 }
 
 @keyframes jk-reveal-up {
