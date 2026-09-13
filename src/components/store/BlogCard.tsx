@@ -16,43 +16,47 @@ export type BlogCardData = {
 
 export function BlogCard({ post }: { post: BlogCardData }) {
   return (
-    <article className="reveal card-hover storybook-panel p-2">
-      <Link to="/blog/$slug" params={{ slug: post.slug }} className="group block overflow-hidden rounded-[1.7rem]">
-        <div className="relative overflow-hidden rounded-[1.7rem]">
+    <article className="reveal group overflow-hidden rounded-xl border border-surface-container-high bg-surface-container-lowest shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(0,75,209,0.12)]">
+      <Link to="/blog/$slug" params={{ slug: post.slug }} className="block overflow-hidden">
+        <div className="relative aspect-[16/10] overflow-hidden">
           <img
             src={post.cover ?? "/images/hero-nursery.jpg"}
             alt={post.title}
             loading="lazy"
-            className="h-52 w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-charcoal/65 via-charcoal/10 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
           {post.tag ? (
-            <span className="absolute start-4 top-4 rounded-full bg-white/90 px-3 py-1 text-[10px] font-extrabold text-brand shadow-soft">
+            <span className="absolute right-3 top-3 rounded-full bg-surface-container-lowest/90 px-3 py-1 text-[11px] font-bold text-primary shadow-sm backdrop-blur-sm">
               {post.tag}
             </span>
           ) : null}
         </div>
       </Link>
 
-      <div className="space-y-3 px-3 pb-3 pt-4">
-        <h3 className="line-clamp-2 text-base font-black leading-7 text-foreground">
-          <Link to="/blog/$slug" params={{ slug: post.slug }} className="transition-colors hover:text-brand">
+      <div className="space-y-3 p-card-padding">
+        <h3 className="font-headline-sm text-headline-sm line-clamp-2 leading-8 text-on-surface transition-colors group-hover:text-primary">
+          <Link to="/blog/$slug" params={{ slug: post.slug }}>
             {post.title}
           </Link>
         </h3>
 
-        {post.excerpt ? <p className="line-clamp-3 text-[11px] leading-7 text-muted-foreground">{post.excerpt}</p> : null}
+        {post.excerpt ? <p className="line-clamp-2 text-[13px] leading-7 text-on-surface-variant">{post.excerpt}</p> : null}
 
-        <div className="flex flex-wrap items-center gap-3 rounded-[1.2rem] border border-white/70 bg-white/75 px-3 py-2 text-[10px] text-muted-foreground shadow-soft">
+        <div className="flex flex-wrap items-center gap-3 border-t border-surface-container-low pt-3 text-[11px] text-on-surface-variant">
           <span className="inline-flex items-center gap-1">
-            <CalendarDays className="size-3" aria-hidden />
+            <CalendarDays className="size-3.5" aria-hidden />
             {post.publishedAt ? formatJalali(post.publishedAt) : "—"}
           </span>
           <span className="inline-flex items-center gap-1">
-            <MessageCircle className="size-3" aria-hidden />
+            <MessageCircle className="size-3.5" aria-hidden />
             {toFaDigits(post.commentCount)} دیدگاه
           </span>
-          <Link to="/blog/$slug" params={{ slug: post.slug }} className="ms-auto inline-flex items-center gap-1 font-extrabold text-brand">
+          <Link
+            to="/blog/$slug"
+            params={{ slug: post.slug }}
+            className="ms-auto inline-flex items-center gap-1 font-bold text-primary transition-transform group-hover:-translate-x-1"
+          >
             ادامه مطلب
             <ArrowUpLeft className="size-3.5" aria-hidden />
           </Link>

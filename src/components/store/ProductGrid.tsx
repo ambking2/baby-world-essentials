@@ -47,7 +47,7 @@ export function ProductGrid({
   } as const;
 
   return (
-    <div className={cn("grid grid-cols-2 gap-4 lg:gap-8", columnClass[columns], className)}>
+    <div className={cn("grid grid-cols-1 gap-gutter sm:grid-cols-2", columnClass[columns], className)}>
       {products.map((product, index) => (
         <ProductCard
           key={product.id}
@@ -55,8 +55,8 @@ export function ProductGrid({
           inWishlist={wishlistIds.includes(product.id)}
           busy={busyId === product.id}
           eager={index < 4}
-          {...(onAddToCart ? { onAddToCart } : {})}
-          {...(onToggleWishlist ? { onToggleWishlist } : {})}
+          {...(onAddToCart ? { onAddToCart: onAddToCart as any } : {})}
+          {...(onToggleWishlist ? { onToggleWishlist: onToggleWishlist as any } : {})}
         />
       ))}
     </div>

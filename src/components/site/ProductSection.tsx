@@ -12,10 +12,11 @@ type Props = {
   title: string;
   subtitle?: string;
   query?: ProductQuery;
-  moreTo?: "/search" | "/offers" | "/categories";
+  moreTo?: string;
 
   linkLabel?: string;
   rail?: boolean;
+  hideHeading?: boolean;
   tone?: "default" | "sale" | "best";
 };
 
@@ -54,6 +55,7 @@ function ProductSectionContent({
   moreTo = "/search",
   linkLabel = "مشاهده همه",
   rail = false,
+  hideHeading = false,
   tone = "default",
 }: Props) {
   const { data: products } = useSuspenseQuery(productsQuery(query));
@@ -63,19 +65,22 @@ function ProductSectionContent({
 
   return (
     <section id={id} className="container-page section-spacing">
-      <SectionHeading 
-        title={title} 
-        subtitle={subtitle} 
-        moreHref={moreTo as string} 
-        moreLabel={linkLabel}
-        align="start"
-      />
+      {!hideHeading && (
+        <SectionHeading
+          title={title}
+          subtitle={subtitle}
+          moreHref={moreTo as string}
+          moreLabel={linkLabel}
+          align="start"
+        />
+      )}
 
       <div className={rail ? "hide-scrollbar -mx-4 flex gap-3 overflow-x-auto px-4 pb-8 md:mx-0 md:grid-products md:px-0 md:gap-6 lg:gap-8" : "grid-products"}>
         {products.map((product) => (
-          <div key={product.id} className={rail ? "w-[220px] shrink-0 md:w-auto" : ""}>
-            <ProductCard 
-              product={product as any} 
+          <div key={product.id} className={rail ? "w-[260px] shrink-0 md:w-auto" : ""}>
+            <ProductCard
+              product={product as any}
+              onAddToCart={(p) => addToCart.mutate(p as any)}
             />
 
           </div>

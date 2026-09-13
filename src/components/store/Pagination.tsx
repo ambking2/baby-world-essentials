@@ -18,32 +18,52 @@ function pageWindow(page: number, pageCount: number): Array<number> {
   return pages;
 }
 
-/** صفحه‌بندی فهرست محصولات و وبلاگ. */
+/** صفحه‌بندی pill-style مطابق مرجع: ردیف دایره‌ای داخل ظرف گرد با سایهٔ نرم. */
 export function Pagination({ page, pageCount, onChange, className }: PaginationProps) {
   if (pageCount <= 1) return null;
 
   const buttonClass =
-    "inline-flex size-9 items-center justify-center rounded-xl border border-border bg-white text-sm font-bold transition-colors hover:border-primary hover:text-primary disabled:opacity-40 disabled:hover:border-border shadow-sm";
+    "inline-flex size-10 items-center justify-center rounded-full text-sm font-bold transition-all hover:bg-primary-fixed active:scale-95 disabled:opacity-30 disabled:hover:bg-transparent";
 
   return (
-    <nav className={cn("flex items-center justify-center gap-1.5", className)} aria-label="صفحه‌بندی">
-      <button type="button" className={buttonClass} onClick={() => onChange(page - 1)} disabled={page <= 1} aria-label="صفحهٔ قبل">
-        <ChevronRight className="size-4" aria-hidden />
-      </button>
-      {pageWindow(page, pageCount).map((item) => (
+    <nav
+      className={cn("flex items-center justify-center", className)}
+      aria-label="صفحه‌بندی"
+    >
+      <div className="flex items-center gap-1 rounded-full border border-surface-container-high bg-surface-container-lowest p-1.5 shadow-sm">
         <button
-          key={item}
           type="button"
-          onClick={() => onChange(item)}
-          aria-current={item === page ? "page" : undefined}
-          className={cn(buttonClass, item === page && "border-primary bg-primary text-primary-foreground hover:text-primary-foreground")}
+          className={buttonClass}
+          onClick={() => onChange(page - 1)}
+          disabled={page <= 1}
+          aria-label="صفحهٔ قبل"
         >
-          {toFaDigits(item)}
+          <ChevronRight className="size-4" aria-hidden />
         </button>
-      ))}
-      <button type="button" className={buttonClass} onClick={() => onChange(page + 1)} disabled={page >= pageCount} aria-label="صفحهٔ بعد">
-        <ChevronLeft className="size-4" aria-hidden />
-      </button>
+        {pageWindow(page, pageCount).map((item) => (
+          <button
+            key={item}
+            type="button"
+            onClick={() => onChange(item)}
+            aria-current={item === page ? "page" : undefined}
+            className={cn(
+              buttonClass,
+              item === page && "bg-primary text-on-primary shadow-md shadow-primary/25 hover:bg-primary",
+            )}
+          >
+            {toFaDigits(item)}
+          </button>
+        ))}
+        <button
+          type="button"
+          className={buttonClass}
+          onClick={() => onChange(page + 1)}
+          disabled={page >= pageCount}
+          aria-label="صفحهٔ بعد"
+        >
+          <ChevronLeft className="size-4" aria-hidden />
+        </button>
+      </div>
     </nav>
   );
 }

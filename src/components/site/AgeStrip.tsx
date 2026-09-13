@@ -8,7 +8,7 @@ export function AgeStrip({ activeSlug }: { activeSlug?: string }) {
 
   return (
     <section className="container-page py-10">
-      <h2 className="text-center text-lg font-black text-foreground md:text-xl">
+      <h2 className="font-headline-md text-headline-md text-center text-primary">
         خرید بر اساس سن کودک
       </h2>
       <p className="mt-1 text-center text-xs text-muted-foreground">

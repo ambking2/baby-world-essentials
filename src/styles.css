@@ -92,6 +92,7 @@
   --color-surface-container-highest: var(--surface-container-highest);
   --color-on-surface: var(--on-surface);
   --color-on-surface-variant: var(--on-surface-variant);
+  --color-surface-variant: var(--surface-variant);
   --color-outline: var(--outline);
   --color-outline-variant: var(--outline-variant);
   --color-sale: var(--sale);
@@ -100,9 +101,67 @@
   --color-sky: var(--sky);
   --color-charcoal: var(--charcoal);
 
+  /* M3 fixed tones (design system) */
+  --color-primary-fixed: var(--primary-fixed);
+  --color-primary-fixed-dim: var(--primary-fixed-dim);
+  --color-on-primary-fixed: var(--on-primary-fixed);
+  --color-on-primary: var(--on-primary);
+  --color-secondary-fixed: var(--secondary-fixed);
+  --color-on-secondary-fixed: var(--on-secondary-fixed);
+  --color-on-secondary: var(--on-secondary);
+  --color-tertiary-fixed: var(--tertiary-fixed);
+  --color-on-tertiary-fixed: var(--on-tertiary-fixed);
+  --color-on-tertiary-fixed-variant: var(--on-tertiary-fixed-variant);
+  --color-surface-tint: var(--surface-tint);
+  --color-on-error: var(--on-error);
+  --color-on-error-container: var(--on-error-container);
+
+  /* Type scale — Lullaby & Play design system */
+  --text-display-lg: 48px;
+  --text-display-lg--line-height: 64px;
+  --text-display-lg--font-weight: 800;
+  --text-display-lg--letter-spacing: -0.02em;
+  --text-display-lg-mobile: 32px;
+  --text-display-lg-mobile--line-height: 44px;
+  --text-display-lg-mobile--font-weight: 800;
+  --text-headline-md: 24px;
+  --text-headline-md--line-height: 36px;
+  --text-headline-md--font-weight: 700;
+  --text-headline-sm: 20px;
+  --text-headline-sm--line-height: 30px;
+  --text-headline-sm--font-weight: 700;
+  --text-body-lg: 18px;
+  --text-body-lg--line-height: 32px;
+  --text-body-md: 16px;
+  --text-body-md--line-height: 28px;
+  --text-label-md: 14px;
+  --text-label-md--line-height: 20px;
+  --text-label-md--font-weight: 600;
+  --text-price-display: 22px;
+  --text-price-display--line-height: 24px;
+  --text-price-display--font-weight: 800;
+
+  /* Spacing scale — design system */
+  --spacing-base: 8px;
+  --spacing-gutter: 24px;
+  --spacing-margin-mobile: 16px;
+  --spacing-card-padding: 20px;
+  --spacing-section-gap: 80px;
+  --container-container-max: 1280px;
+
   --font-sans: "Vazirmatn", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Vazirmatn", "Be Vietnam Pro", ui-sans-serif, system-ui, sans-serif;
   --font-price: "Be Vietnam Pro", "Vazirmatn", ui-sans-serif, system-ui, sans-serif;
+
+  /* Named font families so `font-headline-md`, `font-label-md`… resolve like the reference config */
+  --font-display-lg: "Vazirmatn", "Be Vietnam Pro", ui-sans-serif, sans-serif;
+  --font-display-lg-mobile: "Vazirmatn", "Be Vietnam Pro", ui-sans-serif, sans-serif;
+  --font-headline-md: "Vazirmatn", "Be Vietnam Pro", ui-sans-serif, sans-serif;
+  --font-headline-sm: "Vazirmatn", "Be Vietnam Pro", ui-sans-serif, sans-serif;
+  --font-body-lg: "Vazirmatn", "Be Vietnam Pro", ui-sans-serif, sans-serif;
+  --font-body-md: "Vazirmatn", "Be Vietnam Pro", ui-sans-serif, sans-serif;
+  --font-label-md: "Vazirmatn", "Be Vietnam Pro", ui-sans-serif, sans-serif;
+  --font-price-display: "Be Vietnam Pro", "Vazirmatn", ui-sans-serif, sans-serif;
   
   --shadow-subtle: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   --shadow-premium: 0 4px 20px 0 rgba(0, 81, 225, 0.08), 0 1px 3px 0 rgba(0, 0, 0, 0.04);
@@ -138,6 +197,20 @@
   --destructive-foreground: #FFFFFF;
   --error-container: #FFDAD6;
   --on-error-container: #93000A;
+  --on-error: #FFFFFF;
+
+  /* M3 fixed tones */
+  --primary-fixed: #DCE1FF;
+  --primary-fixed-dim: #B5C4FF;
+  --on-primary-fixed: #00164D;
+  --on-primary: #FFFFFF;
+  --secondary-fixed: #DBE1FF;
+  --on-secondary-fixed: #00174C;
+  --on-secondary: #FFFFFF;
+  --tertiary-fixed: #FFDBCE;
+  --on-tertiary-fixed: #380D00;
+  --on-tertiary-fixed-variant: #802A00;
+  --surface-tint: #0051E1;
   --border: #C3C5D8;
   --input: #E1E1EF;
   --ring: #004BD1;
@@ -154,6 +227,7 @@
   --surface-container-highest: #E1E1EF;
   --on-surface: #191B25;
   --on-surface-variant: #434656;
+  --surface-variant: #E1E1EF;
   --outline: #737687;
   --outline-variant: #C3C5D8;
 
@@ -208,43 +282,33 @@
 @utility container-page {
   width: 100%;
   margin-inline: auto;
-  padding-inline: 1rem;
-  max-width: 1440px;
+  padding-inline: 16px;
+  max-width: 1280px;
 
   @media (min-width: 768px) {
     padding-inline: 24px;
-  }
-
-  @media (min-width: 1024px) {
-    padding-inline: 32px;
-  }
-
-  @media (min-width: 1320px) {
-    padding-inline: calc((100% - 1320px) / 2 + 32px);
   }
 }
 
 @utility section-spacing {
   padding-block: 64px;
   @media (min-width: 1024px) {
-    padding-block: 100px;
+    padding-block: 80px;
   }
 }
 
 @utility grid-products {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 24px;
   @media (min-width: 640px) {
-    gap: 20px;
-  }
-  @media (min-width: 768px) {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 24px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   @media (min-width: 1024px) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  @media (min-width: 1280px) {
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 32px;
   }
 }
 
@@ -417,6 +481,51 @@
     background-size: 24px 24px;
     background-position: 0 0;
   }
+}
+
+/* Design System: scalloped cloud divider */
+@utility scallop-divider {
+  height: 20px;
+  width: 100%;
+  background-image: radial-gradient(circle at 12px 0, transparent 12px, var(--color-background) 13px);
+  background-size: 24px 20px;
+  background-repeat: repeat-x;
+}
+
+/* Soft-tactile springy press (design system mobile) */
+@utility soft-tactile {
+  transition:
+    transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  &:active {
+    transform: scale(0.97);
+  }
+}
+
+/* Card with the signature soft ambient shadow */
+@utility card-soft {
+  background-color: var(--color-surface-container-lowest);
+  border: 1px solid color-mix(in oklab, var(--color-surface-container-high) 80%, transparent);
+  box-shadow: 0 4px 20px rgba(107, 56, 212, 0.06);
+}
+
+/* Pulsing ring on the active tracking step */
+@utility pulsing-ring {
+  position: relative;
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 9999px;
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--color-primary) 45%, transparent);
+    animation: jk-pulse-ring 2s ease-out infinite;
+  }
+}
+
+@keyframes jk-pulse-ring {
+  0% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--color-primary) 45%, transparent); }
+  70% { box-shadow: 0 0 0 12px transparent; }
+  100% { box-shadow: 0 0 0 0 transparent; }
 }
 
 @keyframes jk-reveal-up {

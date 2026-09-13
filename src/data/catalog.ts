@@ -1,12 +1,12 @@
 import type { Category, Product } from "@/types/catalog";
 
 const IMAGES = {
-  furniture: "https://images.unsplash.com/photo-1544124499-58912cbddaad?q=80&w=1974&auto=format&fit=crop",
-  stroller: "https://images.unsplash.com/photo-1519689680058-324335c77eba?q=80&w=2070&auto=format&fit=crop",
-  clothing: "https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?q=80&w=2075&auto=format&fit=crop",
-  toys: "https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?q=80&w=2070&auto=format&fit=crop",
-  feeding: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?q=80&w=2070&auto=format&fit=crop",
-  dresser: "https://images.unsplash.com/photo-1537726235470-8504e3bdb28d?q=80&w=2070&auto=format&fit=crop",
+  furniture: "/images/hero-nursery.jpg",
+  stroller: "/images/cat-stroller.jpg",
+  clothing: "/images/cat-clothing.jpg",
+  toys: "/images/cat-toys.jpg",
+  feeding: "/images/hero-nursery.jpg",
+  dresser: "/images/cat-feeding.jpg",
 };
 
 export const categories: Category[] = [

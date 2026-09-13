@@ -83,23 +83,33 @@ function CategoryPage() {
 
   return (
     <StoreShell>
-      <div className="container-page py-6">
+      <div className="container-page py-base">
         <Breadcrumb
           items={(data?.breadcrumb ?? []).map((crumb) => ({ title: crumb.title, href: `/category/${crumb.slug}` }))}
           className="mb-4"
         />
 
-        <div className="mb-5 rounded-3xl border border-border bg-card p-5">
-          <h1 className="text-xl font-extrabold text-foreground">{data?.category?.title ?? "دسته‌بندی محصولات"}</h1>
-          {data?.category?.blurb ? (
-            <p className="mt-2 max-w-2xl text-sm leading-7 text-muted-foreground">{data.category.blurb}</p>
-          ) : null}
-          {products ? (
-            <p className="mt-2 text-xs text-muted-foreground">{toFaDigits(products.total)} کالا در این دسته پیدا شد</p>
-          ) : null}
+        <div className="relative mb-10 text-center md:text-right">
+          <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
+            <div>
+              <h1 className="font-headline-md text-headline-md text-primary">
+                {data?.category?.title ?? "دسته‌بندی محصولات"}
+              </h1>
+              {data?.category?.blurb ? (
+                <p className="mt-2 max-w-2xl font-body-md text-body-md text-on-surface-variant">
+                  {data.category.blurb}
+                </p>
+              ) : null}
+            </div>
+            {products ? (
+              <span className="hidden shrink-0 rounded-full bg-primary-fixed px-6 py-2 text-[13px] font-bold text-on-primary-fixed md:inline-block">
+                {toFaDigits(products.total)} کالا
+              </span>
+            ) : null}
+          </div>
         </div>
 
-        <div className="grid gap-5 lg:grid-cols-[260px_1fr]">
+        <div className="flex flex-col gap-gutter md:flex-row">
           <FilterSidebar
             state={filters}
             onChange={(next) => {
@@ -111,10 +121,10 @@ function CategoryPage() {
             availableColors={products?.availableColors ?? []}
             categories={categories}
             activeSlug={slug}
-            className="hidden lg:block"
+            className="hidden w-72 shrink-0 md:block"
           />
 
-          <div className="min-w-0">
+          <div className="min-w-0 flex-1">
             <SortBar
               sort={sort}
               total={products?.total ?? 0}

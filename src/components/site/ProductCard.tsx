@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Heart, ShoppingCart, Star } from "lucide-react";
+import { Heart, Plus, Star } from "lucide-react";
 import { toast } from "sonner";
 
 import { formatToman, toFaDigits } from "@/lib/format";
@@ -47,6 +47,7 @@ function cardPricing(product: ProductLike) {
   return { current, original, off };
 }
 
+/** کارت محصول — مطابق الگوی «Lullaby & Play»: تصویر مربع روی سطح طوسی ملایم، بج تخفیف بالا-راست، علاقه‌مندی بالا-چپ، قیمت در فوتر با دکمهٔ دایره‌ای افزودن. */
 export function ProductCard({
   product,
   className,
@@ -69,153 +70,129 @@ export function ProductCard({
   const rating = product.ratingAverage ?? product.rating ?? 0;
   const reviewCount = product.ratingCount ?? product.reviewCount ?? 0;
   const tags = product.tags ?? [];
-  const showNew = tags.includes("new");
   const showBest = tags.includes("best") || tags.includes("best-seller") || product.badge === "پرفروش";
-  const showFeatured = product.isFeatured === true;
-  const showWorkshop = product.madeInWorkshop === true;
+
+  const handleAdd = (event: React.MouseEvent) => {
+    event.preventDefault();
+    if (outOfStock) return;
+    onAddToCart ? onAddToCart(product) : toast.success("به سبد خرید اضافه شد");
+  };
 
   return (
-    <div
+    <article
       className={cn(
-        "group relative flex h-full min-w-0 flex-col bg-white border border-accent/60 rounded-2xl transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lift overflow-hidden",
+        "product-card group flex h-full min-w-0 flex-col rounded-lg border border-surface-container-high bg-surface-container-lowest p-card-padding shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_12px_30px_rgba(0,75,209,0.12)]",
         className,
       )}
     >
-      <div className="relative aspect-[4/5] overflow-hidden rounded-t-2xl bg-secondary/30">
+      {/* Image area */}
+      <div className="relative aspect-square overflow-hidden rounded-lg bg-surface-container-low">
         <Link to="/product/$slug" params={{ slug: product.slug }} className="block h-full w-full">
-          <div className="absolute inset-0 skeleton" />
           <img
             src={product.image || product.cover || "/assets/images/nursery-6.jpg"}
             alt={product.title}
             loading={eager ? "eager" : "lazy"}
             decoding="async"
-            fetchPriority={eager ? "high" : "low"}
-            onLoad={(e) => {
-              const skeleton = e.currentTarget.previousElementSibling as HTMLElement | null;
-              if (skeleton) skeleton.style.display = "none";
-            }}
             className={cn(
-              "relative h-full w-full object-cover transition-transform duration-500 group-hover:scale-105",
+              "h-full w-full object-cover transition-transform duration-500 group-hover:scale-105",
               outOfStock && "opacity-60",
             )}
           />
         </Link>
 
-        <div className="absolute left-4 top-4 z-10 flex flex-col gap-2">
+        {/* Discount / status badges — top start */}
+        <div className="absolute right-3 top-3 z-10 flex flex-col items-start gap-1.5">
           {off > 0 && !outOfStock ? (
-            <span className="bg-destructive text-white px-2 py-1 text-[10px] font-bold rounded-md shadow-sm">
-              {toFaDigits(off)}٪ تخفیف
+            <span className="rounded-full bg-secondary-container px-3 py-1 text-xs font-bold text-on-secondary shadow-md">
+              ٪{toFaDigits(off)} تخفیف
             </span>
-          ) : null}
-          {product.saleActive ? (
-            <span className="bg-orange-500 text-white px-2 py-1 text-[10px] font-bold rounded-md shadow-sm">
-              تخفیف لحظه‌ای
-            </span>
-          ) : null}
-          {product.badge && product.badge !== "پرفروش" ? (
-            <span className="bg-primary text-white px-2 py-1 text-[10px] font-bold rounded-md shadow-sm">
-              {product.badge}
-            </span>
-          ) : null}
-          {showNew ? (
-            <span className="bg-primary text-white px-2 py-1 text-[10px] font-bold rounded-md shadow-sm">جدید</span>
           ) : null}
           {showBest ? (
-            <span className="bg-amber-100 text-amber-800 px-2 py-1 text-[10px] font-bold rounded-md border border-amber-200">
+            <span className="rounded-full bg-tertiary-container px-3 py-1 text-[11px] font-bold text-on-tertiary shadow-md">
               پرفروش
             </span>
           ) : null}
-          {showFeatured && !showBest && !showNew ? (
-            <span className="bg-primary/90 text-white px-2 py-1 text-[10px] font-bold rounded-md shadow-sm">ویژه</span>
-          ) : null}
-          {showWorkshop ? (
-            <span className="bg-white/95 text-primary px-2 py-1 text-[10px] font-bold rounded-md border border-primary/20 shadow-sm">
+          {product.madeInWorkshop ? (
+            <span className="rounded-full bg-surface-container-lowest/90 px-3 py-1 text-[11px] font-bold text-primary shadow-sm">
               ساخت کارگاه
             </span>
           ) : null}
           {outOfStock ? (
-            <span className="bg-charcoal text-white px-2 py-1 text-[10px] font-bold rounded-md shadow-sm">ناموجود</span>
+            <span className="rounded-full bg-on-surface px-3 py-1 text-[11px] font-bold text-surface shadow-md">
+              ناموجود
+            </span>
           ) : null}
         </div>
 
+        {/* Wishlist — top end, revealed on hover */}
         <button
-          onClick={() =>
-            onToggleWishlist ? onToggleWishlist(product) : toast.success("به علاقه‌مندی‌ها اضافه شد")
-          }
-          className="absolute right-4 top-4 z-10 p-2 bg-white/90 hover:bg-white text-gray-900 rounded-full shadow-sm transition-all duration-300 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 active:scale-90"
+          onClick={(event) => {
+            event.preventDefault();
+            onToggleWishlist ? onToggleWishlist(product) : toast.success("به علاقه‌مندی‌ها اضافه شد");
+          }}
+          aria-label={inWishlist ? "حذف از علاقه‌مندی‌ها" : "افزودن به علاقه‌مندی‌ها"}
+          className="absolute left-3 top-3 z-10 flex size-10 items-center justify-center rounded-full bg-white/80 text-on-surface-variant shadow-sm backdrop-blur-sm transition-all opacity-100 hover:scale-110 hover:text-destructive active:scale-95 lg:opacity-0 lg:group-hover:opacity-100"
         >
-          <Heart className={cn("size-4", inWishlist && "fill-destructive text-destructive")} />
+          <Heart className={cn("size-5", inWishlist && "fill-destructive text-destructive")} />
         </button>
 
-        <div className="absolute bottom-4 left-4 right-4 translate-y-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
-          <button
-            onClick={() => (onAddToCart ? onAddToCart(product) : toast.success("به سبد خرید اضافه شد"))}
-            disabled={outOfStock || busy}
-            className="w-full bg-primary text-white py-3 text-[11px] font-bold rounded-lg hover:bg-primary/90 transition-all duration-300 active:scale-[0.97] shadow-lg shadow-primary/20 disabled:opacity-50"
-          >
-            {outOfStock ? "ناموجود" : busy ? "در حال افزودن…" : "افزودن سریع"}
-          </button>
-        </div>
+        {outOfStock ? (
+          <div className="absolute inset-0 z-20 flex items-center justify-center bg-surface-container-low/60">
+            <span className="rounded-full bg-on-surface px-4 py-1.5 text-xs font-bold text-surface">ناموجود</span>
+          </div>
+        ) : null}
       </div>
 
-      <div className="flex flex-1 flex-col p-4 md:p-6">
-        <div className="mb-1 text-[10px] font-medium text-muted-foreground uppercase tracking-widest">
-          {product.brand || product.categoryTitle || "جهان کودک"}
-        </div>
+      {/* Body */}
+      <div className="flex flex-1 flex-col pt-4">
+        {product.categoryTitle ? (
+          <span className="mb-1.5 self-start rounded-full bg-primary-fixed px-2.5 py-0.5 text-[11px] font-bold text-on-primary-fixed">
+            {product.categoryTitle}
+          </span>
+        ) : null}
 
         <Link to="/product/$slug" params={{ slug: product.slug }}>
-          <h3 className="mb-2 text-[14px] font-semibold leading-relaxed text-gray-900 transition-colors hover:text-primary line-clamp-2 min-h-[2.8em]">
+          <h3 className="font-headline-sm text-headline-sm line-clamp-2 leading-8 text-on-surface transition-colors group-hover:text-primary">
             {product.title}
           </h3>
         </Link>
 
-        <div className="mt-auto">
-          <div className="flex items-center gap-1.5 mb-3">
-            <div className="flex items-center gap-0.5">
-              {[1, 2, 3, 4, 5].map((i) => (
+        {rating > 0 ? (
+          <div className="mt-2 flex items-center gap-1.5">
+            <span className="flex items-center gap-0.5">
+              {Array.from({ length: 5 }).map((_, i) => (
                 <Star
                   key={i}
-                  className={cn("size-3", i <= Math.round(rating || 0) ? "fill-amber-400 text-amber-400" : "text-gray-200")}
+                  className={cn("size-3.5", i < Math.round(rating) ? "fill-orange-400 text-orange-400" : "text-outline-variant")}
+                  aria-hidden
                 />
               ))}
-            </div>
-            <span className="text-[10px] text-muted-foreground font-medium">({toFaDigits(reviewCount)})</span>
-          </div>
-
-          <div className="flex flex-col gap-1">
-            <div className="flex items-center justify-between gap-2 flex-wrap">
-              <div className="flex items-baseline gap-2 flex-wrap">
-                <span className="text-base font-bold text-gray-900">{formatToman(current)}</span>
-                {original && original > current ? (
-                  <span className="text-[12px] text-muted-foreground line-through opacity-60">
-                    {formatToman(original)}
-                  </span>
-                ) : null}
-              </div>
-
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  onAddToCart ? onAddToCart(product) : toast.success("به سبد خرید اضافه شد");
-                }}
-                disabled={outOfStock || busy}
-                className="flex md:hidden items-center gap-1 bg-primary text-white px-3 py-1.5 rounded-full text-[10px] font-bold shadow-sm active:scale-95 disabled:opacity-50"
-              >
-                <ShoppingCart className="size-3" />
-                <span>افزودن</span>
-              </button>            </div>
-
-            {outOfStock ? (
-              <span className="text-[11px] text-destructive font-bold mt-1">ناموجود در انبار</span>
-            ) : null}
-            {!outOfStock && (product.stock ?? 0) > 0 && (product.stock ?? 0) <= 5 ? (
-              <span className="text-[10px] text-amber-600 font-bold mt-1">
-                تنها {toFaDigits(product.stock ?? 0)} عدد در انبار باقی‌مانده!
-              </span>
+            </span>
+            {reviewCount > 0 ? (
+              <span className="text-[11px] text-on-surface-variant">({toFaDigits(reviewCount)} نظر)</span>
             ) : null}
           </div>
+        ) : null}
+
+        {/* Price + add — footer row */}
+        <div className="mt-auto flex items-end justify-between gap-2 border-t border-surface-container-low pt-4">
+          <div className="flex flex-col gap-0.5">
+            {original && original > current ? (
+              <span className="text-[12px] text-on-surface-variant line-through">{formatToman(original)}</span>
+            ) : null}
+            <span className="font-price-display text-price-display text-primary">{formatToman(current)}</span>
+          </div>
+          <button
+            type="button"
+            onClick={handleAdd}
+            disabled={outOfStock || busy}
+            aria-label="افزودن به سبد خرید"
+            className="flex size-12 shrink-0 items-center justify-center rounded-full bg-primary-container text-on-primary shadow-lg shadow-primary/20 transition-all hover:scale-110 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100"
+          >
+            <Plus className="size-6" aria-hidden />
+          </button>
         </div>
       </div>
-    </div>
+    </article>
   );
 }

@@ -6,10 +6,11 @@ import {
   User,
   Menu,
   X,
-  ChevronDown,
-  LogOut,
   ChevronLeft,
+  Home,
+  LayoutGrid,
   Sparkles,
+  LogOut,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -28,6 +29,15 @@ type SiteHeaderProps = {
   isAdmin?: boolean;
   announcement?: string | null;
 };
+
+const NAV_LINKS = [
+  { label: "خانه", to: "/" },
+  { label: "دسته‌بندی‌ها", to: "/categories" },
+  { label: "فروشگاه", to: "/shop" },
+  { label: "تخفیف‌ها", to: "/offers" },
+  { label: "برندها", to: "/brands" },
+  { label: "مجله", to: "/blog" },
+] as const;
 
 export function SiteHeader({
   categories,
@@ -50,401 +60,250 @@ export function SiteHeader({
   const submitSearch = (event: React.FormEvent) => {
     event.preventDefault();
     if (!term.trim()) return;
+    setMobileOpen(false);
     void navigate({ to: "/search", search: { q: term.trim() } });
   };
 
   return (
     <header className="relative w-full">
-      {/* Announcement Bar — gradient primary */}
-      <div
-        className="bg-primary py-2.5 text-center text-[9px] font-bold text-white sm:text-[10px]"
-        style={{
-          backgroundImage:
-            "linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-container) 100%)",
-        }}
-      >
-        🎈 ارسال رایگان برای تمام سفارش‌های بالای{" "}
-        {formatToman(business.freeShippingThreshold)}
+      {/* Announcement bar */}
+      <div className="bg-primary py-2 px-4 text-center text-[11px] font-semibold text-on-primary rounded-b-lg">
+        ✦ ضمانت اصالت کالا · ارسال رایگان سفارش‌های بالای {formatToman(business.freeShippingThreshold)} · پشتیبانی {toFaDigits(business.phoneDisplay)}
       </div>
 
-      {/* Main Header Container — glass nav */}
+      {/* Sticky frosted main bar (design system: h-20, backdrop-blur, surface-container-lowest) */}
       <div
         className={cn(
-          "z-50 w-full transition-all duration-300",
-          isScrolled
-            ? "fixed top-0 shadow-premium py-2 lg:py-3 glass-nav"
-            : "relative py-4 lg:py-6",
+          "sticky top-0 z-50 w-full bg-surface-container-lowest/80 backdrop-blur-md transition-shadow duration-300",
+          isScrolled ? "shadow-md" : "shadow-sm",
         )}
-        style={
-          isScrolled
-            ? {
-                backdropFilter: "blur(20px)",
-                WebkitBackdropFilter: "blur(20px)",
-                backgroundColor: "rgba(251, 248, 255, 0.8)",
-                borderBottom: "1px solid rgba(195, 197, 216, 0.4)",
-              }
-            : undefined
-        }
       >
-        <div className="container-page flex items-center justify-between gap-6 lg:gap-12">
-          {/* Mobile Menu Toggle */}
+        <div className="mx-auto flex h-20 max-w-container-max items-center justify-between gap-4 px-margin-mobile md:px-gutter">
+          {/* Mobile menu */}
           <button
-            className="lg:hidden p-2 -ms-2 rounded-full hover:bg-surface-container transition-colors"
+            className="flex size-10 shrink-0 items-center justify-center rounded-full text-primary transition-transform hover:bg-primary-fixed active:scale-95 lg:hidden"
             onClick={() => setMobileOpen(true)}
+            aria-label="باز کردن منو"
           >
-            <Menu className="size-6 text-gray-900" />
+            <Menu className="size-6" />
           </button>
 
-          {/* Logo */}
-          <Link to="/" className="shrink-0 relative z-10 block group">
-            <div className="flex items-center gap-3">
-              <div className="relative">
-                <img
-                  src={brandLogoUrl}
-                  alt={business.name}
-                  className="h-10 w-auto sm:h-12 md:h-14 transition-transform group-hover:scale-105"
-                />
-                <span className="absolute -top-1 -left-1 flex size-4 items-center justify-center rounded-full bg-tertiary text-white">
-                  <Sparkles className="size-2.5" />
-                </span>
-              </div>
-              <div className="flex flex-col leading-tight">
-                <span className="hidden text-xl font-black text-gray-900 sm:inline sm:text-2xl">
-                  {business.name}
-                </span>
-                <span className="hidden sm:block text-[10px] font-medium text-muted-foreground uppercase tracking-[0.2em]">
-                  Jahan Koodak
-                </span>
-              </div>
-            </div>
+          {/* Brand */}
+          <Link to="/" className="flex shrink-0 items-center gap-2.5 group">
+            <span className="flex size-11 items-center justify-center rounded-full bg-primary text-on-primary shadow-lg shadow-primary/20 transition-transform group-hover:scale-105">
+              <Sparkles className="size-5" />
+            </span>
+            <span className="hidden flex-col leading-tight sm:flex">
+              <span className="font-headline-sm text-headline-sm font-black text-primary">{business.name}</span>
+              <span className="text-[10px] font-semibold tracking-widest text-on-surface-variant">جهان کودک</span>
+            </span>
           </Link>
 
-          {/* Search Bar — Desktop pill */}
+          {/* Desktop nav — underline-active links */}
+          <nav className="hidden items-center gap-6 lg:flex">
+            {NAV_LINKS.map((link) => (
+              <Link
+                key={link.to}
+                to={link.to}
+                className="border-b-2 border-transparent pb-1 text-label-md font-label-md text-on-surface-variant transition-colors duration-300 hover:border-primary hover:text-primary data-[status=active]:border-primary data-[status=active]:font-bold data-[status=active]:text-primary"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+
+          {/* Desktop search pill */}
           <form
             onSubmit={submitSearch}
-            className="hidden max-w-xl flex-1 items-center gap-3 rounded-full border border-border bg-white px-5 py-3 shadow-soft focus-within:border-primary/40 lg:flex transition-all duration-300"
+            className="relative hidden w-72 xl:block xl:w-96"
           >
-            <Search className="size-4 text-muted-foreground" />
+            <Search className="pointer-events-none absolute right-3.5 top-1/2 size-4 -translate-y-1/2 text-outline" />
             <input
               value={term}
               onChange={(e) => setTerm(e.target.value)}
-              placeholder="جستجو در بین محصولات جهان کودک..."
-              className="w-full bg-transparent text-[13px] outline-none placeholder:text-muted-foreground/60"
+              placeholder="جستجوی محصول…"
+              className="w-full rounded-full border border-outline-variant/60 bg-surface-container-low py-2.5 pl-4 pr-11 text-sm outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/20"
             />
           </form>
 
           {/* Actions */}
-          <div className="flex items-center gap-3 sm:gap-5">
-            <Link
-              to={userName ? "/account" : "/auth/login"}
-              className="hidden items-center gap-2.5 text-[13px] font-bold text-gray-900 hover:text-primary transition-colors lg:flex group"
-            >
-              <span className="flex size-9 items-center justify-center rounded-full bg-surface-container text-gray-900 transition-colors group-hover:bg-primary/10">
-                <User className="size-4 transition-transform group-hover:scale-110" />
-              </span>
-              <div className="flex flex-col items-start leading-none">
-                <span className="text-[10px] text-muted-foreground font-medium mb-1 group-hover:text-primary/70 transition-colors">
-                  {userName ? "خوش آمدید" : "ورود"}
-                </span>
-                <span className="font-bold">{userName ?? "حساب کاربری"}</span>
-              </div>
-            </Link>
+          <div className="flex shrink-0 items-center gap-2 sm:gap-3">
             <Link
               to="/account/wishlist"
-              className="hidden lg:flex size-9 items-center justify-center rounded-full bg-surface-container text-gray-900 hover:text-destructive transition-colors"
+              className="hidden size-10 items-center justify-center rounded-full bg-surface-container-low text-primary transition-all hover:bg-primary-fixed active:scale-95 sm:flex"
+              aria-label="علاقه‌مندی‌ها"
             >
-              <Heart className="size-4" />
+              <Heart className="size-5" />
             </Link>
             <Link
               to="/cart"
-              className="relative flex items-center gap-2.5 text-[13px] font-bold text-gray-900 hover:text-primary transition-colors group"
+              className="relative flex items-center gap-2 rounded-full bg-surface-container-low px-3 py-2 text-primary transition-all hover:bg-primary-fixed active:scale-95"
+              aria-label="سبد خرید"
             >
-              <span className="flex size-9 items-center justify-center rounded-full bg-surface-container text-gray-900 transition-colors group-hover:bg-primary/10">
-                <ShoppingCart className="size-4" />
-                {cartCount > 0 && (
-                  <span className="absolute -top-1 -left-1 flex size-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white shadow-sm ring-2 ring-white">
-                    {toFaDigits(cartCount)}
-                  </span>
-                )}
+              <ShoppingCart className="size-5" />
+              {cartCount > 0 && (
+                <span className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-secondary text-[10px] font-bold text-on-secondary ring-2 ring-surface-container-lowest">
+                  {toFaDigits(cartCount)}
+                </span>
+              )}
+              <span className="hidden text-[11px] font-bold xl:inline">
+                {cartCount > 0 ? formatToman(cartTotal) : "سبد خرید"}
               </span>
-              <div className="hidden sm:flex flex-col items-start leading-none">
-                <span className="text-[10px] text-muted-foreground font-medium mb-1 group-hover:text-primary/70 transition-colors">
-                  سبد خرید
-                </span>
-                <span className="font-bold">
-                  {cartCount > 0 ? formatToman(cartTotal) : "۰ تومان"}
-                </span>
-              </div>
+            </Link>
+            <Link
+              to={userName ? "/account" : "/auth/login"}
+              className="flex items-center gap-2 rounded-full border border-primary/20 bg-surface-container-lowest py-1.5 pl-3 pr-1.5 transition-all hover:border-primary hover:bg-primary-fixed active:scale-95"
+            >
+              <span className="flex size-8 items-center justify-center rounded-full bg-primary-fixed text-primary">
+                <User className="size-4" />
+              </span>
+              <span className="hidden text-[11px] font-bold text-on-surface sm:inline">
+                {userName ? "حساب من" : "ورود"}
+              </span>
             </Link>
           </div>
         </div>
       </div>
 
-      {/* Navigation — Desktop */}
-      <nav
-        className={cn(
-          "hidden border-b border-border bg-white lg:block z-40 transition-all duration-300",
-          isScrolled ? "fixed top-[61px] w-full" : "relative"
-        )}
-      >
-        <div className="container-page flex items-center justify-between">
-          <div className="flex-1 flex justify-start pr-8">
-            <ul className="flex gap-8">
-              <li>
-                <Link
-                  to="/"
-                  className="relative block py-4 text-[11px] font-bold text-gray-900 hover:text-primary transition-colors after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all hover:after:w-full active:scale-95"
-                >
-                  خانه
-                </Link>
-              </li>
-              <li className="group relative">
-                <button className="flex items-center gap-2 py-4 text-[11px] font-bold text-gray-900 group-hover:text-primary transition-colors">
-                  دسته‌بندی‌ها
-                  <ChevronDown className="size-3.5 transition-transform group-hover:rotate-180" />
-                </button>
-                {/* Mega Menu — glass card */}
-                <div className="invisible absolute right-0 top-full z-[100] w-[1000px] translate-y-4 bg-white p-10 opacity-0 shadow-deep transition-all duration-300 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 rounded-b-[24px] border border-border border-t-0">
-                  <div className="grid grid-cols-4 gap-10">
-                    {categories.map((cat) => (
-                      <div key={cat.slug} className="space-y-5">
-                        <Link
-                          to="/category/$slug"
-                          params={{ slug: cat.slug }}
-                          className="block text-[13px] font-bold text-gray-900 hover:text-primary transition-colors"
-                        >
-                          {cat.title}
-                        </Link>
-                        <ul className="space-y-3 border-r border-border/40 pr-5">
-                          {cat.children.map((child) => (
-                            <li key={child.slug}>
-                              <Link
-                                to="/category/$slug"
-                                params={{ slug: child.slug }}
-                                className="text-[12px] text-muted-foreground hover:text-primary hover:translate-x-[-4px] transition-all inline-block font-medium"
-                              >
-                                {child.title}
-                              </Link>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </li>
-              <li>
-                <Link
-                  to="/shop"
-                  className="relative block py-4 text-[11px] font-bold text-gray-900 hover:text-primary transition-colors after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all hover:after:w-full"
-                >
-                  فروشگاه
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/offers"
-                  className="relative block py-4 text-[11px] font-bold text-destructive hover:opacity-80 transition-colors"
-                >
-                  تخفیف‌های ویژه
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/blog"
-                  className="relative block py-4 text-[11px] font-bold text-gray-900 hover:text-primary transition-colors after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all hover:after:w-full"
-                >
-                  مجله آموزشی
-                </Link>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
-
-      {/* Mobile Menu Overlay */}
-      <div
-        className={cn(
-          "fixed inset-0 z-[100] lg:hidden",
-          mobileOpen ? "visible" : "invisible"
-        )}
-      >
+      {/* Mobile drawer */}
+      <div className={cn("fixed inset-0 z-[100] lg:hidden", mobileOpen ? "visible" : "invisible")}>
         <div
           className={cn(
-            "absolute inset-0 bg-black/60 backdrop-blur-md transition-opacity duration-500 ease-in-out",
-            mobileOpen ? "opacity-100" : "opacity-0"
+            "absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300",
+            mobileOpen ? "opacity-100" : "opacity-0",
           )}
           onClick={() => setMobileOpen(false)}
         />
         <div
           className={cn(
-            "absolute inset-y-0 right-0 flex w-[85%] max-w-[340px] flex-col bg-white shadow-2xl transition-all duration-500",
-            mobileOpen ? "right-0" : "right-[-100%]"
+            "absolute inset-y-0 right-0 flex w-[85%] max-w-[340px] flex-col rounded-l-xl bg-surface-container-lowest shadow-2xl transition-transform duration-300",
+            mobileOpen ? "translate-x-0" : "translate-x-full",
           )}
         >
-          {/* Header */}
-          <div className="flex items-center justify-between border-b border-border/50 p-6">
-            <Link
-              to="/"
-              onClick={() => setMobileOpen(false)}
-              className="flex items-center gap-3"
-            >
-              <img src={brandLogoUrl} alt={business.name} className="h-10 w-auto" />
-              <span className="text-lg font-bold text-gray-900">{business.name}</span>
+          <div className="flex items-center justify-between border-b border-outline-variant/40 p-4">
+            <Link to="/" onClick={() => setMobileOpen(false)} className="flex items-center gap-2.5">
+              <span className="flex size-10 items-center justify-center rounded-full bg-primary text-on-primary">
+                <Sparkles className="size-5" />
+              </span>
+              <span className="font-headline-sm text-headline-sm font-black text-primary">{business.name}</span>
             </Link>
             <button
               onClick={() => setMobileOpen(false)}
-              className="flex size-10 items-center justify-center rounded-full bg-muted/50 text-gray-900 transition-transform active:scale-90"
+              className="flex size-10 items-center justify-center rounded-full bg-surface-container-low text-primary active:scale-90"
+              aria-label="بستن منو"
             >
               <X className="size-5" />
             </button>
           </div>
 
-          {/* Search Area */}
-          <div className="p-6">
-            <form onSubmit={submitSearch} className="relative group">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+          <div className="p-4">
+            <form onSubmit={submitSearch} className="relative">
+              <Search className="pointer-events-none absolute right-3.5 top-1/2 size-4 -translate-y-1/2 text-outline" />
               <input
                 value={term}
                 onChange={(e) => setTerm(e.target.value)}
-                placeholder="جستجوی محصول..."
-                className="w-full bg-[#F9F9F9] border border-border rounded-full py-3.5 pl-10 pr-4 text-[13px] outline-none focus:border-primary/30 focus:bg-white transition-all shadow-soft"
+                placeholder="جستجوی محصول…"
+                className="w-full rounded-full border-[1.5px] border-outline-variant bg-surface-container-low py-2.5 pl-4 pr-11 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
               />
             </form>
           </div>
 
-          {/* Navigation */}
-          <nav className="flex-1 overflow-y-auto px-6 pb-8 hide-scrollbar">
-            <div className="space-y-8 py-4">
-              <div>
-                <span className="block text-[10px] font-bold text-muted-foreground mb-4 pr-2">
-                  منوی اصلی
-                </span>
-                <ul className="space-y-1">
-                  <li>
-                    <Link
-                      to="/"
-                      onClick={() => setMobileOpen(false)}
-                      className="flex items-center justify-between rounded-xl px-4 py-3.5 text-[14px] font-bold text-gray-900 hover:bg-secondary/50 active:bg-secondary transition-all"
-                    >
-                      <span>خانه</span>
-                      <ChevronLeft className="size-4 text-muted-foreground/50" />
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      to="/shop"
-                      onClick={() => setMobileOpen(false)}
-                      className="flex items-center justify-between rounded-xl px-4 py-3.5 text-[14px] font-bold text-gray-900 hover:bg-secondary/50 active:bg-secondary transition-all"
-                    >
-                      <span>فروشگاه</span>
-                      <ChevronLeft className="size-4 text-muted-foreground/50" />
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      to="/categories"
-                      onClick={() => setMobileOpen(false)}
-                      className="flex items-center justify-between rounded-xl px-4 py-3.5 text-[14px] font-bold text-gray-900 hover:bg-secondary/50 active:bg-secondary transition-all"
-                    >
-                      <span>دسته‌بندی‌ها</span>
-                      <ChevronLeft className="size-4 text-muted-foreground/50" />
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      to="/blog"
-                      onClick={() => setMobileOpen(false)}
-                      className="flex items-center justify-between rounded-xl px-4 py-3.5 text-[14px] font-bold text-gray-900 hover:bg-secondary/50 active:bg-secondary transition-all"
-                    >
-                      <span>مجله جهان کودک</span>
-                      <ChevronLeft className="size-4 text-muted-foreground/50" />
-                    </Link>
-                  </li>
-                </ul>
-              </div>
-
-              <div>
-                <span className="block text-[10px] font-bold text-muted-foreground mb-4 pr-2">
-                  دسترسی سریع
-                </span>
-                <ul className="space-y-1">
-                  <li>
-                    <Link
-                      to="/offers"
-                      onClick={() => setMobileOpen(false)}
-                      className="flex items-center rounded-xl px-4 py-3.5 text-[14px] font-bold text-destructive hover:bg-destructive/5 active:bg-destructive/10 transition-colors"
-                    >
-                      تخفیف‌های ویژه
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      to="/contact"
-                      onClick={() => setMobileOpen(false)}
-                      className="flex items-center rounded-xl px-4 py-3.5 text-[14px] font-bold text-gray-900 hover:bg-secondary/50 active:bg-secondary transition-colors"
-                    >
-                      تماس با ما
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      to="/about"
-                      onClick={() => setMobileOpen(false)}
-                      className="flex items-center rounded-xl px-4 py-3.5 text-[14px] font-bold text-gray-900 hover:bg-secondary/50 active:bg-secondary transition-colors"
-                    >
-                      درباره ما
-                    </Link>
-                  </li>
-                </ul>
-              </div>
-            </div>
+          <nav className="flex-1 overflow-y-auto px-4 pb-6 hide-scrollbar">
+            <p className="mb-2 px-2 text-[11px] font-bold text-on-surface-variant">منوی اصلی</p>
+            <ul className="space-y-1">
+              {NAV_LINKS.map((link) => (
+                <li key={link.to}>
+                  <Link
+                    to={link.to}
+                    onClick={() => setMobileOpen(false)}
+                    className="flex items-center justify-between rounded-lg px-4 py-3 text-sm font-bold text-on-surface transition-colors hover:bg-primary-fixed hover:text-primary"
+                  >
+                    <span>{link.label}</span>
+                    <ChevronLeft className="size-4 opacity-40" />
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            <p className="mb-2 mt-6 px-2 text-[11px] font-bold text-on-surface-variant">دسته‌بندی‌ها</p>
+            <ul className="space-y-1">
+              {categories.map((cat) => (
+                <li key={cat.slug}>
+                  <Link
+                    to="/category/$slug"
+                    params={{ slug: cat.slug }}
+                    onClick={() => setMobileOpen(false)}
+                    className="flex items-center justify-between rounded-lg px-4 py-2.5 text-[13px] font-medium text-on-surface-variant transition-colors hover:bg-primary-fixed hover:text-primary"
+                  >
+                    <span>{cat.title}</span>
+                    <span className="text-[11px] opacity-60">{toFaDigits(cat.productCount)}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </nav>
 
-          {/* Footer Actions */}
-          <div className="border-t border-border/50 p-6 space-y-4 bg-gray-50/50">
+          <div className="border-t border-outline-variant/40 bg-surface-container-low p-4">
             {userName ? (
-              <div className="space-y-3">
-                <div className="flex items-center gap-3 px-2 py-1">
-                  <div className="flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2">
+                  <span className="flex size-10 items-center justify-center rounded-full bg-primary text-on-primary">
                     <User className="size-5" />
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="text-sm font-bold text-gray-900">{userName}</span>
-                    <span className="text-[10px] text-muted-foreground">
-                      {userRole === "admin" ? "مدیر سیستم" : "مشتری"}
-                    </span>
+                  </span>
+                  <div>
+                    <p className="text-sm font-bold">{userName}</p>
+                    <p className="text-[10px] text-on-surface-variant">{userRole === "admin" ? "مدیر سیستم" : "مشتری"}</p>
                   </div>
                 </div>
                 <Link
                   to="/account"
                   onClick={() => setMobileOpen(false)}
-                  className="btn-secondary w-full flex items-center justify-center gap-3 py-3.5"
+                  className="rounded-full bg-primary px-4 py-2 text-[11px] font-bold text-on-primary shadow-md shadow-primary/20"
                 >
-                  <span>پنل کاربری</span>
+                  پنل کاربری
                 </Link>
               </div>
             ) : (
               <Link
                 to="/auth/login"
                 onClick={() => setMobileOpen(false)}
-                className="btn-primary w-full flex items-center justify-center gap-3 py-4"
+                className="flex w-full items-center justify-center gap-2 rounded-full bg-primary py-3 text-sm font-bold text-on-primary shadow-lg shadow-primary/25"
               >
                 <User className="size-4" />
-                <span>ورود / ثبت‌نام</span>
+                ورود / ثبت‌نام
               </Link>
             )}
-            <div className="flex justify-center gap-8 py-2">
-              <div className="flex flex-col items-center gap-1">
-                <span className="text-[10px] text-muted-foreground">پشتیبانی</span>
-                <a href={business.phoneHref} className="text-[12px] font-bold text-gray-900">
-                  {toFaDigits(business.phoneDisplay)}
-                </a>
-              </div>
-            </div>
           </div>
         </div>
       </div>
     </header>
+  );
+}
+
+/** نوار تب پایین موبایل — مطابق الگوی اپ استیک */
+export function MobileBottomNav() {
+  const tabs = [
+    { to: "/", label: "خانه", icon: Home, exact: true },
+    { to: "/categories", label: "دسته‌ها", icon: LayoutGrid, exact: false },
+    { to: "/cart", label: "سبد", icon: ShoppingCart, exact: false },
+    { to: "/account/wishlist", label: "علاقه‌مندی", icon: Heart, exact: false },
+    { to: "/account", label: "حساب", icon: User, exact: false },
+  ];
+
+  return (
+    <nav className="fixed inset-x-0 bottom-0 z-50 rounded-t-xl bg-surface-container-lowest/90 backdrop-blur-lg shadow-[0_-4px_24px_rgba(0,75,209,0.08)] lg:hidden">
+      <div className="flex items-center justify-around px-2 py-2">
+        {tabs.map((tab) => (
+          <Link
+            key={tab.to}
+            to={tab.to}
+            activeOptions={{ exact: tab.exact }}
+            className="flex flex-col items-center gap-0.5 rounded-full px-3 py-1.5 text-[10px] font-bold text-on-surface-variant transition-all data-[status=active]:scale-105 data-[status=active]:bg-primary-fixed data-[status=active]:text-primary"
+          >
+            <tab.icon className="size-5" />
+            {tab.label}
+          </Link>
+        ))}
+      </div>
+    </nav>
   );
 }

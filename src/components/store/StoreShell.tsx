@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { reportLovableError } from "@/lib/lovable-error-reporting";
 
 import { SiteFooter } from "@/components/store/SiteFooter";
-import { SiteHeader } from "@/components/store/SiteHeader";
+import { MobileBottomNav, SiteHeader } from "@/components/store/SiteHeader";
 import { AdminFloatingButton } from "@/components/store/AdminFloatingButton";
 import { joinNewsletter, getCatalogShell } from "@/server/functions/catalog";
 import { getCart } from "@/server/functions/cart";
@@ -56,7 +56,7 @@ export function StoreShell({ children }: { children: ReactNode }) {
   void queryClient;
 
   return (
-    <div className="flex min-h-screen flex-col bg-white">
+    <div className="flex min-h-screen flex-col bg-background">
       <SiteHeader
         categories={categories}
         cartCount={cart?.itemCount ?? 0}
@@ -67,7 +67,7 @@ export function StoreShell({ children }: { children: ReactNode }) {
         announcement={shellQuery.data?.announcement ?? null}
       />
 
-      <main id="main" className="flex-1">
+      <main id="main" className="flex-1 pb-20 lg:pb-0">
         {children}
       </main>
 
@@ -76,7 +76,9 @@ export function StoreShell({ children }: { children: ReactNode }) {
         onSubscribe={(email) => subscribe.mutate(email)}
         subscribing={subscribe.isPending}
       />
-      
+
+      <MobileBottomNav />
+
       <AdminFloatingButton />
     </div>
   );

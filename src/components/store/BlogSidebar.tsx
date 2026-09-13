@@ -44,39 +44,39 @@ export function BlogSidebar({
   });
 
   return (
-    <aside className="space-y-4">
+    <aside className="space-y-6 lg:sticky lg:top-24">
       {onSearchChange ? (
         <form
           onSubmit={(event) => {
             event.preventDefault();
             onSearchSubmit?.();
           }}
-          className="rounded-2xl border border-border bg-white shadow-sm flex items-center gap-2 p-3"
+          className="card-soft flex items-center gap-2 rounded-lg p-3"
         >
-          <Search className="ms-1 size-4 text-muted-foreground" aria-hidden />
+          <Search className="ms-1 size-4 shrink-0 text-outline" aria-hidden />
           <input
             value={search ?? ""}
             onChange={(event) => onSearchChange(event.target.value)}
             placeholder="جستجو در مقاله‌ها…"
-            className="w-full bg-transparent text-xs outline-none"
+            className="w-full bg-transparent text-sm text-on-surface outline-none placeholder:text-outline-variant"
           />
         </form>
       ) : null}
 
-      <section className="rounded-2xl border border-border bg-white shadow-sm p-4">
-        <h2 className="mb-3 text-sm font-black text-foreground">آخرین مطالب</h2>
+      <section className="card-soft rounded-lg p-5">
+        <h2 className="font-label-md text-label-md mb-4 font-bold text-on-surface">آخرین مطالب</h2>
         <div className="space-y-3">
           {recent.map((post) => (
             <Link
               key={post.slug}
               to="/blog/$slug"
               params={{ slug: post.slug }}
-              className="flex items-center gap-3 rounded-2xl border border-border bg-muted/20 p-2.5 transition-colors hover:text-primary shadow-sm hover:border-primary/30"
+              className="flex items-center gap-3 rounded-lg bg-surface-container-low p-2.5 transition-colors hover:bg-primary-fixed/50"
             >
-              <img src={post.cover ?? "/images/workshop.jpg"} alt={post.title} className="size-16 rounded-[1rem] object-cover" />
+              <img src={post.cover ?? "/images/workshop.jpg"} alt={post.title} className="size-16 shrink-0 rounded-lg object-cover" />
               <div className="min-w-0">
-                <p className="line-clamp-2 text-[11px] font-bold leading-6">{post.title}</p>
-                <p className="mt-1 text-[10px] text-muted-foreground">{post.publishedAt ? formatJalali(post.publishedAt) : "—"}</p>
+                <p className="line-clamp-2 text-[12px] font-bold leading-6 text-on-surface">{post.title}</p>
+                <p className="mt-1 text-[10px] text-on-surface-variant">{post.publishedAt ? formatJalali(post.publishedAt) : "—"}</p>
               </div>
             </Link>
           ))}
@@ -84,8 +84,8 @@ export function BlogSidebar({
       </section>
 
       {tags.length > 0 ? (
-        <section className="rounded-2xl border border-border bg-white shadow-sm p-4">
-          <h2 className="mb-3 text-sm font-black text-foreground">برچسب‌ها</h2>
+        <section className="card-soft rounded-lg p-5">
+          <h2 className="font-label-md text-label-md mb-4 font-bold text-on-surface">برچسب‌ها</h2>
           <div className="flex flex-wrap gap-2">
             {tags.map((item) => {
               const active = activeTag === item.tag;
@@ -94,8 +94,10 @@ export function BlogSidebar({
                   key={item.tag}
                   type="button"
                   onClick={() => onTagSelect?.(active ? undefined : item.tag)}
-                  className={`rounded-full border px-3 py-1.5 text-[10px] font-extrabold transition-colors ${
-                    active ? "border-primary bg-primary text-primary-foreground shadow-sm" : "border-border bg-muted/20 text-muted-foreground hover:border-primary/50 hover:text-primary"
+                  className={`rounded-full px-3 py-1.5 text-[11px] font-bold transition-colors ${
+                    active
+                      ? "bg-primary text-on-primary shadow-md shadow-primary/20"
+                      : "bg-surface-container-low text-on-surface-variant hover:bg-primary-fixed hover:text-primary"
                   }`}
                 >
                   {item.tag} ({toFaDigits(item.postCount)})
@@ -106,19 +108,19 @@ export function BlogSidebar({
         </section>
       ) : null}
 
-      <section className="rounded-2xl border border-border bg-white shadow-sm p-5">
-        <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-[11px] font-extrabold text-primary">
+      <section className="rounded-lg bg-gradient-to-br from-primary to-primary-container p-6 text-on-primary">
+        <div className="inline-flex items-center gap-2 rounded-full bg-white/20 px-3 py-1 text-[11px] font-bold backdrop-blur-md">
           <Sparkles className="size-3.5" aria-hidden />
           خبرنامهٔ جهان کودک
         </div>
-        <h2 className="mt-3 text-sm font-black text-foreground">مقاله و تخفیف را یک‌جا بگیرید</h2>
-        <p className="mt-2 text-[11px] leading-6 text-muted-foreground">راهنمای خرید سیسمونی و خبر تخفیف‌ها را ایمیل می‌کنیم.</p>
+        <h2 className="font-headline-sm text-headline-sm mt-3 font-bold">مقاله و تخفیف را یک‌جا بگیرید</h2>
+        <p className="mt-2 text-[12px] leading-6 text-white/85">راهنمای خرید سیسمونی و خبر تخفیف‌ها را ایمیل می‌کنیم.</p>
         <form
           onSubmit={(event) => {
             event.preventDefault();
             subscribe.mutate();
           }}
-          className="mt-3 space-y-2"
+          className="mt-4 space-y-2"
         >
           <input
             required
@@ -127,20 +129,20 @@ export function BlogSidebar({
             onChange={(event) => setEmail(event.target.value)}
             placeholder="ایمیل شما"
             dir="ltr"
-            className="w-full rounded-full border border-border bg-white px-4 py-3 text-xs outline-none focus:border-primary shadow-sm"
+            className="w-full rounded-full border-0 bg-white px-4 py-3 text-xs text-on-surface outline-none"
           />
           <button
             type="submit"
             disabled={subscribe.isPending}
-            className="w-full rounded-full bg-primary px-4 py-3 text-[11px] font-extrabold text-primary-foreground disabled:opacity-60 shadow-md hover:bg-primary/90 transition-colors"
+            className="w-full rounded-full bg-white px-4 py-3 text-[12px] font-bold text-primary shadow-sm transition-transform hover:scale-[1.02] active:scale-95 disabled:opacity-60"
           >
             عضویت در خبرنامه
           </button>
         </form>
       </section>
 
-      <section className="rounded-2xl border border-border bg-white shadow-sm p-4 text-[11px] leading-6 text-muted-foreground">
-        <h2 className="mb-2 text-sm font-black text-foreground">مشاورهٔ خرید</h2>
+      <section className="card-soft rounded-lg p-5 text-[12px] leading-6 text-on-surface-variant">
+        <h2 className="font-label-md text-label-md mb-2 font-bold text-on-surface">مشاورهٔ خرید</h2>
         <p>تلفن فروشگاه: {business.phoneDisplay}</p>
         <p>{business.hoursFull}</p>
         <p>{business.addressLine}</p>

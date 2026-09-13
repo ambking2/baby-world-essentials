@@ -27,28 +27,30 @@ export function SectionHeading({
   return (
     <div
       className={cn(
-        "mb-10 lg:mb-16 flex flex-wrap items-end gap-6",
+        "mb-12 flex flex-wrap items-end gap-6",
         align === "center" ? "flex-col items-center text-center" : "justify-between",
         className,
       )}
     >
       <div className={cn("max-w-2xl space-y-2", align === "center" && "mx-auto")}>
         {eyebrow && (
-          <span className="mb-1 block text-[10px] font-bold uppercase tracking-widest text-primary">
-            {eyebrow}
-          </span>
+          <span className="mb-1 block text-[12px] font-bold text-primary">{eyebrow}</span>
         )}
-        <h2 className={cn(
-          "text-2xl font-bold lg:text-3xl tracking-tight text-gray-900",
-          tone === "onDark" ? "text-white" : "text-gray-900"
-        )}>
+        <h2
+          className={cn(
+            "font-headline-md text-headline-md tracking-tight",
+            tone === "onDark" ? "text-white" : "text-on-surface",
+          )}
+        >
           {title}
         </h2>
         {subtitle && (
-          <p className={cn(
-            "text-sm leading-relaxed lg:text-base",
-            tone === "onDark" ? "text-white/70" : "text-muted-foreground"
-          )}>
+          <p
+            className={cn(
+              "font-body-md text-body-md leading-8",
+              tone === "onDark" ? "text-white/75" : "text-on-surface-variant",
+            )}
+          >
             {subtitle}
           </p>
         )}
@@ -56,7 +58,7 @@ export function SectionHeading({
       {moreHref && (
         <Link
           to={moreHref as any}
-          className="group flex items-center gap-1 text-[11px] font-bold uppercase tracking-widest transition-all duration-250 text-gray-900 hover:text-primary border-b border-gray-900/10 hover:border-primary pb-0.5"
+          className="group flex items-center gap-1 border-b border-primary/20 pb-0.5 text-label-md font-label-md text-primary transition-all hover:border-primary"
         >
           {moreLabel}
           <ChevronLeft className="size-4 shrink-0 transition-transform group-hover:-translate-x-1" aria-hidden />
