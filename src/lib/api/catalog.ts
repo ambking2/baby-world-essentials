@@ -2,7 +2,6 @@ import { queryOptions } from "@tanstack/react-query";
 
 import { categories, products } from "@/data/catalog";
 import type {
-  AgeGroup,
   BlogPost,
   Brand,
   Category,
@@ -74,17 +73,7 @@ export const relatedProductsQuery = (slug: string, limit = 5) =>
     queryFn: () => fetchRelatedProducts(slug, limit),
   });
 
-/* ---------- age groups, brands and blog ---------- */
-
-export async function fetchAgeGroups(): Promise<AgeGroup[]> {
-  const { ageGroups } = await import("@/data/site");
-  return ageGroups;
-}
-
-export async function fetchProductsByAge(ageSlug: string): Promise<Product[]> {
-  const { categoryAges } = await import("@/data/site");
-  return products.filter((p) => (categoryAges[p.categorySlug] ?? []).includes(ageSlug));
-}
+/* ---------- brands and blog ---------- */
 
 export async function fetchBrands(): Promise<Brand[]> {
   const { brands } = await import("@/data/site");
@@ -100,12 +89,6 @@ export async function fetchPost(slug: string): Promise<BlogPost | null> {
   const { blogPosts } = await import("@/data/site");
   return blogPosts.find((p) => p.slug === slug) ?? null;
 }
-
-export const ageGroupsQuery = () =>
-  queryOptions({ queryKey: ["age-groups"], queryFn: () => fetchAgeGroups() });
-
-export const productsByAgeQuery = (ageSlug: string) =>
-  queryOptions({ queryKey: ["products", "age", ageSlug], queryFn: () => fetchProductsByAge(ageSlug) });
 
 export const brandsQuery = () =>
   queryOptions({ queryKey: ["brands"], queryFn: () => fetchBrands() });

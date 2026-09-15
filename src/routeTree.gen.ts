@@ -36,7 +36,6 @@ import { Route as AdminCustomersRouteImport } from './routes/admin.customers'
 import { Route as AdminOrdersRouteImport } from './routes/admin.orders'
 import { Route as AdminPostsRouteImport } from './routes/admin.posts'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
-import { Route as AgeSlugRouteImport } from './routes/age.$slug'
 import { Route as AuthForgotRouteImport } from './routes/auth.forgot'
 import { Route as AuthLoginRouteImport } from './routes/auth.login'
 import { Route as AuthRegisterRouteImport } from './routes/auth.register'
@@ -185,11 +184,6 @@ const AdminSettingsRoute = AdminSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => AdminRoute,
 } as any)
-const AgeSlugRoute = AgeSlugRouteImport.update({
-  id: '/age/$slug',
-  path: '/age/$slug',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AuthForgotRoute = AuthForgotRouteImport.update({
   id: '/auth/forgot',
   path: '/auth/forgot',
@@ -277,7 +271,6 @@ export interface FileRoutesByFullPath {
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/posts': typeof AdminPostsRoute
   '/admin/settings': typeof AdminSettingsRoute
-  '/age/$slug': typeof AgeSlugRoute
   '/auth/forgot': typeof AuthForgotRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
@@ -317,7 +310,6 @@ export interface FileRoutesByTo {
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/posts': typeof AdminPostsRoute
   '/admin/settings': typeof AdminSettingsRoute
-  '/age/$slug': typeof AgeSlugRoute
   '/auth/forgot': typeof AuthForgotRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
@@ -360,7 +352,6 @@ export interface FileRoutesById {
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/posts': typeof AdminPostsRoute
   '/admin/settings': typeof AdminSettingsRoute
-  '/age/$slug': typeof AgeSlugRoute
   '/auth/forgot': typeof AuthForgotRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
@@ -404,7 +395,6 @@ export interface FileRouteTypes {
     | '/admin/orders'
     | '/admin/posts'
     | '/admin/settings'
-    | '/age/$slug'
     | '/auth/forgot'
     | '/auth/login'
     | '/auth/register'
@@ -444,7 +434,6 @@ export interface FileRouteTypes {
     | '/admin/orders'
     | '/admin/posts'
     | '/admin/settings'
-    | '/age/$slug'
     | '/auth/forgot'
     | '/auth/login'
     | '/auth/register'
@@ -486,7 +475,6 @@ export interface FileRouteTypes {
     | '/admin/orders'
     | '/admin/posts'
     | '/admin/settings'
-    | '/age/$slug'
     | '/auth/forgot'
     | '/auth/login'
     | '/auth/register'
@@ -519,7 +507,6 @@ export interface RootRouteChildren {
   ShopRoute: typeof ShopRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   StoresRoute: typeof StoresRoute
-  AgeSlugRoute: typeof AgeSlugRoute
   AuthForgotRoute: typeof AuthForgotRoute
   AuthLoginRoute: typeof AuthLoginRoute
   AuthRegisterRoute: typeof AuthRegisterRoute
@@ -723,13 +710,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminSettingsRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/age/$slug': {
-      id: '/age/$slug'
-      path: '/age/$slug'
-      fullPath: '/age/$slug'
-      preLoaderRoute: typeof AgeSlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/auth/forgot': {
       id: '/auth/forgot'
       path: '/auth/forgot'
@@ -878,7 +858,6 @@ const rootRouteChildren: RootRouteChildren = {
   ShopRoute: ShopRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   StoresRoute: StoresRoute,
-  AgeSlugRoute: AgeSlugRoute,
   AuthForgotRoute: AuthForgotRoute,
   AuthLoginRoute: AuthLoginRoute,
   AuthRegisterRoute: AuthRegisterRoute,

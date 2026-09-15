@@ -7,25 +7,25 @@ import { cn } from "@/lib/utils";
 
 type Slide = {
   alt: string;
-  slug: string;
+  href: string;
   image: string;
 };
 
 const SLIDES: Array<Slide> = [
   {
-    alt: "سرویس خواب نوزاد",
-    slug: "servis-khab",
-    image: "/images/hero-nursery.jpg",
+    alt: "بنر تخفیف‌های ویژه",
+    href: "/shop",
+    image: "/images/hero1.jpg",
   },
   {
-    alt: "کالکشن پوشاک نوزاد",
-    slug: "lebas",
-    image: "/images/hero-kid.png",
+    alt: "بنر محصولات جدید",
+    href: "/shop",
+    image: "/images/hero2.jpg",
   },
   {
-    alt: "اسباب‌بازی آموزشی",
-    slug: "asbab-bazi",
-    image: "/images/cat-toys.jpg",
+    alt: "بنر پیشنهادات شگفت‌انگیز",
+    href: "/shop",
+    image: "/images/hero3.jpg",
   },
 ];
 
@@ -55,10 +55,9 @@ export function HeroSlider() {
           {SLIDES.map((slide, idx) => (
             <div key={idx} className="group relative min-w-0 flex-[0_0_100%]">
               <Link
-                to="/category/$slug"
-                params={{ slug: slide.slug }}
+                to={slide.href}
                 aria-label={slide.alt}
-                className="block h-[45vh] max-h-[620px] min-h-[280px] w-full sm:h-[55vh] lg:h-[68vh]"
+                className="block aspect-[1280/455] w-full"
               >
                 <img
                   src={slide.image}

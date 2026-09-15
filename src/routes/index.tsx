@@ -20,7 +20,6 @@ import { StoreShell, storeKeys } from "@/components/store/StoreShell";
 import { ProductSection } from "@/components/site/ProductSection";
 import { SectionHeading } from "@/components/store/SectionHeading";
 import { BlogPreview } from "@/components/site/BlogPreview";
-import { AgeStrip } from "@/components/site/AgeStrip";
 import { InstagramStrip } from "@/components/site/InstagramStrip";
 
 import { getCatalogShell } from "@/server/functions/catalog";
@@ -41,11 +40,6 @@ function HomePage() {
     <StoreShell>
       {/* Hero */}
       <HeroSlider />
-
-      {/* Shop by age — circular chips (design-system tertiary accent) */}
-      <Suspense fallback={<div className="container-page py-10"><div className="skeleton mx-auto h-40 w-full max-w-3xl rounded-2xl" /></div>}>
-        <AgeStrip />
-      </Suspense>
 
       {/* Popular categories */}
       <section className="bg-surface-container-lowest py-section-gap">

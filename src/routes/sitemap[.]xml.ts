@@ -2,7 +2,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
 
 import {
-  fetchAgeGroups,
   fetchBrands,
   fetchCategories,
   fetchPosts,
@@ -32,9 +31,8 @@ export const Route = createFileRoute("/sitemap.xml")({
           { path: "/contact", changefreq: "monthly", priority: "0.6" },
         ];
 
-        const [categories, ageGroups, posts, products, brands] = await Promise.all([
+        const [categories, posts, products, brands] = await Promise.all([
           fetchCategories(),
-          fetchAgeGroups(),
           fetchPosts(),
           fetchProducts(),
           fetchBrands(),
@@ -45,14 +43,6 @@ export const Route = createFileRoute("/sitemap.xml")({
             path: `/category/${category.slug}`,
             changefreq: "weekly",
             priority: "0.7",
-          });
-        }
-
-        for (const age of ageGroups) {
-          entries.push({
-            path: `/age/${age.slug}`,
-            changefreq: "monthly",
-            priority: "0.6",
           });
         }
 

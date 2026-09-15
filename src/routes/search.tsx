@@ -76,20 +76,26 @@ function SearchPage() {
 
   return (
     <StoreShell>
-      <div className="container-page py-6">
-        <div className="mb-10 lg:mb-16">
-          <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 tracking-tight">
-            {q.trim().length > 0 ? `نتایج جستجو برای «${q}»` : "همه محصولات"}
-          </h1>
-          <div className="mt-3 flex items-center gap-2">
-            <div className="h-1 w-12 bg-primary rounded-full"></div>
+      <div className="container-page py-base">
+        <div className="mb-10">
+          <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
+            <div>
+              <h1 className="font-headline-md text-headline-md text-primary">
+                {q.trim().length > 0 ? `نتایج جستجو برای «${q}»` : "همه محصولات"}
+              </h1>
+              <p className="mt-2 max-w-2xl font-body-md text-body-md text-on-surface-variant">
+                کالاهای فروشگاه جهان کودک را فیلتر و مرتب کنید.
+              </p>
+            </div>
             {products ? (
-              <p className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">شامل {toFaDigits(products.total)} کالا در جهان کودک</p>
+              <span className="hidden shrink-0 rounded-full bg-primary-fixed px-6 py-2 text-[13px] font-bold text-on-primary-fixed md:inline-block">
+                {toFaDigits(products.total)} کالا
+              </span>
             ) : null}
           </div>
         </div>
 
-        <div className="grid gap-5 lg:grid-cols-[260px_1fr]">
+        <div className="flex flex-col gap-gutter md:flex-row">
           <FilterSidebar
             state={filters}
             onChange={(next) => {
@@ -100,10 +106,10 @@ function SearchPage() {
             availableSizes={products?.availableSizes ?? []}
             availableColors={products?.availableColors ?? []}
             categories={shellQuery.data?.categories ?? []}
-            className="hidden lg:block"
+            className="hidden w-72 shrink-0 md:block"
           />
 
-          <div className="min-w-0">
+          <div className="min-w-0 flex-1">
             <SortBar
               sort={sort}
               total={products?.total ?? 0}

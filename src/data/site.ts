@@ -1,23 +1,4 @@
-import type { AgeGroup, BlogPost, Brand } from "@/types/catalog";
-
-export const ageGroups: AgeGroup[] = [
-  { slug: "0-6m", label: "۰-۶", note: "۰ تا ۶ ماه", color: "bg-[oklch(0.62_0.19_255)]" },
-  { slug: "6-12m", label: "۶-۱۲", note: "۶ تا ۱۲ ماه", color: "bg-[oklch(0.65_0.16_165)]" },
-  { slug: "1-2y", label: "۱-۲", note: "۱ تا ۲ سال", color: "bg-[oklch(0.68_0.19_45)]" },
-  { slug: "2-4y", label: "۲-۴", note: "۲ تا ۴ سال", color: "bg-[oklch(0.7_0.18_2)]" },
-  { slug: "4-7y", label: "۴-۷", note: "۴ تا ۷ سال", color: "bg-[oklch(0.55_0.22_292)]" },
-  { slug: "7plus", label: "+۷", note: "۷ سال به بالا", color: "bg-[oklch(0.68_0.13_195)]" },
-];
-
-/** Which age groups each catalog category is meant for. */
-export const categoryAges: Record<string, string[]> = {
-  "servis-khab": ["0-6m", "6-12m", "1-2y", "2-4y"],
-  kalaskeh: ["0-6m", "6-12m", "1-2y"],
-  lebas: ["0-6m", "6-12m", "1-2y", "2-4y"],
-  "asbab-bazi": ["6-12m", "1-2y", "2-4y", "4-7y", "7plus"],
-  shirdehi: ["0-6m", "6-12m"],
-  dekor: ["0-6m", "6-12m", "1-2y", "2-4y", "4-7y"],
-};
+import type { BlogPost, Brand } from "@/types/catalog";
 
 export const brands: Brand[] = [
   { slug: "jahan-koodak", title: "کارگاه جهان کودک", note: "تولید چوب در ابهر" },
