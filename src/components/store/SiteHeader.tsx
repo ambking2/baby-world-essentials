@@ -13,6 +13,7 @@ import {
   LogOut,
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { ExpandingSearchDock } from "@/components/ui/expanding-search-dock";
 
 const brandLogoUrl = "/assets/logo/brand-logo.png";
 import { business } from "@/data/business";
@@ -64,11 +65,18 @@ export function SiteHeader({
     void navigate({ to: "/search", search: { q: term.trim() } });
   };
 
+  const dockSearch = (query: string) => {
+    if (!query.trim()) return;
+    setMobileOpen(false);
+    void navigate({ to: "/search", search: { q: query.trim() } });
+  };
+
   return (
     <header className="relative w-full">
       {/* Announcement bar */}
       <div className="bg-primary py-2 px-4 text-center text-[11px] font-semibold text-on-primary rounded-b-lg">
-        ✦ ضمانت اصالت کالا · ارسال رایگان سفارش‌های بالای {formatToman(business.freeShippingThreshold)} · پشتیبانی {toFaDigits(business.phoneDisplay)}
+        ✦ ضمانت اصالت کالا · ارسال رایگان سفارش‌های بالای{" "}
+        {formatToman(business.freeShippingThreshold)} · پشتیبانی {toFaDigits(business.phoneDisplay)}
       </div>
 
       {/* Sticky frosted main bar (design system: h-20, backdrop-blur, surface-container-lowest) */}
@@ -94,8 +102,12 @@ export function SiteHeader({
               <Sparkles className="size-5" />
             </span>
             <span className="hidden flex-col leading-tight sm:flex">
-              <span className="font-headline-sm text-headline-sm font-black text-primary">{business.name}</span>
-              <span className="text-[10px] font-semibold tracking-widest text-on-surface-variant">جهان کودک</span>
+              <span className="font-headline-sm text-headline-sm font-black text-primary">
+                {business.name}
+              </span>
+              <span className="text-[10px] font-semibold tracking-widest text-on-surface-variant">
+                جهان کودک
+              </span>
             </span>
           </Link>
 
@@ -112,19 +124,10 @@ export function SiteHeader({
             ))}
           </nav>
 
-          {/* Desktop search pill */}
-          <form
-            onSubmit={submitSearch}
-            className="relative hidden w-72 xl:block xl:w-96"
-          >
-            <Search className="pointer-events-none absolute right-3.5 top-1/2 size-4 -translate-y-1/2 text-outline" />
-            <input
-              value={term}
-              onChange={(e) => setTerm(e.target.value)}
-              placeholder="جستجوی محصول…"
-              className="w-full rounded-full border border-outline-variant/60 bg-surface-container-low py-2.5 pl-4 pr-11 text-sm outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/20"
-            />
-          </form>
+          {/* Desktop expanding search dock */}
+          <div className="hidden xl:block">
+            <ExpandingSearchDock onSearch={dockSearch} placeholder="جستجوی محصول…" />
+          </div>
 
           {/* Actions */}
           <div className="flex shrink-0 items-center gap-2 sm:gap-3">
@@ -185,7 +188,9 @@ export function SiteHeader({
               <span className="flex size-10 items-center justify-center rounded-full bg-primary text-on-primary">
                 <Sparkles className="size-5" />
               </span>
-              <span className="font-headline-sm text-headline-sm font-black text-primary">{business.name}</span>
+              <span className="font-headline-sm text-headline-sm font-black text-primary">
+                {business.name}
+              </span>
             </Link>
             <button
               onClick={() => setMobileOpen(false)}
@@ -224,7 +229,9 @@ export function SiteHeader({
                 </li>
               ))}
             </ul>
-            <p className="mb-2 mt-6 px-2 text-[11px] font-bold text-on-surface-variant">دسته‌بندی‌ها</p>
+            <p className="mb-2 mt-6 px-2 text-[11px] font-bold text-on-surface-variant">
+              دسته‌بندی‌ها
+            </p>
             <ul className="space-y-1">
               {categories.map((cat) => (
                 <li key={cat.slug}>
@@ -251,7 +258,9 @@ export function SiteHeader({
                   </span>
                   <div>
                     <p className="text-sm font-bold">{userName}</p>
-                    <p className="text-[10px] text-on-surface-variant">{userRole === "admin" ? "مدیر سیستم" : "مشتری"}</p>
+                    <p className="text-[10px] text-on-surface-variant">
+                      {userRole === "admin" ? "مدیر سیستم" : "مشتری"}
+                    </p>
                   </div>
                 </div>
                 <Link
