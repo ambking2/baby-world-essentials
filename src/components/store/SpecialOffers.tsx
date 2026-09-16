@@ -37,7 +37,7 @@ export function SpecialOffers() {
                 <Timer className="size-3.5" />
                 فروش ویژهٔ فصل
               </span>
-              <h2 className="font-display-lg text-2xl font-black leading-tight drop-shadow-sm md:text-3xl">
+              <h2 className="font-display-lg text-2xl font-black leading-tight text-white drop-shadow-sm md:text-3xl">
                 پیشنهادهای ویژه
               </h2>
               <p className="mt-2 max-w-xs text-sm leading-7 text-white/85">
