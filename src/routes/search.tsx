@@ -3,6 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
 
+import { MobileFilterSheet } from "@/components/store/MobileFilterSheet";
 import { FilterSidebar, type FilterState } from "@/components/store/FilterSidebar";
 import { Pagination } from "@/components/store/Pagination";
 import { ProductGrid } from "@/components/store/ProductGrid";
@@ -35,6 +36,14 @@ function SearchPage() {
     onlyAvailable: false,
     onlyDiscounted: false,
   });
+  const [filtersOpen, setFiltersOpen] = useState(false);
+
+  const activeFiltersCount =
+    filters.sizes.length +
+    filters.colors.length +
+    (filters.onlyAvailable ? 1 : 0) +
+    (filters.onlyDiscounted ? 1 : 0) +
+    (filters.minPrice !== undefined || filters.maxPrice !== undefined ? 1 : 0);
 
   const shellQuery = useQuery({
     queryKey: storeKeys.shell,
@@ -117,6 +126,8 @@ function SearchPage() {
                 setSort(next);
                 setPage(1);
               }}
+              onOpenFilters={() => setFiltersOpen(true)}
+              activeFiltersCount={activeFiltersCount}
             />
 
             <ProductGrid
@@ -124,7 +135,11 @@ function SearchPage() {
               columns={3}
               onAddToCart={(product) => addToCart.mutate(product)}
               busyId={addToCart.isPending ? (addToCart.variables?.id ?? null) : null}
-              emptyMessage={listQuery.isLoading ? "در حال جستجو…" : "نتیجه‌ای پیدا نشد؛ عبارت دیگری را امتحان کنید."}
+              emptyMessage={
+                listQuery.isLoading
+                  ? "در حال جستجو…"
+                  : "نتیجه‌ای پیدا نشد؛ عبارت دیگری را امتحان کنید."
+              }
             />
 
             <Pagination
@@ -138,6 +153,20 @@ function SearchPage() {
             />
           </div>
         </div>
+
+        <MobileFilterSheet
+          open={filtersOpen}
+          onOpenChange={setFiltersOpen}
+          state={filters}
+          onChange={(next) => {
+            setFilters(next);
+            setPage(1);
+          }}
+          priceBounds={products?.priceBounds ?? { min: 0, max: 20_000_000 }}
+          availableSizes={products?.availableSizes ?? []}
+          availableColors={products?.availableColors ?? []}
+          categories={shellQuery.data?.categories ?? []}
+        />
       </div>
     </StoreShell>
   );

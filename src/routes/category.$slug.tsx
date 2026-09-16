@@ -4,6 +4,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 import { Breadcrumb } from "@/components/store/Breadcrumb";
+import { MobileFilterSheet } from "@/components/store/MobileFilterSheet";
 import { FilterSidebar, type FilterState } from "@/components/store/FilterSidebar";
 import { Pagination } from "@/components/store/Pagination";
 import { ProductGrid } from "@/components/store/ProductGrid";
@@ -41,6 +42,14 @@ function CategoryPage() {
     onlyAvailable: false,
     onlyDiscounted: false,
   });
+  const [filtersOpen, setFiltersOpen] = useState(false);
+
+  const activeFiltersCount =
+    filters.sizes.length +
+    filters.colors.length +
+    (filters.onlyAvailable ? 1 : 0) +
+    (filters.onlyDiscounted ? 1 : 0) +
+    (filters.minPrice !== undefined || filters.maxPrice !== undefined ? 1 : 0);
 
   const shellQuery = useQuery({
     queryKey: storeKeys.shell,
@@ -85,7 +94,10 @@ function CategoryPage() {
     <StoreShell>
       <div className="container-page py-base">
         <Breadcrumb
-          items={(data?.breadcrumb ?? []).map((crumb) => ({ title: crumb.title, href: `/category/${crumb.slug}` }))}
+          items={(data?.breadcrumb ?? []).map((crumb) => ({
+            title: crumb.title,
+            href: `/category/${crumb.slug}`,
+          }))}
           className="mb-4"
         />
 
@@ -132,6 +144,8 @@ function CategoryPage() {
                 setSort(next);
                 setPage(1);
               }}
+              onOpenFilters={() => setFiltersOpen(true)}
+              activeFiltersCount={activeFiltersCount}
             />
 
             <ProductGrid
@@ -139,7 +153,9 @@ function CategoryPage() {
               columns={3}
               onAddToCart={(product) => addToCart.mutate(product)}
               busyId={addToCart.isPending ? (addToCart.variables?.id ?? null) : null}
-              emptyMessage={pageQuery.isLoading ? "در حال بارگزاری محصولات…" : "محصولی با این فیلترها پیدا نشد."}
+              emptyMessage={
+                pageQuery.isLoading ? "در حال بارگزاری محصولات…" : "محصولی با این فیلترها پیدا نشد."
+              }
             />
 
             <Pagination
@@ -153,6 +169,21 @@ function CategoryPage() {
             />
           </div>
         </div>
+
+        <MobileFilterSheet
+          open={filtersOpen}
+          onOpenChange={setFiltersOpen}
+          state={filters}
+          onChange={(next) => {
+            setFilters(next);
+            setPage(1);
+          }}
+          priceBounds={products?.priceBounds ?? { min: 0, max: 20_000_000 }}
+          availableSizes={products?.availableSizes ?? []}
+          availableColors={products?.availableColors ?? []}
+          categories={categories}
+          activeSlug={slug}
+        />
       </div>
     </StoreShell>
   );

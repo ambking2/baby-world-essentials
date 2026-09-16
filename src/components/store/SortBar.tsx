@@ -1,3 +1,5 @@
+import { SlidersHorizontal } from "lucide-react";
+
 import { cn } from "@/lib/utils";
 import { toFaDigits } from "@/lib/format";
 
@@ -17,11 +19,16 @@ export function SortBar({
   total,
   onChange,
   className,
+  onOpenFilters,
+  activeFiltersCount = 0,
 }: {
   sort: SortKeyUi;
   total: number;
   onChange: (sort: SortKeyUi) => void;
   className?: string;
+  /** اگر داده شود، دکمهٔ «فیلترها» فقط در موبایل نمایش داده می‌شود. */
+  onOpenFilters?: () => void;
+  activeFiltersCount?: number;
 }) {
   return (
     <div
@@ -30,6 +37,22 @@ export function SortBar({
         className,
       )}
     >
+      {onOpenFilters ? (
+        <button
+          type="button"
+          onClick={onOpenFilters}
+          className="relative inline-flex shrink-0 items-center gap-2 rounded-full border border-outline-variant bg-surface-container-lowest px-4 py-2 text-[13px] font-bold text-on-surface shadow-sm transition-colors hover:border-primary/50 hover:text-primary md:hidden"
+        >
+          <SlidersHorizontal className="size-4" aria-hidden />
+          فیلترها
+          {activeFiltersCount > 0 ? (
+            <span className="flex size-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-on-primary">
+              {toFaDigits(activeFiltersCount)}
+            </span>
+          ) : null}
+        </button>
+      ) : null}
+
       <div className="flex min-w-0 flex-wrap items-center gap-2">
         <span className="ml-1 hidden shrink-0 font-label-md text-label-md text-on-surface-variant sm:inline">
           مرتب‌سازی:
