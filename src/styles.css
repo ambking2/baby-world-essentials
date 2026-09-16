@@ -52,7 +52,7 @@
   --radius-xl: 1rem;
   --radius-2xl: 1.5rem;
   --radius-3xl: 2rem;
-  
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -116,7 +116,7 @@
   --color-on-error: var(--on-error);
   --color-on-error-container: var(--on-error-container);
 
-  /* Type scale — Lullaby & Play design system */
+  /* Type scale — MOOD. design system (سریف تیترها، سنس بدنه) */
   --text-display-lg: 48px;
   --text-display-lg--line-height: 64px;
   --text-display-lg--font-weight: 800;
@@ -150,49 +150,51 @@
   --container-container-max: 1280px;
 
   --font-sans: "Vazirmatn", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Vazirmatn", "Be Vietnam Pro", ui-sans-serif, system-ui, sans-serif;
-  --font-price: "Be Vietnam Pro", "Vazirmatn", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Vazirmatn", ui-sans-serif, system-ui, sans-serif;
+  --font-price: "Vazirmatn", ui-sans-serif, system-ui, sans-serif;
 
-  /* Named font families so `font-headline-md`, `font-label-md`… resolve like the reference config */
-  --font-display-lg: "Vazirmatn", "Be Vietnam Pro", ui-sans-serif, sans-serif;
-  --font-display-lg-mobile: "Vazirmatn", "Be Vietnam Pro", ui-sans-serif, sans-serif;
-  --font-headline-md: "Vazirmatn", "Be Vietnam Pro", ui-sans-serif, sans-serif;
-  --font-headline-sm: "Vazirmatn", "Be Vietnam Pro", ui-sans-serif, sans-serif;
-  --font-body-lg: "Vazirmatn", "Be Vietnam Pro", ui-sans-serif, sans-serif;
-  --font-body-md: "Vazirmatn", "Be Vietnam Pro", ui-sans-serif, sans-serif;
-  --font-label-md: "Vazirmatn", "Be Vietnam Pro", ui-sans-serif, sans-serif;
-  --font-price-display: "Be Vietnam Pro", "Vazirmatn", ui-sans-serif, sans-serif;
-  
+  /* تیترها با سریف فارسی (Vazirmatn وزن سنگین + tracking)؛ font-serif برای عناصر سریف */
+  --font-serif: "Vazirmatn", "Playfair Display", ui-serif, Georgia, serif;
+  --font-display-lg: "Vazirmatn", ui-sans-serif, system-ui, sans-serif;
+  --font-display-lg-mobile: "Vazirmatn", ui-sans-serif, system-ui, sans-serif;
+  --font-headline-md: "Vazirmatn", ui-sans-serif, system-ui, sans-serif;
+  --font-headline-sm: "Vazirmatn", ui-sans-serif, system-ui, sans-serif;
+  --font-body-lg: "Vazirmatn", ui-sans-serif, system-ui, sans-serif;
+  --font-body-md: "Vazirmatn", ui-sans-serif, system-ui, sans-serif;
+  --font-label-md: "Vazirmatn", ui-sans-serif, system-ui, sans-serif;
+  --font-price-display: "Vazirmatn", ui-sans-serif, system-ui, sans-serif;
+
   --shadow-subtle: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-premium: 0 4px 20px 0 rgba(0, 81, 225, 0.08), 0 1px 3px 0 rgba(0, 0, 0, 0.04);
-  --shadow-soft: 0 10px 15px -3px rgba(0, 81, 225, 0.06), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
-  --shadow-deep: 0 20px 25px -5px rgba(0, 81, 225, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.03);
-  --shadow-lift: 0 12px 32px 0 rgba(0, 81, 225, 0.12), 0 2px 6px 0 rgba(0, 0, 0, 0.04);
+  --shadow-premium: 0 4px 20px 0 rgba(164, 143, 127, 0.14), 0 1px 3px 0 rgba(0, 0, 0, 0.04);
+  --shadow-soft: 0 10px 15px -3px rgba(164, 143, 127, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+  --shadow-deep: 0 20px 25px -5px rgba(164, 143, 127, 0.16), 0 10px 10px -5px rgba(0, 0, 0, 0.03);
+  --shadow-lift: 0 12px 32px 0 rgba(164, 143, 127, 0.18), 0 2px 6px 0 rgba(0, 0, 0, 0.04);
 }
 
 :root {
-  --background: #FBF8FF;
-  --foreground: #191B25;
+  /* MOOD. palette — کرم گرم، برنز، زینک */
+  --background: #F8F5F2;
+  --foreground: #27272A; /* zinc-900 → برای فارسی کمی نرم‌تر از 900 خالص */
   --card: #FFFFFF;
-  --card-foreground: #191B25;
+  --card-foreground: #27272A;
   --popover: #FFFFFF;
-  --popover-foreground: #191B25;
-  --primary: #004BD1; /* Vibrant Blue */
+  --popover-foreground: #27272A;
+  --primary: #A48F7F; /* Brand bronze */
   --primary-foreground: #FFFFFF;
-  --primary-container: #1C62FD;
-  --on-primary-container: #F4F3FF;
-  --secondary: #455B9F; /* Slate Blue */
+  --primary-container: #8F7A6A;
+  --on-primary-container: #F8F5F2;
+  --secondary: #3F3F46; /* zinc-700 */
   --secondary-foreground: #FFFFFF;
-  --secondary-container: #9DB3FE;
-  --on-secondary-container: #2C4386;
-  --tertiary: #9C3500; /* Burnt Orange */
+  --secondary-container: #E7E5E4; /* stone-200 */
+  --on-secondary-container: #27272A;
+  --tertiary: #7C6A5B;
   --on-tertiary: #FFFFFF;
-  --tertiary-container: #C54500;
-  --on-tertiary-container: #FFF2EE;
-  --muted: #F3F2FF;
-  --muted-foreground: #434656;
-  --accent: #E7E7F5;
-  --accent-foreground: #191B25;
+  --tertiary-container: #EDE4DC;
+  --on-tertiary-container: #4A3F35;
+  --muted: #F1EDE9;
+  --muted-foreground: #52525B; /* zinc-600 */
+  --accent: #EDE4DC;
+  --accent-foreground: #27272A;
   --destructive: #BA1A1A;
   --destructive-foreground: #FFFFFF;
   --error-container: #FFDAD6;
@@ -200,47 +202,47 @@
   --on-error: #FFFFFF;
 
   /* M3 fixed tones */
-  --primary-fixed: #DCE1FF;
-  --primary-fixed-dim: #B5C4FF;
-  --on-primary-fixed: #00164D;
+  --primary-fixed: #EDE4DC;
+  --primary-fixed-dim: #DCCDC1;
+  --on-primary-fixed: #4A3F35;
   --on-primary: #FFFFFF;
-  --secondary-fixed: #DBE1FF;
-  --on-secondary-fixed: #00174C;
+  --secondary-fixed: #E7E5E4;
+  --on-secondary-fixed: #27272A;
   --on-secondary: #FFFFFF;
-  --tertiary-fixed: #FFDBCE;
-  --on-tertiary-fixed: #380D00;
-  --on-tertiary-fixed-variant: #802A00;
-  --surface-tint: #0051E1;
-  --border: #C3C5D8;
-  --input: #E1E1EF;
-  --ring: #004BD1;
+  --tertiary-fixed: #F1E7DE;
+  --on-tertiary-fixed: #4A3F35;
+  --on-tertiary-fixed-variant: #7C6A5B;
+  --surface-tint: #A48F7F;
+  --border: #E4E4E7; /* zinc-200 */
+  --input: #E4E4E7;
+  --ring: #A48F7F;
   --radius: 0.875rem;
 
   /* Surface scale */
-  --surface: #FBF8FF;
-  --surface-dim: #D9D9E6;
-  --surface-bright: #FBF8FF;
-  --surface-container: #EDEDFB;
-  --surface-container-low: #F3F2FF;
+  --surface: #F8F5F2;
+  --surface-dim: #E7E3DF;
+  --surface-bright: #F8F5F2;
+  --surface-container: #F1EDE9;
+  --surface-container-low: #F6F3F0;
   --surface-container-lowest: #FFFFFF;
-  --surface-container-high: #E7E7F5;
-  --surface-container-highest: #E1E1EF;
-  --on-surface: #191B25;
-  --on-surface-variant: #434656;
-  --surface-variant: #E1E1EF;
-  --outline: #737687;
-  --outline-variant: #C3C5D8;
+  --surface-container-high: #EDE9E5;
+  --surface-container-highest: #E7E3DF;
+  --on-surface: #27272A;
+  --on-surface-variant: #52525B;
+  --surface-variant: #E7E5E4;
+  --outline: #A1A1AA; /* zinc-400 */
+  --outline-variant: #D4D4D8; /* zinc-300 */
 
-  /* Custom Design Tokens for consistency */
+  /* Custom Design Tokens */
   --color-brand: var(--primary);
-  --color-brand-soft: var(--secondary-container);
+  --color-brand-soft: var(--tertiary-container);
 
-  /* Accent extras used across the app */
-  --sale: #D4004E;
+  /* Accent extras */
+  --sale: #DC2626; /* red-600 نزدیک به red-400 مرجع ولی با کنتراست کافی */
   --sale-foreground: #FFFFFF;
-  --sun: #F59E0B;
-  --sky: #0EA5E9;
-  --charcoal: #1F2937;
+  --sun: #B45309;
+  --sky: #0E7490;
+  --charcoal: #18181B; /* zinc-900 خالص برای دکمه‌های مشکی */
 }
 
 @layer base {
@@ -262,13 +264,18 @@
     outline: none;
   }
 
+  ::selection {
+    background-color: #dcaea3;
+    color: #ffffff;
+  }
+
   :focus-visible {
     outline: 2px solid var(--primary);
     outline-offset: 2px;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-weight: 500;
+    font-weight: 700;
     line-height: 1.25;
     color: var(--foreground);
   }
@@ -326,7 +333,7 @@
 }
 
 @utility transition-premium {
-  transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @utility reveal {
@@ -373,10 +380,10 @@
 
 @utility card-hover {
   transition:
-    transform 0.28s cubic-bezier(0.22, 0.61, 0.36, 1),
-    box-shadow 0.28s cubic-bezier(0.22, 0.61, 0.36, 1);
+    transform 0.3s cubic-bezier(0.22, 0.61, 0.36, 1),
+    box-shadow 0.3s cubic-bezier(0.22, 0.61, 0.36, 1);
   &:hover {
-    transform: translate3d(0, -8px, 0);
+    transform: translate3d(0, -6px, 0);
     box-shadow: var(--shadow-deep);
   }
 }
@@ -388,11 +395,7 @@
 }
 
 @utility ribbon-sale {
-  background-image: linear-gradient(
-    135deg,
-    var(--color-sale) 0%,
-    color-mix(in oklab, var(--color-sale) 92%, var(--color-sun)) 100%
-  );
+  background-color: var(--color-sale);
   color: var(--color-sale-foreground);
 }
 
@@ -404,14 +407,11 @@
 }
 
 @utility candy-surface {
-  background:
-    radial-gradient(circle at 18% 18%, color-mix(in oklab, var(--color-brand) 12%, transparent) 0, transparent 18%),
-    radial-gradient(circle at 82% 82%, color-mix(in oklab, var(--color-brand-soft) 24%, transparent) 0, transparent 24%),
-    linear-gradient(135deg, color-mix(in oklab, white 92%, var(--color-brand-soft)) 0%, white 100%);
+  background: var(--color-surface-container-low);
 }
 
 @utility dotted-surface {
-  background-image: radial-gradient(color-mix(in oklab, var(--color-brand) 16%, white) 1.2px, transparent 1.2px);
+  background-image: radial-gradient(color-mix(in oklab, var(--color-brand) 22%, white) 1.2px, transparent 1.2px);
   background-size: 18px 18px;
 }
 
@@ -419,15 +419,27 @@
   position: relative;
   overflow: hidden;
   background-color: var(--color-background);
-  border-bottom: 1px solid color-mix(in oklab, var(--color-border) 40%, var(--color-brand-soft));
-  box-shadow: var(--shadow-soft);
+  border-bottom: 1px solid var(--color-border);
 }
 
 @utility toy-button {
   box-shadow: 0 10px 24px color-mix(in oklab, var(--color-brand) 22%, transparent);
 }
 
-/* Animations - Subtle & Professional */
+/* انیمیشن MOOD. — fade-in-up */
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@utility fade-in-up {
+  animation: fade-in-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
 @keyframes fade-in {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
@@ -437,37 +449,33 @@
   animation: fade-in 0.4s ease-out forwards;
 }
 
-/* Buttons — Modern Tactile (Design System) */
+/* Buttons — MOOD. مینیمال: مشکی زینک و برونز */
 .btn-primary {
-  @apply bg-primary text-primary-foreground px-8 py-3.5 rounded-full font-bold text-[13px] tracking-wide hover:bg-primary/95 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none;
-  background-image: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-container) 100%);
-  box-shadow: 0 8px 24px color-mix(in oklab, var(--color-primary) 25%, transparent);
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  @apply bg-charcoal text-white px-8 py-3.5 rounded-full font-bold text-[13px] tracking-wide hover:bg-primary active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .btn-secondary {
-  @apply bg-white border-2 border-primary text-primary px-8 py-3.5 rounded-full font-bold text-[13px] tracking-wide hover:bg-primary/5 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  @apply bg-white border border-foreground text-foreground px-8 py-3.5 rounded-full font-bold text-[13px] tracking-wide hover:bg-primary hover:border-primary hover:text-white active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .btn-outline {
-  @apply bg-transparent border border-border text-foreground px-6 py-2.5 rounded-full font-medium text-[12px] hover:border-foreground/40 hover:bg-muted/30 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none transition-all duration-200;
+  @apply bg-transparent border border-outline-variant text-foreground px-6 py-2.5 rounded-full font-medium text-[12px] hover:border-foreground/40 hover:bg-muted/30 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none transition-all duration-300;
 }
 
-/* Design System: soft cloud shadow */
 @utility cloud-shadow {
-  box-shadow: 0 4px 24px 0 rgba(107, 56, 212, 0.06), 0 1px 3px 0 rgba(0, 0, 0, 0.03);
+  box-shadow: 0 4px 24px 0 rgba(164, 143, 127, 0.08), 0 1px 3px 0 rgba(0, 0, 0, 0.03);
 }
 
 @utility card-hover-shadow {
-  transition: transform 0.28s cubic-bezier(0.22, 0.61, 0.36, 1), box-shadow 0.28s cubic-bezier(0.22, 0.61, 0.36, 1);
+  transition: transform 0.3s cubic-bezier(0.22, 0.61, 0.36, 1), box-shadow 0.3s cubic-bezier(0.22, 0.61, 0.36, 1);
   &:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 32px 0 rgba(107, 56, 212, 0.12), 0 2px 6px 0 rgba(0, 0, 0, 0.04);
+    transform: translateY(-6px);
+    box-shadow: 0 12px 32px 0 rgba(164, 143, 127, 0.16), 0 2px 6px 0 rgba(0, 0, 0, 0.04);
   }
 }
 
-/* Design System: scalloped cloud divider */
 @utility cloud-divider {
   position: relative;
   &::before {
@@ -483,7 +491,6 @@
   }
 }
 
-/* Design System: scalloped cloud divider */
 @utility scallop-divider {
   height: 20px;
   width: 100%;
@@ -492,7 +499,6 @@
   background-repeat: repeat-x;
 }
 
-/* Soft-tactile springy press (design system mobile) */
 @utility soft-tactile {
   transition:
     transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
@@ -502,14 +508,12 @@
   }
 }
 
-/* Card with the signature soft ambient shadow */
 @utility card-soft {
   background-color: var(--color-surface-container-lowest);
   border: 1px solid color-mix(in oklab, var(--color-surface-container-high) 80%, transparent);
-  box-shadow: 0 4px 20px rgba(107, 56, 212, 0.06);
+  box-shadow: 0 4px 20px rgba(164, 143, 127, 0.08);
 }
 
-/* Pulsing ring on the active tracking step */
 @utility pulsing-ring {
   position: relative;
   &::after {

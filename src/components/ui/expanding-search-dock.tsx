@@ -7,7 +7,10 @@ type ExpandingSearchDockProps = {
   placeholder?: string;
 };
 
-/** داک جستجوی بازشونده — دکمهٔ دایره‌ای که با کلیک به فرم جستجو تبدیل می‌شود (RTL). */
+/**
+ * داک جستجوی بازشونده — دکمهٔ دایره‌ای که با کلیک با انیمیشن فنری به فرم جستجو تبدیل می‌شود (RTL).
+ * فرم بازشونده با لنگر لبهٔ چپ ثابت می‌ماند و به سمت راست (مرکز هدر) باز می‌شود.
+ */
 export function ExpandingSearchDock({
   onSearch,
   placeholder = "جستجو…",
@@ -32,8 +35,8 @@ export function ExpandingSearchDock({
   };
 
   return (
-    <div className="relative">
-      <AnimatePresence mode="wait">
+    <div className="relative h-12 w-12">
+      <AnimatePresence mode="wait" initial={false}>
         {!isExpanded ? (
           <motion.button
             key="icon"
@@ -58,7 +61,7 @@ export function ExpandingSearchDock({
               damping: 30,
             }}
             onSubmit={handleSubmit}
-            className="relative"
+            className="absolute left-0 top-0 z-50"
           >
             <motion.div
               initial={{ backdropFilter: "blur(0px)" }}

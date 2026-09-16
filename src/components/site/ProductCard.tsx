@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Heart, Plus, Star } from "lucide-react";
+import { Heart, Search, Star } from "lucide-react";
 import { toast } from "sonner";
 
 import { formatToman, toFaDigits } from "@/lib/format";
@@ -49,8 +49,8 @@ function cardPricing(product: ProductLike) {
 }
 
 /**
- * کارت محصول — در موبایل چیدمان افقی فشرده (تصویر مربع کوچک + متن و قیمت کنار هم)
- * و از sm به بالا کارت گرید عمودی مطابق الگوی «Lullaby & Play».
+ * کارت محصول — سبک MOOD.: نسبت 3/4، بج‌ها بالا-شروع، دکمهٔ نمای سریع و
+ * علاقه‌مندی که با هاور ظاهر می‌شوند، تیتر سریف‌نما، قیمت و رنگ‌ها زیر آن.
  */
 export function ProductCard({
   product,
@@ -88,14 +88,9 @@ export function ProductCard({
   };
 
   return (
-    <article
-      className={cn(
-        "product-card group flex h-full min-w-0 flex-row gap-3 rounded-lg border border-surface-container-high bg-surface-container-lowest p-3 shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_12px_30px_rgba(0,75,209,0.12)] sm:flex-col sm:gap-0 sm:p-card-padding",
-        className,
-      )}
-    >
-      {/* Image area — مربع کوچک در موبایل، تمام‌عرض از sm به بالا */}
-      <div className="relative aspect-square w-28 shrink-0 overflow-hidden rounded-lg bg-surface-container-low sm:w-auto">
+    <article className={cn("group flex h-full min-w-0 flex-col", className)}>
+      {/* Image — aspect 3/4 */}
+      <div className="relative aspect-3/4 overflow-hidden rounded-lg bg-surface-container-low">
         <Link to="/product/$slug" params={{ slug: product.slug }} className="block h-full w-full">
           <img
             src={product.image || product.cover || "/assets/images/nursery-6.jpg"}
@@ -104,36 +99,36 @@ export function ProductCard({
             decoding="async"
             className={cn(
               "h-full w-full object-cover transition-transform duration-500 group-hover:scale-105",
-              outOfStock && "opacity-60",
+              outOfStock && "opacity-70",
             )}
           />
         </Link>
 
-        {/* Discount / status badges — top start */}
-        <div className="absolute right-2 top-2 z-10 flex flex-col items-start gap-1 sm:right-3 sm:top-3 sm:gap-1.5">
+        {/* Badges — top start */}
+        <div className="absolute top-3 right-3 z-10 flex flex-col items-start gap-1.5">
           {off > 0 && !outOfStock ? (
-            <span className="rounded-full bg-secondary-container px-2 py-0.5 text-[10px] font-bold text-on-secondary shadow-md sm:px-3 sm:py-1 sm:text-xs">
+            <span className="rounded-full bg-red-400 px-3 py-1 text-[11px] font-bold text-white shadow-sm">
               ٪{toFaDigits(off)} تخفیف
             </span>
           ) : null}
           {showBest ? (
-            <span className="hidden rounded-full bg-tertiary-container px-3 py-1 text-[11px] font-bold text-on-tertiary shadow-md sm:inline-flex">
+            <span className="rounded-full bg-primary px-3 py-1 text-[11px] font-bold text-white shadow-sm">
               پرفروش
             </span>
           ) : null}
           {product.madeInWorkshop ? (
-            <span className="hidden rounded-full bg-surface-container-lowest/90 px-3 py-1 text-[11px] font-bold text-primary shadow-sm sm:inline-flex">
+            <span className="rounded-full bg-white px-3 py-1 text-[11px] font-bold text-foreground shadow-sm">
               ساخت کارگاه
             </span>
           ) : null}
           {outOfStock ? (
-            <span className="rounded-full bg-on-surface px-2 py-0.5 text-[10px] font-bold text-surface shadow-md sm:px-3 sm:py-1 sm:text-[11px]">
+            <span className="rounded-full bg-zinc-900 px-3 py-1 text-[11px] font-bold text-white shadow-sm">
               ناموجود
             </span>
           ) : null}
         </div>
 
-        {/* Wishlist — top end, revealed on hover */}
+        {/* Wishlist — revealed on hover */}
         <button
           onClick={(event) => {
             event.preventDefault();
@@ -144,81 +139,74 @@ export function ProductCard({
             }
           }}
           aria-label={inWishlist ? "حذف از علاقه‌مندی‌ها" : "افزودن به علاقه‌مندی‌ها"}
-          className="absolute left-2 top-2 z-10 flex size-8 items-center justify-center rounded-full bg-white/80 text-on-surface-variant shadow-sm backdrop-blur-sm transition-all hover:scale-110 hover:text-destructive active:scale-95 sm:left-3 sm:top-3 sm:size-10 lg:opacity-0 lg:group-hover:opacity-100"
+          className="absolute left-3 top-3 z-10 flex size-9 items-center justify-center rounded-full bg-white text-zinc-600 shadow-sm transition-all duration-300 hover:text-primary active:scale-95"
         >
-          <Heart
-            className={cn("size-4 sm:size-5", inWishlist && "fill-destructive text-destructive")}
-          />
+          <Heart className={cn("size-4", inWishlist && "fill-primary text-primary")} />
         </button>
 
-        {outOfStock ? (
-          <div className="absolute inset-0 z-20 flex items-center justify-center bg-surface-container-low/60">
-            <span className="rounded-full bg-on-surface px-3 py-1 text-[10px] font-bold text-surface sm:px-4 sm:text-xs">
-              ناموجود
-            </span>
-          </div>
-        ) : null}
+        {/* Quick actions — slide up on hover */}
+        <div className="absolute inset-x-4 bottom-4 z-10 flex translate-y-4 gap-2 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+          <button
+            type="button"
+            onClick={handleAdd}
+            disabled={outOfStock || busy}
+            className="flex h-10 flex-1 items-center justify-center gap-2 rounded-full bg-zinc-900 text-[12px] font-bold text-white transition-colors duration-300 hover:bg-primary disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {outOfStock ? "ناموجود" : busy ? "…" : "افزودن به سبد"}
+          </button>
+          <Link
+            to="/product/$slug"
+            params={{ slug: product.slug }}
+            aria-label="نمایش سریع"
+            className="flex size-10 shrink-0 items-center justify-center rounded-full bg-white text-foreground shadow-sm transition-colors duration-300 hover:bg-primary hover:text-white"
+          >
+            <Search className="size-4" />
+          </Link>
+        </div>
       </div>
 
-      {/* Body */}
-      <div className="flex min-w-0 flex-1 flex-col justify-center sm:justify-start sm:pt-4">
+      {/* Details */}
+      <div className="flex flex-1 flex-col gap-1 pt-3">
         {product.categoryTitle ? (
-          <span className="mb-1.5 hidden self-start rounded-full bg-primary-fixed px-2.5 py-0.5 text-[11px] font-bold text-on-primary-fixed sm:inline-flex">
+          <span className="text-[11px] font-medium tracking-wide text-zinc-400">
             {product.categoryTitle}
           </span>
         ) : null}
 
         <Link to="/product/$slug" params={{ slug: product.slug }}>
-          <h3 className="line-clamp-2 text-[13px] font-bold leading-5 text-on-surface transition-colors group-hover:text-primary sm:font-headline-sm sm:text-headline-sm sm:leading-8">
+          <h3 className="font-serif line-clamp-2 text-[15px] font-semibold leading-7 text-foreground transition-colors duration-300 group-hover:text-primary">
             {product.title}
           </h3>
         </Link>
 
         {rating > 0 ? (
-          <div className="mt-2 hidden items-center gap-1.5 sm:flex">
-            <span className="flex items-center gap-0.5">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <Star
-                  key={i}
-                  className={cn(
-                    "size-3.5",
-                    i < Math.round(rating)
-                      ? "fill-orange-400 text-orange-400"
-                      : "text-outline-variant",
-                  )}
-                  aria-hidden
-                />
-              ))}
-            </span>
+          <div className="mt-0.5 flex items-center gap-1">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <Star
+                key={i}
+                className={cn(
+                  "size-3",
+                  i < Math.round(rating) ? "fill-primary text-primary" : "text-zinc-300",
+                )}
+                aria-hidden
+              />
+            ))}
             {reviewCount > 0 ? (
-              <span className="text-[11px] text-on-surface-variant">
-                ({toFaDigits(reviewCount)} نظر)
-              </span>
+              <span className="text-[10px] text-zinc-400">({toFaDigits(reviewCount)})</span>
             ) : null}
           </div>
         ) : null}
 
-        {/* Price + add — footer row */}
-        <div className="mt-2 flex items-end justify-between gap-2 border-t border-surface-container-low pt-2 sm:mt-auto sm:pt-4">
-          <div className="flex flex-col gap-0.5">
-            {original && original > current ? (
-              <span className="text-[11px] text-on-surface-variant line-through sm:text-[12px]">
-                {formatToman(original)}
-              </span>
-            ) : null}
-            <span className="text-[14px] font-extrabold text-primary sm:font-price-display sm:text-price-display">
-              {formatToman(current)}
+        <div className="mt-1 flex items-baseline gap-2">
+          {original && original > current ? (
+            <span className="text-[12px] text-zinc-400 line-through">
+              {formatToman(original, false)}
             </span>
-          </div>
-          <button
-            type="button"
-            onClick={handleAdd}
-            disabled={outOfStock || busy}
-            aria-label="افزودن به سبد خرید"
-            className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary-container text-on-primary shadow-lg shadow-primary/20 transition-all hover:scale-110 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100 sm:size-12"
-          >
-            <Plus className="size-5 sm:size-6" aria-hidden />
-          </button>
+          ) : null}
+          <span className="text-[15px] font-bold text-foreground">
+            {formatToman(current, false)}
+            <span className="ms-1 text-[10px] font-medium text-zinc-400">تومان</span>
+          </span>
         </div>
       </div>
     </article>
