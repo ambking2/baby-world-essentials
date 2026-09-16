@@ -25,7 +25,7 @@ export const Route = createFileRoute("/brands")({
   component: BrandsPage,
   errorComponent: ({ error }) => (
     <div role="alert" className="container-page py-20 text-center text-sm text-on-surface-variant">
-      {error.message}
+      {String(error instanceof Error ? error.message : error)}
     </div>
   ),
   notFoundComponent: () => (

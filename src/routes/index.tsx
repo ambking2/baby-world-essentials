@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 
 import { HeroSlider } from "@/components/store/HeroSlider";
+import { SpecialOffers } from "@/components/store/SpecialOffers";
 import { StoreShell, storeKeys } from "@/components/store/StoreShell";
 import { ProductSection } from "@/components/site/ProductSection";
 import { SectionHeading } from "@/components/store/SectionHeading";
@@ -69,36 +70,8 @@ function HomePage() {
         </div>
       </section>
 
-      {/* Special offers — dark gradient banner strip */}
-      <section className="bg-background py-10 md:py-16">
-        <div className="container-page">
-          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-l from-primary to-primary-container p-8 text-on-primary md:p-12">
-            <div className="pointer-events-none absolute -left-10 -top-10 size-48 rounded-full bg-white/10 blur-2xl" />
-            <div className="pointer-events-none absolute -bottom-14 left-1/3 size-56 rounded-full bg-white/10 blur-3xl" />
-            <div className="relative flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
-              <div>
-                <span className="mb-3 inline-flex items-center gap-2 rounded-full bg-white/20 px-4 py-1.5 text-xs font-bold backdrop-blur-md">
-                  <Timer className="size-3.5" />
-                  فروش ویژهٔ فصل
-                </span>
-                <h2 className="font-display-lg text-2xl font-black leading-tight drop-shadow-sm md:text-3xl">
-                  پیشنهادهای ویژه
-                </h2>
-                <p className="mt-2 max-w-md text-sm leading-7 text-white/85">
-                  تخفیف‌های زمان‌دار روی منتخب‌ترین کالاهای سیسمونی — تا پایان هفته.
-                </p>
-              </div>
-              <Link
-                to="/offers"
-                className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-bold text-primary shadow-xl transition-transform hover:scale-105 active:scale-95"
-              >
-                مشاهدهٔ تخفیف‌ها
-                <ArrowLeft className="size-4" />
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Special offers — dark gradient banner with infinite product carousel */}
+      <SpecialOffers />
 
       {/* New arrivals */}
       <div className="bg-surface-container-lowest">
