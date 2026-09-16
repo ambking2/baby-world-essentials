@@ -1,17 +1,17 @@
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import {
-  Heart,
-  Search,
-  ShoppingCart,
-  User,
-  Menu,
-  X,
   ChevronLeft,
+  Heart,
   Home,
   LayoutGrid,
+  Menu,
+  Search,
+  ShoppingCart,
   Sparkles,
+  User,
+  X,
 } from "lucide-react";
-import { useEffect, useState } from "react";
 import { ExpandingSearchDock } from "@/components/ui/expanding-search-dock";
 
 import { business } from "@/data/business";
@@ -120,28 +120,17 @@ export function SiteHeader({
             </span>
           </Link>
 
-          {/* Left side (RTL end): search + wishlist + bag + account */}
+          {/* Left side (RTL end): account / cart / search — موبایل: فقط سبد + حساب؛ تبلت/دسکتاپ: داک جستجو */}
           <div className="flex shrink-0 items-center gap-1.5 sm:gap-2.5">
-            <div className="sm:hidden">
-              <ExpandingSearchDock onSearch={dockSearch} placeholder="جستجو…" />
-            </div>
-
-            <div className="hidden xl:block">
-              <ExpandingSearchDock onSearch={dockSearch} placeholder="جستجوی محصول…" />
-            </div>
-
-            <button
-              type="button"
-              onClick={() => {
-                if (!term.trim()) {
-                  void navigate({ to: "/search", search: { q: "" } });
+            {/* تبلت و دسکتاپ (sm به بالا): داک بازشونده؛ موبایل: سرچ به منو همبرگری رفته */}
+            <div className="hidden sm:block">
+              <ExpandingSearchDock
+                onSearch={dockSearch}
+                placeholder={
+                  "جستجوی محصول…"
                 }
-              }}
-              className="flex size-10 items-center justify-center rounded-full text-foreground transition-colors duration-300 hover:text-primary lg:hidden"
-              aria-label="جستجو"
-            >
-              <Search className="size-5" />
-            </button>
+              />
+            </div>
 
             <Link
               to="/account/wishlist"
@@ -176,7 +165,7 @@ export function SiteHeader({
       </div>
 
       {/* Mobile drawer */}
-      <div className={cn("fixed inset-0 z-[100] lg:hidden", mobileOpen ? "visible" : "invisible")}>
+      <div className={cn("fixed inset-0 z-[100] overflow-hidden lg:hidden", mobileOpen ? "visible" : "invisible")}>
         <div
           className={cn(
             "absolute inset-0 bg-zinc-900/40 backdrop-blur-sm transition-opacity duration-300",
@@ -186,8 +175,8 @@ export function SiteHeader({
         />
         <div
           className={cn(
-            "absolute inset-y-0 right-0 flex w-[85%] max-w-[340px] flex-col rounded-l-xl bg-white shadow-2xl transition-transform duration-300",
-            mobileOpen ? "translate-x-0" : "translate-x-full",
+            "absolute inset-y-0 right-0 flex w-[85%] max-w-[340px] flex-col overflow-hidden rounded-l-xl bg-white shadow-2xl transition-transform duration-300",
+            mobileOpen ? "translate-x-0" : "translate-x-[100%]",
           )}
         >
           <div className="flex items-center justify-between border-b border-zinc-100 p-4">
@@ -210,6 +199,20 @@ export function SiteHeader({
           </div>
 
           <nav className="flex-1 overflow-y-auto px-4 pb-6 hide-scrollbar">
+            {/* جستجو — در موبایل داخل منو همبرگری است */}
+            <form
+              onSubmit={submitSearch}
+              className="mb-4 flex items-center gap-2 rounded-full border border-zinc-200 bg-muted/40 px-4 py-2.5"
+            >
+              <Search className="size-4 shrink-0 text-muted-foreground" />
+              <input
+                value={term}
+                onChange={(e) => setTerm(e.target.value)}
+                placeholder="جستجوی محصول…"
+                className="w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+              />
+            </form>
+
             <p className="mb-2 px-2 text-[11px] font-bold tracking-wide text-zinc-400">منوی اصلی</p>
             <ul className="space-y-1">
               {NAV_LINKS.map((link) => (
@@ -229,7 +232,9 @@ export function SiteHeader({
               دسته‌بندی‌ها
             </p>
             <ul className="space-y-1">
-              {categories.map((cat) => (
+              {/* دسته‌ها فقط وقتی منو باز است رندر می‌شوند تا خروجی SSR و کلاینت یکی بماند */}
+              {mobileOpen &&
+                categories.map((cat) => (
                 <li key={cat.slug}>
                   <Link
                     to="/category/$slug"

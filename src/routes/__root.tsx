@@ -102,10 +102,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: "https://cdn.jsdelivr.net/npm/vazirmatn@33.0.3/Vazirmatn-font-face.css",
       },
-      {
-        rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@600;700;800&display=swap",
-      },
       { rel: "stylesheet", href: appCss },
       { rel: "stylesheet", href: storeCss },
       { rel: "icon", type: "image/png", href: "/favicon.png" },

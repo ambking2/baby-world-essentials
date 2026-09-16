@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Heart, Search, Star } from "lucide-react";
+import { Heart, Plus, Star } from "lucide-react";
 import { toast } from "sonner";
 
 import { formatToman, toFaDigits } from "@/lib/format";
@@ -49,8 +49,8 @@ function cardPricing(product: ProductLike) {
 }
 
 /**
- * کارت محصول — سبک MOOD.: نسبت 3/4، بج‌ها بالا-شروع، دکمهٔ نمای سریع و
- * علاقه‌مندی که با هاور ظاهر می‌شوند، تیتر سریف‌نما، قیمت و رنگ‌ها زیر آن.
+ * کارت محصول — چیدمان عمودی: عکس بالا، عنوان زیر عکس، قیمت پایین.
+ * در موبایل فشرده و کوچک (مطابق طرح مرجع)، از sm به بالا سایز کامل.
  */
 export function ProductCard({
   product,
@@ -58,6 +58,7 @@ export function ProductCard({
   inWishlist,
   busy,
   eager,
+  compact,
   onAddToCart,
   onToggleWishlist,
 }: {
@@ -66,6 +67,7 @@ export function ProductCard({
   inWishlist?: boolean;
   busy?: boolean;
   eager?: boolean;
+  compact?: boolean;
   onAddToCart?: (product: ProductLike) => void;
   onToggleWishlist?: (product: ProductLike) => void;
 }) {
@@ -88,9 +90,20 @@ export function ProductCard({
   };
 
   return (
-    <article className={cn("group flex h-full min-w-0 flex-col", className)}>
-      {/* Image — aspect 3/4 */}
-      <div className="relative aspect-3/4 overflow-hidden rounded-lg bg-surface-container-low">
+    <article
+      className={cn(
+        "group flex h-full min-w-0 flex-col",
+        compact && "overflow-hidden rounded-xl bg-white shadow-sm",
+        className,
+      )}
+    >
+      {/* Image — بالا: مربع کوچک در موبایل، 3/4 از sm به بالا */}
+      <div
+        className={cn(
+          "relative aspect-square w-full overflow-hidden bg-surface-container-low sm:aspect-[3/4] sm:rounded-lg",
+          compact ? "rounded-t-xl rounded-b-none" : "rounded-xl",
+        )}
+      >
         <Link to="/product/$slug" params={{ slug: product.slug }} className="block h-full w-full">
           <img
             src={product.image || product.cover || "/assets/images/nursery-6.jpg"}
@@ -105,24 +118,24 @@ export function ProductCard({
         </Link>
 
         {/* Badges — top start */}
-        <div className="absolute top-3 right-3 z-10 flex flex-col items-start gap-1.5">
+        <div className="absolute top-2 right-2 z-10 flex flex-col items-start gap-1 sm:top-3 sm:right-3 sm:gap-1.5">
           {off > 0 && !outOfStock ? (
-            <span className="rounded-full bg-red-400 px-3 py-1 text-[11px] font-bold text-white shadow-sm">
+            <span className="rounded-full bg-red-400 px-2 py-0.5 text-[10px] font-bold text-white shadow-sm sm:px-3 sm:py-1 sm:text-[11px]">
               ٪{toFaDigits(off)} تخفیف
             </span>
           ) : null}
           {showBest ? (
-            <span className="rounded-full bg-primary px-3 py-1 text-[11px] font-bold text-white shadow-sm">
+            <span className="hidden rounded-full bg-primary px-3 py-1 text-[11px] font-bold text-white shadow-sm sm:inline-flex">
               پرفروش
             </span>
           ) : null}
           {product.madeInWorkshop ? (
-            <span className="rounded-full bg-white px-3 py-1 text-[11px] font-bold text-foreground shadow-sm">
+            <span className="hidden rounded-full bg-white px-3 py-1 text-[11px] font-bold text-foreground shadow-sm sm:inline-flex">
               ساخت کارگاه
             </span>
           ) : null}
           {outOfStock ? (
-            <span className="rounded-full bg-zinc-900 px-3 py-1 text-[11px] font-bold text-white shadow-sm">
+            <span className="rounded-full bg-zinc-900 px-2 py-0.5 text-[10px] font-bold text-white shadow-sm sm:px-3 sm:py-1 sm:text-[11px]">
               ناموجود
             </span>
           ) : null}
@@ -139,48 +152,33 @@ export function ProductCard({
             }
           }}
           aria-label={inWishlist ? "حذف از علاقه‌مندی‌ها" : "افزودن به علاقه‌مندی‌ها"}
-          className="absolute left-3 top-3 z-10 flex size-9 items-center justify-center rounded-full bg-white text-zinc-600 shadow-sm transition-all duration-300 hover:text-primary active:scale-95"
+          className="absolute left-2 top-2 z-10 flex size-8 items-center justify-center rounded-full bg-white text-zinc-600 shadow-sm transition-all duration-300 hover:text-primary active:scale-95 sm:left-3 sm:top-3 sm:size-9"
         >
           <Heart className={cn("size-4", inWishlist && "fill-primary text-primary")} />
         </button>
-
-        {/* Quick actions — slide up on hover */}
-        <div className="absolute inset-x-4 bottom-4 z-10 flex translate-y-4 gap-2 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
-          <button
-            type="button"
-            onClick={handleAdd}
-            disabled={outOfStock || busy}
-            className="flex h-10 flex-1 items-center justify-center gap-2 rounded-full bg-zinc-900 text-[12px] font-bold text-white transition-colors duration-300 hover:bg-primary disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {outOfStock ? "ناموجود" : busy ? "…" : "افزودن به سبد"}
-          </button>
-          <Link
-            to="/product/$slug"
-            params={{ slug: product.slug }}
-            aria-label="نمایش سریع"
-            className="flex size-10 shrink-0 items-center justify-center rounded-full bg-white text-foreground shadow-sm transition-colors duration-300 hover:bg-primary hover:text-white"
-          >
-            <Search className="size-4" />
-          </Link>
-        </div>
       </div>
 
-      {/* Details */}
-      <div className="flex flex-1 flex-col gap-1 pt-3">
+      {/* Details — زیر عکس: عنوان، سپس قیمت */}
+      <div
+        className={cn(
+          "flex min-w-0 flex-1 flex-col gap-0.5 pt-2 sm:gap-1 sm:pt-3",
+          compact && "px-2 pb-2 sm:px-3 sm:pb-3",
+        )}
+      >
         {product.categoryTitle ? (
-          <span className="text-[11px] font-medium tracking-wide text-zinc-400">
+          <span className="hidden text-[11px] font-medium tracking-wide text-zinc-400 sm:block">
             {product.categoryTitle}
           </span>
         ) : null}
 
         <Link to="/product/$slug" params={{ slug: product.slug }}>
-          <h3 className="font-serif line-clamp-2 text-[15px] font-semibold leading-7 text-foreground transition-colors duration-300 group-hover:text-primary">
+          <h3 className="line-clamp-2 text-[12px] font-semibold leading-5 text-foreground transition-colors duration-300 group-hover:text-primary sm:font-serif sm:text-[15px] sm:leading-7">
             {product.title}
           </h3>
         </Link>
 
         {rating > 0 ? (
-          <div className="mt-0.5 flex items-center gap-1">
+          <div className="mt-0.5 hidden items-center gap-1 sm:flex">
             {Array.from({ length: 5 }).map((_, i) => (
               <Star
                 key={i}
@@ -197,16 +195,29 @@ export function ProductCard({
           </div>
         ) : null}
 
-        <div className="mt-1 flex items-baseline gap-2">
-          {original && original > current ? (
-            <span className="text-[12px] text-zinc-400 line-through">
-              {formatToman(original, false)}
+        {/* Price + add */}
+        <div className="mt-auto flex items-center justify-between gap-1.5 pt-1 sm:items-baseline sm:justify-start sm:pt-1">
+          <div className="flex min-w-0 flex-col gap-0 sm:flex-row sm:items-baseline sm:gap-2">
+            {original && original > current ? (
+              <span className="text-[10px] text-zinc-400 line-through sm:text-[12px]">
+                {formatToman(original, false)}
+              </span>
+            ) : null}
+            <span className="text-[13px] font-bold text-foreground sm:text-[15px]">
+              {formatToman(current, false)}
+              <span className="ms-1 text-[10px] font-medium text-zinc-400">تومان</span>
             </span>
-          ) : null}
-          <span className="text-[15px] font-bold text-foreground">
-            {formatToman(current, false)}
-            <span className="ms-1 text-[10px] font-medium text-zinc-400">تومان</span>
-          </span>
+          </div>
+          {/* دکمهٔ افزودن — فقط موبایل */}
+          <button
+            type="button"
+            onClick={handleAdd}
+            disabled={outOfStock || busy}
+            aria-label="افزودن به سبد خرید"
+            className="flex size-8 shrink-0 items-center justify-center rounded-full bg-charcoal text-white transition-all duration-300 hover:bg-primary active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 sm:hidden"
+          >
+            <Plus className="size-4" />
+          </button>
         </div>
       </div>
     </article>

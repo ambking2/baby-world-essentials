@@ -1,26 +1,47 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { createFileRoute } from "@tanstack/react-router";
 import { Suspense } from "react";
 import { ArrowLeft, RefreshCcw, ShieldCheck, Sparkles, Truck, Users } from "lucide-react";
 
 import { StoreShell, storeKeys } from "@/components/store/StoreShell";
+import { SpecialOffers } from "@/components/store/SpecialOffers";
 import { ProductSection } from "@/components/site/ProductSection";
 import { SectionHeading } from "@/components/store/SectionHeading";
 import { BlogPreview } from "@/components/site/BlogPreview";
 import { InstagramStrip } from "@/components/site/InstagramStrip";
 
 import { getCatalogShell } from "@/server/functions/catalog";
+import { getProducts } from "@/server/functions/products";
+import { productsQuery, postsQuery } from "@/lib/api/catalog";
 
-export const Route = createFileRoute("/")({ component: HomePage });
+export const Route = createFileRoute("/")({
+  // داده‌ها را روی سرور لود می‌کنیم تا صفحهٔ اصلی بدون صبرِ کلاینت رندر شود.
+  loader: ({ context }) =>
+    Promise.all([
+      context.queryClient.ensureQueryData({
+        queryKey: storeKeys.shell,
+        queryFn: () => getCatalogShell(),
+      }),
+      context.queryClient.ensureQueryData(productsQuery({ tag: "best", limit: 8 })),
+      context.queryClient.ensureQueryData(productsQuery({ tag: "new", limit: 8 })),
+      context.queryClient.ensureQueryData({
+        queryKey: ["home", "special-offers"],
+        queryFn: () =>
+          getProducts({ data: { onlyDiscounted: true, sort: "discount", perPage: 12 } }),
+        staleTime: 5 * 60 * 1000,
+      }),
+      context.queryClient.ensureQueryData(postsQuery()),
+    ]),
+  component: HomePage,
+});
 
 function HomePage() {
-  const shellQuery = useQuery({
-    queryKey: storeKeys.shell,
-    queryFn: () => getCatalogShell(),
-    staleTime: 5 * 60 * 1000,
-  });
-  const categories = shellQuery.data?.categories ?? [];
+  const queryClient = useQueryClient();
+  const shell = queryClient.getQueryData(storeKeys.shell) as
+    | Awaited<ReturnType<typeof getCatalogShell>>
+    | undefined;
+  const categories = shell?.categories ?? [];
 
   return (
     <StoreShell>
@@ -65,6 +86,8 @@ function HomePage() {
                 alt="کالکشن سیسمونی جهان کودک"
                 className="aspect-[4/3] w-full object-cover md:aspect-[3/4]"
                 fetchPriority="high"
+                width={1280}
+                height={455}
               />
             </div>
           </div>
@@ -72,12 +95,12 @@ function HomePage() {
       </section>
 
       {/* Section 3 — CATEGORY STRIP: دایره‌ای، اسکرول افقی بدون اسکرول‌بار */}
-      <section className="border-y border-zinc-100 bg-white">
+      <section className="overflow-x-clip border-y border-zinc-100 bg-white">
         <div className="mx-auto max-w-container-max py-10 md:py-12">
           <h2 className="mb-6 text-center font-serif text-2xl font-bold text-foreground md:text-3xl">
             خرید بر اساس دسته
           </h2>
-          <div className="hide-scrollbar -mx-4 flex snap-x gap-6 overflow-x-auto px-4 pb-2 md:justify-center md:mx-0 md:px-0">
+          <div className="hide-scrollbar -mx-4 flex snap-x gap-6 overflow-x-auto px-4 pb-2 md:mx-0 md:justify-center md:px-0">
             {categories.map((cat) => (
               <Link
                 key={cat.slug}
@@ -102,36 +125,10 @@ function HomePage() {
         </div>
       </section>
 
-      {/* Special offers — بنر سادهٔ برنز */}
-      <section className="bg-background py-12 md:py-16">
-        <div className="container-page">
-          <div className="relative overflow-hidden rounded-2xl bg-primary p-8 text-white md:p-12">
-            <div className="relative flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
-              <div>
-                <p className="mb-3 inline-flex items-center gap-2 text-[12px] font-bold tracking-[0.15em] text-white/80">
-                  <Sparkles className="size-4" />
-                  فروش ویژهٔ فصل
-                </p>
-                <h2 className="font-serif text-2xl font-bold leading-tight md:text-3xl">
-                  پیشنهادهای ویژه
-                </h2>
-                <p className="mt-2 max-w-md text-sm leading-7 text-white/85">
-                  تخفیف‌های زمان‌دار روی منتخب‌ترین کالاهای سیسمونی — تا پایان هفته.
-                </p>
-              </div>
-              <Link
-                to="/offers"
-                className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-bold text-foreground transition-colors duration-300 hover:bg-zinc-900 hover:text-white"
-              >
-                مشاهدهٔ تخفیف‌ها
-                <ArrowLeft className="size-4" />
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Special offers — اسلایدر نامحدود محصولات روی بنر برنز */}
+      <SpecialOffers />
 
-      {/* Section 4 — FAVORITES GRID */}
+      {/* Section 4 — FAVORITES: کاروسل نامحدود موبایل + گرید دسکتاپ */}
       <div className="bg-surface-container-lowest">
         <ProductSection
           title="محبوب‌ترین‌ها"
@@ -139,6 +136,7 @@ function HomePage() {
           query={{ tag: "best", limit: 8 }}
           moreTo="/shop"
           linkLabel="مشاهدهٔ همه"
+          rail
         />
       </div>
 
@@ -234,6 +232,49 @@ function HomePage() {
           rail
         />
       </div>
+
+      {/* Promo banners — زیر لاین جدیدترین‌ها */}
+      <section className="container-page grid gap-4 pb-12 sm:grid-cols-3 md:pb-16">
+        {[
+          {
+            img: "/images/cat-toys.jpg",
+            tag: "اسباب‌بازی چوبی",
+            title: "یادگیری با بازی",
+            to: "/category/asbab-bazi",
+          },
+          {
+            img: "/images/cat-feeding.jpg",
+            tag: "شیردهی",
+            title: "آسودگی مادر",
+            to: "/category/shirdehi",
+          },
+          {
+            img: "/images/cat-dresser.jpg",
+            tag: "دکور کودک",
+            title: "اتاق رویایی",
+            to: "/category/dekor",
+          },
+        ].map((b) => (
+          <Link
+            key={b.to}
+            to={b.to}
+            className="group relative flex h-36 items-end overflow-hidden rounded-2xl sm:h-44"
+          >
+            <img
+              src={b.img}
+              alt={b.title}
+              loading="lazy"
+              decoding="async"
+              className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-zinc-900/65 via-zinc-900/15 to-transparent" />
+            <div className="relative p-4">
+              <p className="text-[11px] font-bold tracking-wide text-white/80">{b.tag}</p>
+              <h3 className="font-serif text-lg font-bold text-white">{b.title}</h3>
+            </div>
+          </Link>
+        ))}
+      </section>
 
       {/* Magazine preview */}
       <section className="bg-background py-section-gap">

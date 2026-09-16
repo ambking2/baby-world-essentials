@@ -8,6 +8,7 @@ import {
   Headphones,
   Lock,
   MapPin,
+  PlusCircle,
   RefreshCcw,
   ShieldCheck,
   Wallet,
@@ -17,8 +18,9 @@ import { toast } from "sonner";
 
 import { StoreShell, storeKeys } from "@/components/store/StoreShell";
 import { business } from "@/data/business";
-import { formatToman, toFaDigits } from "@/lib/format";
+import { toFaDigits, formatToman } from "@/lib/format";
 import { cn } from "@/lib/utils";
+import { getMyAddresses, saveMyAddress } from "@/server/functions/account";
 import { checkCoupon, getCheckoutData, submitCheckout } from "@/server/functions/orders";
 
 export const Route = createFileRoute("/checkout")({
@@ -26,6 +28,17 @@ export const Route = createFileRoute("/checkout")({
 });
 
 type PaymentMethod = "card_transfer" | "cash_on_delivery";
+
+type SavedAddress = {
+  id: number;
+  receiver: string;
+  phone: string;
+  province: string;
+  city: string;
+  postalCode: string | null;
+  line: string;
+  isDefault: number | boolean;
+};
 
 function CheckoutPage() {
   const navigate = useNavigate();
@@ -42,7 +55,80 @@ function CheckoutPage() {
   const [couponInput, setCouponInput] = useState("");
   const [coupon, setCoupon] = useState<{ code: string; discount: number } | null>(null);
 
+  const [selectedAddressId, setSelectedAddressId] = useState<number | null>(null);
+  const [manualAddress, setManualAddress] = useState(false);
+  const [saveToAccount, setSaveToAccount] = useState(false);
+  const [showNewAddressForm, setShowNewAddressForm] = useState(false);
+
   const dataQuery = useQuery({ queryKey: ["checkout"], queryFn: () => getCheckoutData() });
+
+  // نشانی‌های ذخیره‌شدهٔ حساب — اگر کاربر وارد شده باشد پر می‌شود
+  const addressesQuery = useQuery({
+    queryKey: ["my-addresses"],
+    queryFn: () => getMyAddresses(),
+    staleTime: 30_000,
+    retry: false,
+  });
+  const savedAddresses = (addressesQuery.data?.addresses ?? []) as Array<SavedAddress>;
+
+  // انتخاب خودکار نشانی پیش‌فرض (فقط بار اول که لیست رسید)
+  const [autoSelected, setAutoSelected] = useState(false);
+  if (!autoSelected && savedAddresses.length > 0) {
+    const def: SavedAddress = savedAddresses.find((a) => a.isDefault) ?? savedAddresses[0]!;
+    setSelectedAddressId(def.id);
+    setReceiver(def.receiver);
+    setPhone(def.phone);
+    setProvince(def.province);
+    setCity(def.city);
+    setPostalCode(def.postalCode ?? "");
+    setAddressLine(def.line);
+    setAutoSelected(true);
+    setShowNewAddressForm(false);
+  }
+
+  const applySavedAddress = (address: SavedAddress) => {
+    setSelectedAddressId(address.id);
+    setReceiver(address.receiver);
+    setPhone(address.phone);
+    setProvince(address.province);
+    setCity(address.city);
+    setPostalCode(address.postalCode ?? "");
+    setAddressLine(address.line);
+    setManualAddress(false);
+    setShowNewAddressForm(false);
+  };
+
+  const startManualAddress = () => {
+    setSelectedAddressId(null);
+    setManualAddress(true);
+    setShowNewAddressForm(true);
+  };
+
+  const saveNewAddress = useMutation({
+    mutationFn: () =>
+      saveMyAddress({
+        data: {
+          receiver,
+          phone,
+          province,
+          city,
+          line: addressLine,
+          isDefault: savedAddresses.length === 0,
+          ...(postalCode.trim().length > 0 ? { postalCode: postalCode.trim() } : {}),
+        },
+      }),
+    onSuccess: (result) => {
+      toast.success("نشانی برای خریدهای بعدی در حساب شما ذخیره شد.");
+      void queryClient.invalidateQueries({ queryKey: ["my-addresses"] });
+      void queryClient.invalidateQueries({ queryKey: ["account"] });
+      if (result.id) setSelectedAddressId(result.id);
+      setShowNewAddressForm(false);
+      setManualAddress(false);
+      setSaveToAccount(false);
+    },
+    onError: (error) =>
+      toast.error(error instanceof Error ? error.message : "ذخیرهٔ نشانی انجام نشد."),
+  });
 
   const tryCoupon = useMutation({
     mutationFn: () => checkCoupon({ data: { code: couponInput.trim() } }),
@@ -154,62 +240,149 @@ function CheckoutPage() {
                   </span>
                   <div>
                     <h2 className="font-headline-sm text-headline-sm font-bold text-on-surface">نشانی تحویل سفارش</h2>
-                    <p className="text-[12px] text-on-surface-variant">اطلاعات گیرنده و آدرس پستی را وارد کنید</p>
+                    <p className="text-[12px] text-on-surface-variant">از نشانی‌های ذخیره‌شده انتخاب کنید یا نشانی جدید وارد کنید</p>
                   </div>
                 </div>
-                <div className="grid gap-3 sm:grid-cols-2">
-                  <input
-                    required
-                    value={receiver}
-                    onChange={(event) => setReceiver(event.target.value)}
-                    placeholder="نام و نام خانوادگی"
-                    className={inputClass}
-                  />
-                  <input
-                    required
-                    value={phone}
-                    onChange={(event) => setPhone(event.target.value)}
-                    placeholder="شمارهٔ موبایل"
-                    inputMode="tel"
-                    className={inputClass}
-                  />
-                  <input
-                    required
-                    value={province}
-                    onChange={(event) => setProvince(event.target.value)}
-                    placeholder="استان"
-                    className={inputClass}
-                  />
-                  <input
-                    required
-                    value={city}
-                    onChange={(event) => setCity(event.target.value)}
-                    placeholder="شهر"
-                    className={inputClass}
-                  />
-                  <input
-                    value={postalCode}
-                    onChange={(event) => setPostalCode(event.target.value)}
-                    placeholder="کد پستی (اختیاری)"
-                    inputMode="numeric"
-                    className={inputClass}
-                  />
-                </div>
-                <textarea
-                  required
-                  value={addressLine}
-                  onChange={(event) => setAddressLine(event.target.value)}
-                  rows={3}
-                  placeholder="نشانی دقیق پستی، همراه پلاک و واحد"
-                  className={cn(inputClass, "mt-3 rounded-2xl")}
-                />
-                <textarea
-                  value={note}
-                  onChange={(event) => setNote(event.target.value)}
-                  rows={2}
-                  placeholder="یادداشت برای فروشنده (اختیاری)"
-                  className={cn(inputClass, "mt-3 rounded-2xl")}
-                />
+
+                {/* Saved addresses — انتخاب سریع */}
+                {savedAddresses.length > 0 ? (
+                  <div className="mb-5 space-y-3">
+                    {savedAddresses.map((address) => {
+                      const active = selectedAddressId === address.id && !manualAddress;
+                      return (
+                        <button
+                          key={address.id}
+                          type="button"
+                          onClick={() => applySavedAddress(address)}
+                          className={cn(
+                            "flex w-full items-start justify-between gap-3 rounded-lg border-2 p-4 text-start transition-all",
+                            active ? "border-primary bg-primary-fixed/15" : "border-surface-container hover:border-outline-variant",
+                          )}
+                        >
+                          <span className="flex gap-3">
+                            <span
+                              className={cn(
+                                "mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full border-2",
+                                active ? "border-primary" : "border-outline-variant",
+                              )}
+                            >
+                              {active ? <span className="size-2.5 rounded-full bg-primary" /> : null}
+                            </span>
+                            <span className="text-[13px] leading-6">
+                              <span className="flex flex-wrap items-center gap-2 font-bold text-on-surface">
+                                {address.receiver}
+                                <span className="text-[12px] font-semibold text-on-surface-variant" dir="ltr">
+                                  {toFaDigits(address.phone)}
+                                </span>
+                                {address.isDefault ? (
+                                  <span className="rounded-full bg-primary px-2.5 py-0.5 text-[10px] font-bold text-on-primary">
+                                    پیش‌فرض
+                                  </span>
+                                ) : null}
+                              </span>
+                              <span className="mt-1 block text-on-surface-variant">
+                                {address.province}، {address.city} — {address.line}
+                              </span>
+                            </span>
+                          </span>
+                        </button>
+                      );
+                    })}
+                    <button
+                      type="button"
+                      onClick={startManualAddress}
+                      className="flex items-center gap-2 rounded-full border border-dashed border-outline-variant px-5 py-2.5 text-[12px] font-bold text-primary transition-colors hover:border-primary hover:bg-primary-fixed/30"
+                    >
+                      <PlusCircle className="size-4" />
+                      افزودن نشانی جدید
+                    </button>
+                  </div>
+                ) : (
+                  <div className="mb-5 rounded-lg bg-surface-container-low p-4 text-[13px] leading-6 text-on-surface-variant">
+                    برای خرید سریع‌تر، می‌توانید نشانی خود را ذخیره کنید تا دفعات بعد به‌صورت خودکار تکمیل شود.
+                  </div>
+                )}
+
+                {/* فرم دستی/نشانی جدید */}
+                {(showNewAddressForm || savedAddresses.length === 0) && (
+                  <div className={cn("space-y-3", savedAddresses.length > 0 && "rounded-lg border border-dashed border-outline-variant p-4")}>
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      <input
+                        required
+                        value={receiver}
+                        onChange={(event) => setReceiver(event.target.value)}
+                        placeholder="نام و نام خانوادگی"
+                        className={inputClass}
+                      />
+                      <input
+                        required
+                        value={phone}
+                        onChange={(event) => setPhone(event.target.value)}
+                        placeholder="شمارهٔ موبایل"
+                        inputMode="tel"
+                        className={inputClass}
+                      />
+                      <input
+                        required
+                        value={province}
+                        onChange={(event) => setProvince(event.target.value)}
+                        placeholder="استان"
+                        className={inputClass}
+                      />
+                      <input
+                        required
+                        value={city}
+                        onChange={(event) => setCity(event.target.value)}
+                        placeholder="شهر"
+                        className={inputClass}
+                      />
+                      <input
+                        value={postalCode}
+                        onChange={(event) => setPostalCode(event.target.value)}
+                        placeholder="کد پستی (اختیاری)"
+                        inputMode="numeric"
+                        className={inputClass}
+                      />
+                    </div>
+                    <textarea
+                      required
+                      value={addressLine}
+                      onChange={(event) => setAddressLine(event.target.value)}
+                      rows={3}
+                      placeholder="نشانی دقیق پستی، همراه پلاک و واحد"
+                      className={cn(inputClass, "rounded-2xl")}
+                    />
+                    <textarea
+                      value={note}
+                      onChange={(event) => setNote(event.target.value)}
+                      rows={2}
+                      placeholder="یادداشت برای فروشنده (اختیاری)"
+                      className={cn(inputClass, "rounded-2xl")}
+                    />
+
+                    {/* ذخیره در حساب — در حالت نشانی جدید */}
+                    <label className="flex cursor-pointer items-center gap-2 text-[13px] text-on-surface">
+                      <input
+                        type="checkbox"
+                        checked={saveToAccount}
+                        onChange={(event) => setSaveToAccount(event.target.checked)}
+                        className="size-4 accent-[var(--color-primary)]"
+                      />
+                      این نشانی در حساب کاربری‌ام ذخیره شود (برای دفعات بعد)
+                    </label>
+                    {saveToAccount ? (
+                      <button
+                        type="button"
+                        onClick={() => saveNewAddress.mutate()}
+                        disabled={saveNewAddress.isPending}
+                        className="flex items-center gap-2 rounded-full border-2 border-primary px-6 py-2.5 text-[12px] font-bold text-primary transition-colors hover:bg-primary hover:text-on-primary disabled:opacity-60"
+                      >
+                        <PlusCircle className="size-4" />
+                        {saveNewAddress.isPending ? "در حال ذخیره…" : "ذخیره در حساب کاربری"}
+                      </button>
+                    ) : null}
+                  </div>
+                )}
               </section>
 
               {/* Payment method — radio cards */}

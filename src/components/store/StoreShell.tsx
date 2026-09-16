@@ -49,7 +49,12 @@ export function StoreShell({ children }: { children: ReactNode }) {
     onError: () => toast.error("ایمیل واردشده درست نیست."),
   });
 
-  const categories = shellQuery.data?.categories ?? [];
+  // دادهٔ هدر (دسته‌ها/تابلوی اعلانات) را هم‌زمان می‌خوانیم: اگر روی سرور
+  // پیش‌بارگیری شده (ensureQueryData داخل loader) از همان کش می‌گیریم تا خروجی
+  // SSR با رندر اولیهٔ کلاینت دقیقاً یکی باشد و هیدریشن ناسازگاری رخ ندهد.
+  // useQuery فقط برای تازه‌نگهداشتن و خطای شبکه در پس‌زمینه می‌ماند.
+  const shell = shellQuery.data ?? queryClient.getQueryData(storeKeys.shell);
+  const categories = shell?.categories ?? [];
   const cart = cartQuery.data;
   const user = sessionQuery.data?.user ?? null;
 
@@ -64,7 +69,7 @@ export function StoreShell({ children }: { children: ReactNode }) {
         userName={user ? (user.name ?? user.email) : null}
         userRole={user?.role}
         isAdmin={user?.role === "admin"}
-        announcement={shellQuery.data?.announcement ?? null}
+        announcement={shell?.announcement ?? null}
       />
 
       <main id="main" className="flex-1 pb-20 lg:pb-0">

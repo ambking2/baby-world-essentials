@@ -26,6 +26,12 @@ export const getAccount = createServerFn({ method: "GET" }).handler(async () => 
   return { user, orders, addresses, wishlist };
 });
 
+/** فقط نشانی‌های کاربر — برای تکمیل خودکار در تسویهٔ حساب. */
+export const getMyAddresses = createServerFn({ method: "GET" }).handler(async () => {
+  const user = await requireUser();
+  return { addresses: await listAddresses(user.id) };
+});
+
 /** فقط شناسهٔ علاقه‌مندی‌ها — برای نمایش قلب روی کارت محصول. */
 export const getWishlistIds = createServerFn({ method: "GET" }).handler(async () => {
   const user = await requireUser();

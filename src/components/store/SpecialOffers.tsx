@@ -30,22 +30,22 @@ export function SpecialOffers() {
           <div className="pointer-events-none absolute -left-10 -top-10 size-48 rounded-full bg-white/10 blur-2xl" />
           <div className="pointer-events-none absolute -bottom-14 left-1/3 size-56 rounded-full bg-white/10 blur-3xl" />
 
-          <div className="relative flex flex-col gap-8 lg:flex-row lg:items-center lg:gap-10">
-            {/* متن و دکمه — لایهٔ ثابت پشت اسلایدر */}
-            <div className="shrink-0 lg:w-64 xl:w-72">
-              <span className="mb-3 inline-flex items-center gap-2 rounded-full bg-white/20 px-4 py-1.5 text-xs font-bold backdrop-blur-md">
+          <div className="relative flex flex-row items-stretch gap-4 md:gap-6 lg:gap-8">
+            {/* متن و دکمه — راست (RTL start) */}
+            <div className="w-[38%] shrink-0 self-center sm:w-[30%] lg:w-64 xl:w-72">
+              <span className="mb-2 inline-flex items-center gap-2 rounded-full bg-white/20 px-3 py-1 text-[11px] font-bold backdrop-blur-md sm:mb-3 sm:px-4 sm:text-xs">
                 <Timer className="size-3.5" />
                 فروش ویژهٔ فصل
               </span>
-              <h2 className="font-display-lg text-2xl font-black leading-tight text-white drop-shadow-sm md:text-3xl">
+              <h2 className="font-display-lg text-lg font-black leading-tight text-white drop-shadow-sm sm:text-2xl md:text-3xl">
                 پیشنهادهای ویژه
               </h2>
-              <p className="mt-2 max-w-xs text-sm leading-7 text-white/85">
+              <p className="mt-2 hidden text-sm leading-7 text-white/85 sm:block">
                 تخفیف‌های زمان‌دار روی منتخب‌ترین کالاهای سیسمونی — تا پایان هفته.
               </p>
               <Link
                 to="/offers"
-                className="mt-6 inline-flex items-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-bold text-primary shadow-xl transition-transform hover:scale-105 active:scale-95"
+                className="mt-4 inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-[12px] font-bold text-primary shadow-xl transition-transform hover:scale-105 active:scale-95 sm:mt-6 sm:px-8 sm:py-3.5 sm:text-sm"
               >
                 مشاهدهٔ تخفیف‌ها
                 <ArrowLeft className="size-4" />
@@ -55,9 +55,9 @@ export function SpecialOffers() {
             {products.length > 0 ? (
               <OffersRail products={products} />
             ) : (
-              <div className="min-w-0 flex-1 grid grid-cols-2 lg:grid-cols-4 gap-3">
-                {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="skeleton aspect-[4/5] rounded-lg bg-white/30" />
+              <div className="min-w-0 flex-1 grid grid-cols-2 gap-3">
+                {[1, 2].map((i) => (
+                  <div key={i} className="skeleton aspect-square rounded-xl bg-white/30" />
                 ))}
               </div>
             )}
@@ -71,7 +71,7 @@ export function SpecialOffers() {
 /** اسلایدر نامحدود محصولات — هر بار یک کارت جابه‌جا می‌شود. */
 function OffersRail({ products }: { products: Array<ProductCardData> }) {
   const [emblaRef, emblaApi] = useEmblaCarousel({
-    loop: products.length >= 5,
+    loop: products.length >= 2,
     direction: "rtl",
     align: "start",
     slidesToScroll: 1,
@@ -90,10 +90,11 @@ function OffersRail({ products }: { products: Array<ProductCardData> }) {
               key={product.id}
               className={cn(
                 "min-w-0 shrink-0 grow-0 px-2",
-                "flex-[0_0_72%] sm:flex-[0_0_46%] lg:flex-[0_0_33.333%] xl:flex-[0_0_25%]",
+                "flex-[0_0_140px] sm:flex-[0_0_170px] md:flex-[0_0_190px] lg:flex-[0_0_220px] xl:flex-[0_0_240px]",
               )}
             >
               <ProductCard
+                compact
                 product={product}
                 onAddToCart={(p) => addToCart.mutate(p as ProductCardData)}
               />
